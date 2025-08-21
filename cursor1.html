@@ -1,0 +1,1855 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Confident Picks — Prototype</title>
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0B0F14">
+
+<meta name="description" content="Data-driven sports betting picks with confidence ratings. For entertainment purposes only.">
+<meta property="og:title" content="Confident Picks">
+<meta property="og:description" content="Data-driven sports betting picks with confidence ratings.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/og-image.png">
+<meta property="og:url" content="https://your-live-url.com">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Firebase SDK (commented out - uncomment when ready) -->
+<!--
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+-->
+
+<style>
+:root{
+  --bg:#0B0F14; --card:#121820; --text:#E6EDF3; --sub:#98A6B3;
+  --blue:#4DA3FF; --green:#22C55E; --red:#FF6B6B; --border:#ffffff18; --r:12px;
+
+  --select-popup-bg:#0B0F14;
+  --select-popup-text:#E6EDF3;
+}
+:root[data-theme="light"]{
+  --bg:#ffffff; --card:#F4F6F8; --text:#0B0F14; --sub:#475569; --border:#00000014;
+  --select-popup-bg:#ffffff;
+  --select-popup-text:#0B0F14;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);color:var(--text); color-scheme: dark;}
+:root[data-theme="light"] body{ color-scheme: light; }
+
+.container{max-width:1024px;margin:0 auto;padding:16px}
+.hidden{display:none}
+.header{position:sticky;top:0;background:rgba(0,0,0,.2);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:1000}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px}
+.logo .brandmark{ width:28px; height:28px; display:inline-block; }
+.logo strong{ letter-spacing:.2px; }
+
+.btn{padding:8px 12px;border-radius:var(--r);border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);cursor:pointer}
+.btn.primary{background:var(--blue);color:#0B0F14;border-color:transparent}
+.btn.danger{border-color:var(--red);color:var(--red);background:transparent}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;margin-left:6px}
+.badge.win{color:var(--green);border-color:var(--green)}
+.badge.loss{color:var(--red);border-color:var(--red)}
+.badge.push{color:var(--sub)}
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:12px}
+.grid{display:grid;gap:12px}
+.chip{position:relative; padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid var(--border)}
+.chip.safe{color:var(--green);border-color:var(--green)}
+.chip.degen{color:var(--red);border-color:var(--red)}
+.text-sub{color:var(--sub);font-size:14px}
+.kbd{font-family:ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace; background:rgba(255,255,255,.06); padding:2px 6px; border-radius:6px; border:1px solid var(--border);}
+.star{
+  width:20px;height:20px;display:inline-block;border-radius:8px;
+  border:1px solid var(--border);background:rgba(255,255,255,.06);cursor:pointer;
+  transition: all 0.2s ease;
+  transform: scale(1);
+}
+.star:hover{
+  background:rgba(255,255,255,.12);
+  transform: scale(1.1);
+}
+.star:active{
+  transform: scale(0.95);
+}
+.star.on{
+  background:var(--blue);
+  box-shadow: 0 2px 8px rgba(77,163,255,0.3);
+}
+.tabs,.smalltabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{
+  padding:8px 12px;border:1px solid var(--border);border-radius:999px;
+  background:rgba(255,255,255,.06);cursor:pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.tab:hover{
+  background:rgba(255,255,255,.12);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.tab.active{
+  background:var(--blue);color:#0B0F14;border-color:transparent;
+  box-shadow: 0 3px 8px rgba(77,163,255,0.3);
+}
+.nav a{color:var(--text); text-decoration:none; opacity:.85}
+.nav a.active{opacity:1; font-weight:600; text-decoration:underline; text-decoration-color: var(--blue)}
+
+/* 🔲 Section frame */
+.panel{
+  background: var(--card);
+  border: 1px solid #ffffff26;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
+}
+:root[data-theme="light"] .panel{
+  background:#ffffff;
+  border-color:#00000022;
+  box-shadow:none;
+}
+
+/* Filters */
+.filters{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:800px){
+  .filters{grid-template-columns:1fr 1fr}
+  .filters input, .filters select { padding: 14px; font-size: 16px; }
+  
+  /* Enhanced mobile touch targets */
+  .btn { padding: 12px 16px; min-height: 44px; }
+  .tab { padding: 12px 16px; min-height: 44px; }
+  .star { width: 32px; height: 32px; }
+  .minconf .step { width: 32px; height: 20px; font-size: 14px; }
+  input, select, textarea { padding: 14px; min-height: 44px; }
+}
+input,select,textarea{width:100%;padding:10px;border-radius:var(--r);border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);font-family:inherit}
+.filters input, .filters select{ background: rgba(255,255,255,.12); border-color: #ffffff2e; color: var(--text); font-weight: 600; }
+.filters input::placeholder{ color: var(--text); opacity:.9; }
+.filters .text-sub{ color: var(--text); opacity:.9; font-weight:600; }
+
+/* dropdown popup legibility */
+.filters select{ color-scheme: dark; }
+:root[data-theme="light"] .filters select{ color-scheme: light; }
+.filters select option, .filters select optgroup{
+  background-color: var(--select-popup-bg) !important;
+  color: var(--select-popup-text) !important;
+  font-weight:600;
+}
+
+/* Settings dropdowns - match filters styling */
+.settings-select{ 
+  background: rgba(255,255,255,.12) !important; 
+  border-color: #ffffff2e !important; 
+  color: var(--text) !important; 
+  font-weight: 600 !important;
+  color-scheme: dark;
+}
+:root[data-theme="light"] .settings-select{ color-scheme: light; }
+.settings-select option, .settings-select optgroup{
+  background-color: var(--select-popup-bg) !important;
+  color: var(--select-popup-text) !important;
+  font-weight:600;
+}
+:focus-visible { outline:2px solid var(--blue); outline-offset:2px; border-radius:6px; }
+
+/* Min Confidence — compact v38 format (prevents click-masking) */
+.minconf {
+  position: relative;
+  display: inline-block;
+}
+.minconf input {
+  width: 100%;
+  padding: 10px 44px 10px 10px;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.12);
+  border-color: #ffffff2e;
+  color: var(--text);
+  font-weight: 600;
+}
+.minconf .steppers {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.minconf .step {
+  width: 20px;
+  height: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.06);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--text);
+}
+.minconf .step:hover {
+  background: rgba(255,255,255,.12);
+}
+.minconf .caption {
+  font-size: 11px;
+  color: var(--sub);
+  margin-top: 4px;
+}
+:root[data-theme="light"] .minconf input {
+  background: #ffffff;
+  border-color: #00000022;
+}
+
+/* keep native spinners hidden for other inputs */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0; }
+input[type=number]{ -moz-appearance:textfield; appearance:textfield; }
+
+/* Scorecard metrics side-by-side */
+.metrics{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin:12px 0; }
+.metrics .card{ background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 12px; }
+.metrics .label{ color: var(--sub); font-size: 14px; margin-bottom: 6px; }
+.metrics .value{ font-size: 28px; font-weight: 800; letter-spacing: .3px; }
+@media (max-width: 720px){ .metrics{ grid-template-columns: 1fr; } }
+
+/* locked teaser */
+.locked-card{ position:relative; overflow:hidden; border:1px solid var(--border); border-radius:var(--r); background:var(--card); }
+.locked-inner{ filter: blur(6px); opacity:.65; pointer-events:none; z-index:1; position:relative; }
+.locked-veil{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(11,15,20,0.25), rgba(11,15,20,0.55)); backdrop-filter: blur(2px); z-index:2; pointer-events:none; }
+.locked-cta{ position:absolute; inset:auto 12px 12px 12px; display:flex; gap:8px; align-items:center; justify-content:space-between; z-index:3; }
+.locked-label{ font-size:12px; color:var(--sub); position:absolute; top:8px; left:12px; padding:2px 6px; border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.06); z-index:3; }
+
+/* mobile banner */
+.mobile-banner{ display:none; position:fixed; bottom:0; left:0; right:0; z-index:10; background:var(--card); border-top:1px solid var(--border); padding:12px; }
+@media (max-width:800px){ .mobile-banner.visible{ display:flex; align-items:center; justify-content:space-between; gap:12px; } body{ padding-bottom:70px; } }
+
+/* maintenance banner */
+.site-banner{ display:flex; align-items:center; gap:12px; background:linear-gradient(180deg, rgba(77,163,255,.18), rgba(34,197,94,.18)); border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin:12px 0; }
+.site-banner .label{ font-weight:700; }
+.site-banner .dismiss{ margin-left:auto; }
+
+/* Account page small bits */
+.account-wrap{ max-width:720px; margin: 0 auto; }
+.authTabs{ display:flex; gap:8px; margin-top:8px; }
+.authTabs .tab{ flex:0 0 auto; }
+.divider{ display:flex; align-items:center; gap:10px; margin:10px 0; }
+.divider:before, .divider:after{ content:""; height:1px; background:var(--border); flex:1; }
+.helper{ font-size:12px; color:var(--sub); margin-top:6px; }
+
+.result-list{margin-top:12px}
+.result-row,.out-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-top:8px;background:rgba(255,255,255,.04)}
+.reasoning{margin-top:6px;color:var(--sub);font-size:14px;line-height:1.35}
+
+footer{color:var(--sub);font-size:14px;padding:24px 0;text-align:center}
+footer a{ color:var(--sub); text-decoration:underline }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container row">
+    <div class="logo">
+      <svg class="brandmark" viewBox="0 0 48 48" aria-hidden="true">
+        <defs><linearGradient id="g1" x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4DA3FF"/><stop offset="1" stop-color="#22C55E"/></linearGradient></defs>
+        <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#g1)"/>
+        <path d="M14 25 L21 32 L34 17" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <strong>Confident Picks</strong>
+    </div>
+    <div class="row nav" style="gap:12px">
+      <a href="#picks" data-nav>Picks</a>
+      <a href="#scorecard" data-nav>Scorecard</a>
+      <a href="#outcomes" data-nav>Outcomes</a>
+      <a href="#favorites" data-nav>Favorites</a>
+      <a href="#account" data-nav id="navAccount">Account</a>
+      <a href="#admin" data-nav id="navAdmin" class="hidden">Admin</a>
+      <button type="button" id="themeBtn" class="btn">Theme</button>
+      <button type="button" id="authBtn" class="btn primary">Sign up for free</button>
+      <button type="button" id="upgradeBtn" class="btn primary hidden">Upgrade</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div id="maintBanner" class="site-banner" role="status" aria-live="polite">
+    <div class="label">Maintenance:</div>
+    <div class="text-sub">Scheduled maintenance tonight 1:00–2:00am ET. Features may be limited.</div>
+    <button type="button" class="btn dismiss" aria-label="Dismiss maintenance notice" onclick="dismissMaintBanner()">Dismiss</button>
+  </div>
+
+  <!-- PICKS -->
+  <section id="view-picks">
+    <div class="filters">
+      <select id="leagueSel">
+        <option value="">All Leagues</option>
+        <option>MLB</option>
+        <option>NFL</option>
+      </select>
+      <select id="marketSel">
+        <option value="">All Markets</option>
+        <option value="moneyline">Moneyline</option>
+        <option value="spread">Spread</option>
+        <option value="totals">Totals</option>
+        <option value="props">Props</option>
+      </select>
+      <select id="sortSel">
+        <option value="commence">Sort: Commence Time</option>
+        <option value="confidence">Sort: Confidence</option>
+      </select>
+      <input id="searchInp" placeholder="Search team/player…"/>
+
+      <!-- Min Confidence with compact v38 steppers -->
+      <div class="minconf">
+        <input id="minConf" type="number" min="0" max="100" value="70" placeholder="Min Confidence" aria-label="Minimum confidence threshold"/>
+        <div class="steppers">
+          <div class="step" data-step="5" aria-label="Increase confidence by 5">+</div>
+          <div class="step" data-step="-5" aria-label="Decrease confidence by 5">-</div>
+        </div>
+        <div class="caption">Min Confidence</div>
+      </div>
+    </div>
+
+    <div id="gatingNote" class="card text-sub" style="margin-top:12px"></div>
+
+    <div id="verifyBanner" class="card hidden" style="margin-top:8px; align-items:center; justify-content:space-between; gap:8px">
+      <div><strong>Verify your email</strong> to unlock free extras.</div>
+      <div style="display:flex; gap:8px">
+        <button id="sendVerifyBtn" class="btn" aria-label="Send email verification">Send verification</button>
+        <button id="markVerifiedBtn" class="btn primary" aria-label="Mark email as verified (mock)">Mark verified (mock)</button>
+      </div>
+    </div>
+
+    <div id="list" class="grid" style="margin-top:12px"></div>
+  </section>
+
+  <!-- SCORECARD -->
+  <section id="view-scorecard" class="hidden">
+    <div class="panel">
+      <div class="row" style="gap:8px">
+        <div><strong>Scorecard</strong> <span id="gradeBadge" class="grade">—</span></div>
+        <div class="tabs" role="tablist" aria-label="Scorecard Timeframe">
+          <button type="button" class="tab score-tab active" role="tab" aria-selected="true" data-tf="7">Last 7 Days</button>
+          <button type="button" class="tab score-tab" role="tab" aria-selected="false" data-tf="30">Last 30 Days</button>
+          <button type="button" class="tab score-tab" role="tab" aria-selected="false" data-tf="180">Last 180 Days</button>
+          <button type="button" class="tab score-tab" role="tab" aria-selected="false" data-tf="all">All-Time</button>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="card"><div class="label">Record</div><div class="value" id="mRecord">—</div></div>
+        <div class="card"><div class="label">Win %</div><div class="value" id="mWinpct">—</div></div>
+      </div>
+
+      <div id="resultsWrap" class="result-list"></div>
+      <div id="resultsNote" class="text-sub" style="margin-top:10px"></div>
+
+      <details id="scoreHelp" class="text-sub" style="margin-top:12px">
+        <summary style="cursor:pointer">Grading guide</summary>
+        <div class="helper">
+          <strong>F</strong> &lt; 45% • <strong>D</strong> 45–49.9% • <strong>C</strong> 50–54.9% •
+          <strong>B</strong> 55–64.9% • <strong>A</strong> ≥ 65%.
+          For A-tier, add a <strong>+</strong> every +8% above 65 (capped at A+++):
+          <strong>A+</strong> 73–80.9%, <strong>A++</strong> 81–88.9%, <strong>A+++</strong> ≥ 89%.
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- OUTCOMES -->
+  <section id="view-outcomes" class="hidden">
+    <div class="panel" id="outcomesContainer">
+      <!-- Content will be populated by renderOutcomes() -->
+    </div>
+  </section>
+
+  <!-- Favorites -->
+  <section id="view-favorites" class="hidden">
+    <div class="panel">
+      <div class="row" style="gap:8px; justify-content:space-between; align-items:center">
+        <div><strong>My Favorites</strong></div>
+        <button id="readFavoritesBtn" class="btn">🔊 <span id="readFavoritesText">Read Favorites Aloud</span></button>
+      </div>
+      <div id="favGate" style="margin-top:8px"></div>
+      <div id="favList" class="grid" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <!-- ACCOUNT -->
+  <section id="view-account" class="hidden">
+    <div class="account-wrap" id="accountContainer"></div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="view-admin" class="hidden">
+    <div class="card">
+      <h3 style="margin:0 0 8px 0">Admin (local dev)</h3>
+      <div id="profileInfo"></div>
+      <div style="margin-top:12px" class="text-sub">Switch auth state:</div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:8px;gap:8px">
+        <button type="button" class="btn" id="btnAnon">Anon</button>
+        <button type="button" class="btn" id="btnFree">Signed-in (Free)</button>
+        <button type="button" class="btn" id="btnPaid">Subscriber</button>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
+        <button id="resetBannerBtn" class="btn">Reset maintenance banner</button>
+        <button id="markVerifiedBtn" class="btn">Mark email verified (mock)</button>
+        <button id="unverifyBtn" class="btn">Mark email unverified (mock)</button>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
+        <button id="seedOutcomesBtn" class="btn">Seed demo outcomes</button>
+        <button id="clearFavsBtn" class="btn danger">Clear favorites</button>
+        <button id="seedDemoBtn" class="btn">Add demo outcomes</button>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
+        <button id="toggleAutoRenewBtn" class="btn" onclick="toggleAutoRenew()">Toggle auto-renew (mock)</button>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
+        <button id="adminOffBtn" class="btn">Exit Admin (hide link)</button>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="text-sub">Keyboard: <span class="kbd">/</span> focus search • <span class="kbd">t</span> toggle theme • <span class="kbd">1-6</span> navigate • <span class="kbd">esc</span> clear search</div>
+      </div>
+      
+      <!-- Admin Dashboard Prep -->
+      <div class="card" style="margin-top:12px">
+        <h4 style="margin:0 0 8px 0">Dashboard Ready</h4>
+        <div class="text-sub">Infrastructure prepared for:</div>
+        <ul class="text-sub" style="margin:8px 0; padding-left:20px;">
+          <li>Firebase Authentication</li>
+          <li>Real-time data feeds</li>
+          <li>User management</li>
+          <li>Content moderation</li>
+          <li>Analytics integration</li>
+          <li>N8N webhook handlers</li>
+        </ul>
+        <div class="row" style="gap:8px; margin-top:8px">
+          <button id="setupFirebaseBtn" class="btn primary" disabled>Setup Firebase</button>
+          <button id="setupN8NBtn" class="btn primary" disabled>Setup N8N</button>
+          <button id="setupDomainBtn" class="btn primary" disabled>Setup Domain</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Subscribe -->
+  <section id="view-subscribe" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between; align-items:flex-end">
+        <div>
+          <h3 style="margin:0 0 6px 0">Become a Subscriber</h3>
+          <div class="text-sub">Unlock full picks, Favorites, and Outcomes.</div>
+        </div>
+        <div class="chip">21+</div>
+      </div>
+      <div class="row" style="gap:10px; margin-top:12px">
+        <div class="row" style="gap:8px; align-items:baseline">
+          <div id="planName"><strong>Confident Picks — Monthly</strong></div>
+          <div class="h1" id="planPrice" style="font-size:22px">$15</div>
+          <div id="planInterval" class="text-sub">USD / month</div>
+        </div>
+        <div class="space"></div>
+        <div class="row" style="gap:8px">
+          <button id="planMonthlyBtn" class="btn primary">Monthly</button>
+          <button id="planYearlyBtn" class="btn">Yearly</button>
+        </div>
+      </div>
+      <div class="row" style="gap:8px; margin-top:8px">
+        <input id="couponCode" class="input" placeholder="Have a code? (try SAVE20)"/>
+        <button id="applyCouponBtn" class="btn">Apply</button>
+      </div>
+      <div id="subscribeNote" class="text-sub" style="margin-top:8px"></div>
+      <div class="row" style="gap:10px; margin-top:12px">
+        <button id="upgradeNowBtn" class="btn primary">Complete subscription — $15/mo</button>
+        <button id="backToPicksBtn" class="btn">Back to picks</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Legal pages -->
+  <section id="view-terms" class="hidden">
+    <div class="card"><h3 style="margin:0 0 6px 0">Terms of Service (Preview)</h3><div class="text-sub">Placeholder copy for preview/testing. Final legal text will be added later.</div></div>
+  </section>
+  <section id="view-privacy" class="hidden">
+    <div class="card"><h3 style="margin:0 0 6px 0">Privacy Policy (Preview)</h3><div class="text-sub">Placeholder copy for preview/testing. Final legal text will be added later.</div></div>
+  </section>
+  <section id="view-responsible" class="hidden">
+    <div class="card">
+      <h3 style="margin:0 0 6px 0">Responsible Gaming</h3>
+      <div class="text-sub">If you or someone you know has a gambling problem, help is available.</div>
+      <ul class="text-sub">
+        <li>Call or text 1-800-GAMBLER (where available).</li>
+        <li>Set limits and never wager more than you can afford to lose.</li>
+        <li>Confident Picks does not facilitate wagering.</li>
+      </ul>
+    </div>
+    </section>
+
+  <!-- Contact Form -->
+  <section id="view-contact" class="hidden">
+    <div class="card">
+      <h3 style="margin:0 0 8px 0" id="contactTitle">Contact Us</h3>
+      <div class="text-sub" style="margin-bottom:12px">Have questions or feedback? We'd love to hear from you!</div>
+      
+      <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px">
+        <div>
+          <div class="text-sub" id="nameLabel">Name</div>
+          <input id="contactName" class="input" style="margin-top:4px" placeholder="Your name"/>
+        </div>
+        <div>
+          <div class="text-sub" id="emailLabel">Email</div>
+          <input id="contactEmail" type="email" class="input" style="margin-top:4px" placeholder="your@email.com"/>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:12px">
+        <div class="text-sub" id="subjectLabel">Subject</div>
+        <input id="contactSubject" class="input" style="margin-top:4px" placeholder="What's this about?"/>
+      </div>
+      
+      <div style="margin-bottom:12px">
+        <div class="text-sub" id="messageLabel">Message</div>
+        <textarea id="contactMessage" class="input" style="margin-top:4px; min-height:100px; resize:vertical" placeholder="Tell us more..."></textarea>
+      </div>
+      
+      <div class="row" style="gap:8px">
+        <button id="sendContactBtn" class="btn primary" id="sendBtn">Send Message</button>
+        <button id="clearContactBtn" class="btn">Clear Form</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    For entertainment/education only. If you or someone you know has a gambling problem, seek help.
+    <a href="#responsible" data-nav>Responsible gaming</a> ·
+    <a href="#terms" data-nav>Terms</a> ·
+    <a href="#privacy" data-nav>Privacy</a> ·
+    <a href="#contact" data-nav>Contact</a> ·
+    <strong>21+ where applicable</strong>
+</footer>
+</div>
+
+<div id="mobileBanner" class="mobile-banner">
+  <div>
+    <div><strong>Upgrade to unlock all picks</strong></div>
+    <div class="text-sub">$15 USD / month</div>
+  </div>
+  <button id="mobileUpgradeBtn" class="btn primary">Upgrade</button>
+</div>
+
+<script>
+// THEME
+(function(){
+  var saved = localStorage.getItem('theme') || 'dark';
+  if(saved==='light') document.documentElement.setAttribute('data-theme','light');
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var next = (cur==='light') ? '' : 'light';
+    if (next) document.documentElement.setAttribute('data-theme', next);
+    else document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('theme', next||'dark');
+    render();
+  });
+})();
+
+// ROUTER + ADMIN NAV
+var navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
+function show(el, on){ if(!el) return; if(on) el.classList.remove('hidden'); else el.classList.add('hidden'); }
+
+function updateHeaderUI(){
+  var upg = document.getElementById('upgradeBtn');
+  if (upg) (state.auth === 'free') ? upg.classList.remove('hidden') : upg.classList.add('hidden');
+  updateMobileBanner();
+  updateAdminUI();
+}
+function updateAdminUI(){
+  var navAdmin = document.getElementById('navAdmin');
+  show(navAdmin, state.isAdmin);
+}
+function route(){
+  var hash = location.hash || '#picks';
+  navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')===hash); });
+  document.getElementById('view-picks').classList.toggle('hidden', hash !== '#picks');
+  document.getElementById('view-scorecard').classList.toggle('hidden', hash !== '#scorecard');
+  document.getElementById('view-outcomes').classList.toggle('hidden', hash !== '#outcomes');
+  document.getElementById('view-favorites').classList.toggle('hidden', hash !== '#favorites');
+  document.getElementById('view-account').classList.toggle('hidden', hash !== '#account');
+  document.getElementById('view-admin').classList.toggle('hidden', hash !== '#admin');
+  document.getElementById('view-subscribe').classList.toggle('hidden', hash !== '#subscribe');
+  document.getElementById('view-terms').classList.toggle('hidden', hash !== '#terms');
+  document.getElementById('view-privacy').classList.toggle('hidden', hash !== '#privacy');
+  document.getElementById('view-responsible').classList.toggle('hidden', hash !== '#responsible');
+  document.getElementById('view-contact').classList.toggle('hidden', hash !== '#contact');
+
+  if (hash === '#admin' && !state.isAdmin){
+    alert('Admin is disabled on this device (mock). Enable it from Account.');
+    location.hash = '#account';
+    return;
+  }
+
+  if (hash === '#favorites') renderFavorites();
+  if (hash === '#account') renderAccount();
+  if (hash === '#admin') renderProfile();
+  if (hash === '#scorecard') renderScorecard();
+  if (hash === '#outcomes') renderOutcomes();
+  if (hash === '#subscribe') renderSubscribe();
+  if (hash === '#contact') renderContact();
+  maybeShowVerifyBanner();
+}
+window.addEventListener('hashchange', route);
+
+// TRANSLATION DATA (Top 4 Languages)
+var translations = {
+  en: {
+    picks: 'Picks', scorecard: 'Scorecard', outcomes: 'Outcomes', 
+    favorites: 'Favorites', account: 'Account', admin: 'Admin',
+    signUp: 'Sign up for free', signOut: 'Sign out', upgrade: 'Upgrade',
+    resetSettings: 'Reset to Default',
+    readFavorites: 'Read Favorites Aloud', stopReading: 'Stop Reading',
+    settings: 'Settings', language: 'Language', theme: 'Theme', 
+    voiceSpeed: 'Voice Speed', currency: 'Currency', voiceEnabled: 'Enable Voice Reading',
+    darkTheme: 'Dark', lightTheme: 'Light', autoTheme: 'Auto',
+    saveSettings: 'Save Settings', resetToDefault: 'Reset to Default',
+    contact: 'Contact', contactUs: 'Contact Us', name: 'Name', email: 'Email',
+    subject: 'Subject', message: 'Message', sendMessage: 'Send Message'
+  },
+  es: {
+    picks: 'Selecciones', scorecard: 'Puntuación', outcomes: 'Resultados',
+    favorites: 'Favoritos', account: 'Cuenta', admin: 'Administrador',
+    signUp: 'Registrarse gratis', signOut: 'Cerrar sesión', upgrade: 'Actualizar',
+    resetSettings: 'Restablecer por Defecto',
+    readFavorites: 'Leer Favoritos en Voz Alta', stopReading: 'Detener Lectura',
+    settings: 'Configuración', language: 'Idioma', theme: 'Tema',
+    voiceSpeed: 'Velocidad de Voz', currency: 'Moneda', voiceEnabled: 'Habilitar Lectura de Voz',
+    darkTheme: 'Oscuro', lightTheme: 'Claro', autoTheme: 'Automático',
+    saveSettings: 'Guardar Configuración', resetToDefault: 'Restablecer por Defecto',
+    contact: 'Contacto', contactUs: 'Contáctanos', name: 'Nombre', email: 'Correo',
+    subject: 'Asunto', message: 'Mensaje', sendMessage: 'Enviar Mensaje'
+  },
+  fr: {
+    picks: 'Sélections', scorecard: 'Tableau de Bord', outcomes: 'Résultats',
+    favorites: 'Favoris', account: 'Compte', admin: 'Administrateur',
+    signUp: 'Inscription gratuite', signOut: 'Déconnexion', upgrade: 'Améliorer',
+    resetSettings: 'Réinitialiser par Défaut',
+    readFavorites: 'Lire les Favoris à Voix Haute', stopReading: 'Arrêter la Lecture',
+    settings: 'Paramètres', language: 'Langue', theme: 'Thème',
+    voiceSpeed: 'Vitesse de la Voix', currency: 'Devise', voiceEnabled: 'Activer la Lecture Vocale',
+    darkTheme: 'Sombre', lightTheme: 'Clair', autoTheme: 'Automatique',
+    saveSettings: 'Sauvegarder les Paramètres', resetToDefault: 'Réinitialiser par Défaut',
+    contact: 'Contact', contactUs: 'Nous Contacter', name: 'Nom', email: 'Email',
+    subject: 'Sujet', message: 'Message', sendMessage: 'Envoyer le Message'
+  },
+  de: {
+    picks: 'Auswahl', scorecard: 'Bewertung', outcomes: 'Ergebnisse',
+    favorites: 'Favoriten', account: 'Konto', admin: 'Administrator',
+    signUp: 'Kostenlos anmelden', signOut: 'Abmelden', upgrade: 'Upgrade',
+    resetSettings: 'Auf Standard Zurücksetzen',
+    readFavorites: 'Favoriten Vorlesen', stopReading: 'Vorlesen Stoppen',
+    settings: 'Einstellungen', language: 'Sprache', theme: 'Design',
+    voiceSpeed: 'Sprachgeschwindigkeit', currency: 'Währung', voiceEnabled: 'Sprachausgabe Aktivieren',
+    darkTheme: 'Dunkel', lightTheme: 'Hell', autoTheme: 'Automatisch',
+    saveSettings: 'Einstellungen Speichern', resetToDefault: 'Auf Standard Zurücksetzen',
+    contact: 'Kontakt', contactUs: 'Kontaktieren Sie uns', name: 'Name', email: 'E-Mail',
+    subject: 'Betreff', message: 'Nachricht', sendMessage: 'Nachricht Senden'
+  }
+};
+
+// TRANSLATION FUNCTION
+function t(key) {
+  var lang = state.settings.language || 'en';
+  return translations[lang] && translations[lang][key] ? translations[lang][key] : translations.en[key] || key;
+}
+
+// STATE
+var state = {
+  auth: localStorage.getItem('auth') || 'anon',
+  favorites: JSON.parse(localStorage.getItem('favorites')||'[]'),
+  tf: localStorage.getItem('tf') || '7',
+  otf: localStorage.getItem('otf') || '30',
+  selectedOut: [],
+  isAdmin: localStorage.getItem('isAdmin') === '1',
+  accTab: localStorage.getItem('accTab') || 'signup',
+  settings: JSON.parse(localStorage.getItem('userSettings') || '{"language":"en","theme":"dark","voiceSpeed":"1.0","currency":"USD","voiceEnabled":"false"}'),
+  isReading: false
+};
+// Normalize any legacy favorites (ids -> {id})
+(function normalizeFavorites(){
+  var changed = false;
+  state.favorites = (state.favorites || []).map(function(f){
+    if (typeof f === 'string') { changed = true; return { id: f }; }
+    if (f && typeof f === 'object' && f.id) return f;
+    return null;
+  }).filter(Boolean);
+  if (changed) localStorage.setItem('favorites', JSON.stringify(state.favorites));
+})();
+
+var authBtn = document.getElementById('authBtn');
+function setAuth(mode){
+  state.auth = mode;
+  localStorage.setItem('auth', mode);
+  authBtn.textContent = mode==='anon' ? 'Sign up for free' : 'Sign out';
+  render(); renderAccount(); renderProfile(); reflectAuthButtons(); updateHeaderUI();
+}
+authBtn.addEventListener('click', function(){
+  if (state.auth==='anon'){ location.hash = '#account'; route(); }
+  else { setAuth('anon'); location.hash = '#picks'; route(); }
+});
+var _upgEl = document.getElementById('upgradeBtn'); if (_upgEl) { _upgEl.addEventListener('click', function(){ location.hash = '#subscribe'; route(); }); }
+
+function setAdmin(on){
+  state.isAdmin = !!on;
+  try { localStorage.setItem('isAdmin', on ? '1' : '0'); } catch(e){}
+  updateAdminUI();
+  if (!on && location.hash==='#admin'){ location.hash = '#account'; }
+}
+
+// DATA
+function daysAgo(n){ var d = new Date(Date.now() - n*86400000); return d.toISOString(); }
+var picksLive = [
+  {id:'1', league:'MLB', marketType:'moneyline', pickDesc:'Rays ML vs Yankees', oddsAmerican:-120, modelConfidence:82, commenceTime:daysAgo(-0.2), tier:'public', riskTag:'safe', reasoning:'Rays bullpen rested; model edge ~1.9%.'},
+  {id:'2', league:'NFL', marketType:'props', pickDesc:'Mahomes Over 2.5 TD', oddsAmerican:140, modelConfidence:71, commenceTime:daysAgo(-22), tier:'public', riskTag:'degen', reasoning:'RZ pass rate up; opponent man-heavy.'},
+  {id:'3', league:'MLB', marketType:'totals', pickDesc:'Under 8.0 CLE@DET', oddsAmerican:-105, modelConfidence:88, commenceTime:daysAgo(-0.1), tier:'public', riskTag:'safe', reasoning:'GB% arms + cool weather; model 7.3.'},
+  {id:'4', league:'MLB', marketType:'spread', pickDesc:'Braves -1.5 vs Nats', oddsAmerican:115, modelConfidence:76, commenceTime:daysAgo(-0.05), tier:'free', riskTag:'safe', reasoning:'K-BB% gap + hard-hit edge.'}
+];
+var picksResults = [
+  {id:'r1', league:'MLB', marketType:'moneyline', pickDesc:'Dodgers ML vs Mets', oddsAmerican:-135, modelConfidence:83, commenceTime:daysAgo(1.5), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(1.3), reasoning:'LAD #2 vs RHP last 30d; fair -146.'},
+  {id:'r2', league:'NFL', marketType:'totals', pickDesc:'Over 47.5 KC@BUF', oddsAmerican:-105, modelConfidence:72, commenceTime:daysAgo(2), tier:'paid', riskTag:'degen', result:'L', settledAt:daysAgo(1.9), reasoning:'Pace-up; both top-8 pass rate.'},
+  {id:'r3', league:'MLB', marketType:'props', pickDesc:'Acuña 2+ Bases', oddsAmerican:135, modelConfidence:81, commenceTime:daysAgo(3), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(2.8), reasoning:'Barrel% allowed; median 2.2 TB.'},
+  {id:'r4', league:'NFL', marketType:'spread', pickDesc:'49ers -3 vs SEA', oddsAmerican:-110, modelConfidence:86, commenceTime:daysAgo(4), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(3.9), reasoning:'Pressure mismatch; SEA OL issues.'},
+  {id:'r5', league:'MLB', marketType:'totals', pickDesc:'Over 7.5 NYY@TB', oddsAmerican:100, modelConfidence:69, commenceTime:daysAgo(5), tier:'free', riskTag:'degen', result:'L', settledAt:daysAgo(4.9), reasoning:'Pens taxed; hitting-friendly ump.'},
+  {id:'r6', league:'NFL', marketType:'moneyline', pickDesc:'Jets ML vs NE', oddsAmerican:120, modelConfidence:77, commenceTime:daysAgo(6), tier:'free', riskTag:'safe', result:'W', settledAt:daysAgo(5.8), reasoning:'Defense edge + home; QB health.'},
+  {id:'r7', league:'MLB', marketType:'spread', pickDesc:"Blue Jays -1.5 vs O's", oddsAmerican:140, modelConfidence:75, commenceTime:daysAgo(12), tier:'paid', riskTag:'degen', result:'L', settledAt:daysAgo(11.8), reasoning:'Buy-low vs LHP; pen fresher.'},
+  {id:'r8', league:'NFL', marketType:'moneyline', pickDesc:'Chiefs ML vs CIN', oddsAmerican:-125, modelConfidence:73, commenceTime:daysAgo(14), tier:'public', riskTag:'safe', result:'W', settledAt:daysAgo(13.8), reasoning:'CB cluster injuries; fair -132.'},
+  {id:'r9', league:'MLB', marketType:'totals', pickDesc:'Under 7.5 LAD@SF', oddsAmerican:-102, modelConfidence:70, commenceTime:daysAgo(20), tier:'free', riskTag:'safe', result:'W', settledAt:daysAgo(19.8), reasoning:'Marine layer; model 7.0.'},
+  {id:'r10', league:'MLB', marketType:'moneyline', pickDesc:'Astros ML vs TEX', oddsAmerican:-150, modelConfidence:90, commenceTime:daysAgo(35), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(34.8), reasoning:''},
+  {id:'r11', league:'NFL', marketType:'spread', pickDesc:'Eagles -7 vs NYG', oddsAmerican:-110, modelConfidence:85, commenceTime:daysAgo(40), tier:'public', riskTag:'safe', result:'W', settledAt:daysAgo(39.8), reasoning:''}
+];
+var picksAll = picksLive.concat(picksResults);
+
+// HELPERS
+function formatDate(iso){ var d = new Date(iso); return d.toLocaleString([], { dateStyle:'medium', timeStyle:'short' }); }
+function byCommence(a,b){ return new Date(a.commenceTime) - new Date(b.commenceTime); }
+function byConfidence(a,b){ return (b.modelConfidence - a.modelConfidence) || (b.oddsAmerican - a.oddsAmerican); }
+function oddsString(a){ return a >= 0 ? ('+'+a) : String(a); }
+function esc(s){ if (s==null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;'); }
+function isVerified(){ return localStorage.getItem('emailVerified') === 'true'; }
+function nowIso(){ return new Date().toISOString(); }
+function addMonthsISO(iso, n){ var d = new Date(iso); d.setMonth(d.getMonth()+n); return d.toISOString(); }
+function fmt(iso){ return iso ? new Date(iso).toLocaleString([], {dateStyle:'medium', timeStyle:'short'}) : '—'; }
+
+// Better message system to replace alert()
+function showMessage(message, type = 'info') {
+  // Remove existing messages
+  var existing = document.querySelector('.app-message');
+  if (existing) existing.remove();
+  
+  var msgEl = document.createElement('div');
+  msgEl.className = 'app-message';
+  msgEl.style.cssText = 
+    'position: fixed; top: 20px; right: 20px; z-index: 10000;' +
+    'padding: 12px 16px; border-radius: 8px; color: white;' +
+    'background: ' + (type === 'error' ? '#FF6B6B' : type === 'success' ? '#22C55E' : '#4DA3FF') + ';' +
+    'box-shadow: 0 4px 12px rgba(0,0,0,0.3);' +
+    'transform: translateX(100%); transition: transform 0.3s ease;' +
+    'max-width: 300px; word-wrap: break-word;';
+  msgEl.textContent = message;
+  document.body.appendChild(msgEl);
+  
+  // Animate in
+  setTimeout(function() { msgEl.style.transform = 'translateX(0)'; }, 10);
+  
+  // Auto remove after 4 seconds
+  setTimeout(function() {
+    msgEl.style.transform = 'translateX(100%)';
+    setTimeout(function() { msgEl.remove(); }, 300);
+  }, 4000);
+}
+
+// SETTINGS HELPER FUNCTIONS
+function updateAllTranslations() {
+  var navLinks = document.querySelectorAll('[data-nav]');
+  navLinks.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (href === '#picks') link.textContent = t('picks');
+    else if (href === '#scorecard') link.textContent = t('scorecard');
+    else if (href === '#outcomes') link.textContent = t('outcomes');
+    else if (href === '#favorites') link.textContent = t('favorites');
+    else if (href === '#account') link.textContent = t('account');
+    else if (href === '#admin') link.textContent = t('admin');
+  });
+  
+  var authBtn = document.getElementById('authBtn');
+  if (authBtn) {
+    authBtn.textContent = state.auth === 'anon' ? t('signUp') : t('signOut');
+  }
+  
+  // Update read button text
+  updateReadButton();
+  
+  renderAccount();
+  renderContact();
+}
+
+function readFavoritesAloud() {
+  // If currently reading, stop it
+  if (state.isReading) {
+    speechSynthesis.cancel();
+    state.isReading = false;
+    updateReadButton();
+    return;
+  }
+  
+  if (state.settings.voiceEnabled !== 'true') {
+    alert('Voice reading is disabled. Enable it in Settings first.');
+    return;
+  }
+  
+  if (state.favorites.length === 0) {
+    alert('No favorites to read!');
+    return;
+  }
+  
+  if (!window.speechSynthesis) {
+    alert('Speech synthesis not supported in this browser.');
+    return;
+  }
+  
+  var textToRead = t('favorites') + ': ';
+  
+  // Get favorites in the same order as displayed (sorted by commence time)
+  var ids = state.favorites.map(function(f){ return f.id; });
+  var favs = picksAll.filter(function(p){ return ids.indexOf(p.id) >= 0 && canSee(p); });
+  var sortedFavs = favs.sort(byCommence);
+  
+  sortedFavs.forEach(function(pick, index) {
+    textToRead += (index + 1) + '. ' + pick.pickDesc + '. ';
+  });
+  
+  var utterance = new SpeechSynthesisUtterance(textToRead);
+  utterance.rate = parseFloat(state.settings.voiceSpeed) || 1.0;
+  utterance.lang = state.settings.language === 'es' ? 'es-ES' : 
+                   state.settings.language === 'fr' ? 'fr-FR' :
+                   state.settings.language === 'de' ? 'de-DE' : 'en-US';
+  
+  // Set reading state
+  state.isReading = true;
+  updateReadButton();
+  
+  // Handle when reading finishes
+  utterance.onend = function() {
+    state.isReading = false;
+    updateReadButton();
+  };
+  
+  utterance.onerror = function() {
+    state.isReading = false;
+    updateReadButton();
+  };
+  
+  speechSynthesis.speak(utterance);
+}
+
+function updateReadButton() {
+  var btn = document.getElementById('readFavoritesBtn');
+  if (btn) {
+    if (state.isReading) {
+      btn.innerHTML = '⏹️ ' + t('stopReading');
+      btn.classList.add('danger');
+    } else {
+      btn.innerHTML = '🔊 ' + t('readFavorites');
+      btn.classList.remove('danger');
+    }
+  }
+}
+
+function toggleAutoRenew() {
+  var currentRenew = localStorage.getItem('autoRenew') === 'true';
+  var newRenew = !currentRenew;
+  localStorage.setItem('autoRenew', newRenew.toString());
+  alert('Auto-renew ' + (newRenew ? 'enabled' : 'disabled') + ' (mock)');
+  renderAccount();
+}
+
+function loadSettingsValues() {
+  setTimeout(function() {
+    var languageSelect = document.getElementById('languageSelect');
+    var themeSelect = document.getElementById('themeSelect');
+    var voiceSpeedSelect = document.getElementById('voiceSpeedSelect');
+    var currencySelect = document.getElementById('currencySelect');
+    var voiceEnabledSelect = document.getElementById('voiceEnabledSelect');
+    
+    if (languageSelect) languageSelect.value = state.settings.language || 'en';
+    if (themeSelect) themeSelect.value = state.settings.theme || 'dark';
+    if (voiceSpeedSelect) voiceSpeedSelect.value = state.settings.voiceSpeed || '1.0';
+    if (currencySelect) currencySelect.value = state.settings.currency || 'USD';
+    if (voiceEnabledSelect) voiceEnabledSelect.value = state.settings.voiceEnabled || 'false';
+  }, 100);
+}
+
+// LOGIC
+function maybeShowVerifyBanner(){
+  var banner = document.getElementById('verifyBanner');
+  if (!banner) return;
+  if (state.auth === 'free' && !isVerified()){
+    banner.classList.remove('hidden'); banner.style.display = 'flex';
+  } else {
+    banner.classList.add('hidden'); banner.style.display = 'none';
+  }
+}
+function letterFromWins(wins, n){
+  var p = n>0 ? wins/n : 0;
+  if (p < 0.45) return ['F','f'];
+  if (p < 0.50) return ['D','d'];
+  if (p < 0.55) return ['C','c'];
+  if (p < 0.65) return ['B','b'];
+  var pluses = Math.max(0, Math.floor((p - 0.65)/0.08));
+  var capped = Math.min(pluses, 3);
+  return ['A' + new Array(capped+1).join('+'), 'a'];
+}
+function canSee(p){
+  if (state.auth==='paid') return true;
+  if (state.auth==='free') return p.tier==='public' || p.tier==='free';
+  return p.tier==='public';
+}
+function updateMobileBanner(){
+  var banner = document.getElementById('mobileBanner');
+  if (!banner) return;
+  if (state.auth === 'free') banner.classList.add('visible');
+  else banner.classList.remove('visible');
+}
+
+// FAVORITES (paid only)
+function toggleFavorite(id){
+  if (state.auth !== 'paid') {
+    alert('Favorites are for subscribers (prototype).');
+    location.hash = '#subscribe';
+    route();
+    return;
+  }
+  var idx = state.favorites.findIndex(function(f){ return f && f.id === id; });
+  if (idx === -1) {
+    var snap = picksAll.find(function(p){ return p.id === id; }) || {};
+    state.favorites.push({ id: id, snap: snap });
+  } else {
+    state.favorites.splice(idx, 1);
+  }
+  localStorage.setItem('favorites', JSON.stringify(state.favorites));
+  render(); renderFavorites(); renderOutcomes();
+}
+
+// RENDERERS
+function cardHTML(p){
+  var confColor = p.modelConfidence >= 80 ? 'var(--green)' : 'var(--blue)';
+  var on = state.favorites.find(function(f){ return f.id===p.id; }) ? 'on' : '';
+  var risk = p.riskTag ? p.riskTag.toUpperCase() : '';
+  var star = (state.auth==='paid')
+    ? ('<div class="star '+on+'" title="Favorite" role="button" aria-pressed="'+(on?'true':'false')+'" tabindex="0" data-fav="'+p.id+'"></div>')
+    : '<div class="text-sub">(Favorites for subscribers)</div>';
+  return '<div class="card">'
+    + '<div class="text-sub">'+p.league+' • '+p.marketType+'</div>'
+    + '<div class="row" style="gap:8px"><div><strong>'+p.pickDesc+'</strong></div><div class="chip '+(p.riskTag==='safe'?'safe':'degen')+'">'+risk+'</div></div>'
+    + '<div class="text-sub">Confidence: <span style="color:'+confColor+'">'+p.modelConfidence+'</span> • Odds: '+oddsString(p.oddsAmerican)+'</div>'
+    + '<div class="reasoning">Reasoning: '+esc(p.reasoning || '—')+'</div>'
+    + '<div class="row" style="margin-top:6px;gap:8px"><div class="text-sub">Commences: '+formatDate(p.commenceTime)+'</div>'+star+'</div>'
+    + '</div>';
+}
+function resultRowHTML(x){
+  var badge = x.result==='W'?'win':(x.result==='L'?'loss':'push');
+  var right = (x.commenceTime ? formatDate(x.commenceTime) : '');
+  var checked = state.selectedOut.indexOf(x.id) >= 0 ? 'checked' : '';
+  return '<div class="out-row" data-row="'+x.id+'">'
+    + '<div>'
+    +   '<div><strong>'+esc(x.pickDesc||'—')+'</strong> <span class="badge '+badge+'">'+x.result+'</span></div>'
+    +   '<div class="text-sub">'+esc(x.league||'—')+' • '+esc(x.marketType||'—')+' • Odds '+oddsString(x.oddsAmerican||0)+' • '+(x.settledAt?formatDate(x.settledAt):'')+'</div>'
+    +   (x.reasoning ? '<div class="reasoning">Reasoning: '+esc(x.reasoning)+'</div>' : '')
+    + '</div>'
+    + '<div class="row" style="gap:8px">'
+    +   '<input type="checkbox" data-sel="'+x.id+'" '+checked+' />'
+    +   '<div class="text-sub">'+right+'</div>'
+    + '</div>'
+    + '</div>';
+}
+function scoreRowHTML(x){
+  var badge = x.result==='W'?'win':(x.result==='L'?'loss':'push');
+  var right = (x.commenceTime ? formatDate(x.commenceTime) : '');
+  return '<div class="out-row" data-row="'+x.id+'">'
+    + '<div>'
+    +   '<div><strong>'+esc(x.pickDesc||'—')+'</strong> <span class="badge '+badge+'">'+x.result+'</span></div>'
+    +   '<div class="text-sub">'+esc(x.league||'—')+' • '+esc(x.marketType||'—')+' • Odds '+oddsString(x.oddsAmerican||0)+' • '+(x.settledAt?formatDate(x.settledAt):'')+'</div>'
+    +   (x.reasoning ? '<div class="reasoning">Reasoning: '+esc(x.reasoning)+'</div>' : '')
+    + '</div>'
+    + '<div class="text-sub">'+right+'</div>'
+    + '</div>';
+}
+function teaserCardHTML(i){
+  var isAnon = state.auth === 'anon';
+  var ctaText = isAnon ? 'Sign up to unlock' : 'Upgrade to unlock';
+  var btnText = isAnon ? 'Sign up for free' : 'Upgrade';
+  var btnAction = isAnon ? 'data-goto-signup' : 'data-goto-subscribe';
+  
+  // Dynamic teaser content for variety
+  var leagues = ['MLB', 'NFL', 'NBA', 'NHL'];
+  var markets = ['moneyline', 'spread', 'totals', 'props'];
+  var risks = ['SAFE', 'DEGEN'];
+  var teams = ['████████ vs █████', '███████ vs ██████', '██████ vs ███████', '█████ vs ████████'];
+  
+  var league = leagues[i % leagues.length];
+  var market = markets[Math.floor(Math.random() * markets.length)];
+  var risk = risks[Math.floor(Math.random() * risks.length)];
+  var team = teams[i % teams.length];
+  var confidence = 70 + Math.floor(Math.random() * 20); // 70-89
+  var odds = Math.floor(Math.random() * 300) - 150; // -150 to +150
+  
+  return '<div class="locked-card card">'
+    + '<div class="locked-label">Locked pick</div>'
+    + '<div class="locked-inner">'
+    +   '<div class="text-sub">' + league + ' • ' + market + '</div>'
+    +   '<div class="row" style="gap:8px"><div><strong>' + team + '</strong></div><div class="chip ' + (risk==='SAFE'?'safe':'degen') + '">' + risk + '</div></div>'
+    +   '<div class="text-sub">Confidence: ' + confidence + '█ • Odds: ' + (odds >= 0 ? '+' : '') + odds + '█</div>'
+    +   '<div class="reasoning">Reasoning: ████████████████████████████████</div>'
+    +   '<div class="row" style="margin-top:6px;gap:8px"><div class="text-sub">Commences: ███ ██, ████</div></div>'
+    + '</div>'
+    + '<div class="locked-veil"></div>'
+    + '<div class="locked-cta"><div class="text-sub">' + ctaText + '</div><button type="button" class="btn primary" ' + btnAction + '>' + btnText + '</button></div>'
+    + '</div>';
+}
+
+// VIEW RENDERERS
+function render(){
+  var note = document.getElementById('gatingNote');
+  if (state.auth==='anon') {
+    note.textContent = 'Sign up for free to see 3 more picks.';
+    note.classList.remove('hidden');
+  } else if (state.auth==='free') {
+    note.innerHTML = 'Upgrade to see all picks & unlock Favorites/Outcomes <strong>($15/mo)</strong>. <button type="button" class="btn primary" data-goto-subscribe>Upgrade</button>';
+    note.classList.remove('hidden');
+  } else {
+    note.classList.add('hidden');
+  }
+  var league = (document.getElementById('leagueSel')).value;
+  var market = (document.getElementById('marketSel')).value;
+  var sort = (document.getElementById('sortSel')).value;
+  var min = Number((document.getElementById('minConf')).value || 0);
+  var search = (document.getElementById('searchInp')).value.trim().toLowerCase();
+
+  var arr = picksAll.filter(function(p){ return canSee(p); });
+  if (league) arr = arr.filter(function(p){ return p.league===league; });
+  if (market) arr = arr.filter(function(p){ return p.marketType===market; });
+  if (min>0) arr = arr.filter(function(p){ return p.modelConfidence >= min; });
+  if (search) arr = arr.filter(function(p){ return p.pickDesc.toLowerCase().includes(search); });
+  arr.sort(sort==='confidence' ? byConfidence : byCommence);
+
+  var list = document.getElementById('list');
+  if (arr.length > 0) list.innerHTML = arr.map(cardHTML).join('');
+  else list.innerHTML = '<div class="card text-sub">No picks match your current filters.</div>';
+
+  var _authBtn = document.getElementById('authBtn');
+  if (_authBtn) _authBtn.textContent = state.auth==='anon' ? 'Sign up for free' : 'Sign out';
+
+  if (state.auth==='anon'){
+    var teasers = 5;
+    list.innerHTML += Array.from({length:teasers}, function(_,_i){ return teaserCardHTML(_i); }).join('');
+  } else if (state.auth==='free'){
+    var teasers = 3;
+    list.innerHTML += Array.from({length:teasers}, function(_,_i){ return teaserCardHTML(_i); }).join('');
+  }
+  maybeShowVerifyBanner();
+}
+
+function inTimeframeRes(p, tf){ if (tf==='all') return true; var cutoff = Date.now() - Number(tf)*86400000; return p.settledAt && new Date(p.settledAt).getTime() >= cutoff; }
+function computeStats(tf){
+  var graded = picksResults.filter(function(p){ return inTimeframeRes(p, tf); });
+  var w=0,l=0,pu=0;
+  graded.forEach(function(p){ if (p.result==='W') w++; else if (p.result==='L') l++; else pu++; });
+  var n = w+l; var winPct = n ? (w*100/n) : 0;
+  var res = letterFromWins(w,n);
+  return { w:w,l:l,pu:pu, winPct:winPct, letter:res[0], cls:res[1], graded:graded };
+}
+function renderScorecard(){
+  var tf = state.tf;
+  Array.prototype.forEach.call(document.querySelectorAll('.score-tab'), function(t){
+    var isActive = t.getAttribute('data-tf') === tf;
+    t.classList.toggle('active', isActive);
+    t.setAttribute('aria-selected', isActive);
+  });
+  var stats = computeStats(tf);
+  document.getElementById('mRecord').textContent = stats.w+'-'+stats.l+'-'+stats.pu;
+  document.getElementById('mWinpct').textContent = (stats.winPct||0).toFixed(1)+'%';
+  var grade = document.getElementById('gradeBadge');
+  grade.textContent = 'Grade: ' + stats.letter;
+  grade.className = 'grade ' + stats.cls;
+
+  var wrap = document.getElementById('resultsWrap');
+  var note = document.getElementById('resultsNote');
+  if (tf==='7' || tf==='30'){
+    wrap.innerHTML = stats.graded.sort(function(a,b){ return new Date(b.settledAt) - new Date(a.settledAt); }).map(scoreRowHTML).join('') || '<div class="text-sub">No graded picks yet.</div>';
+    note.textContent = '';
+  } else {
+    wrap.innerHTML = '';
+    note.textContent = 'Detailed picks are hidden for longer ranges (180d/All-Time).';
+  }
+}
+
+function renderFavorites(){
+  var gate = document.getElementById('favGate');
+  var wrap = document.getElementById('favList');
+  if (state.auth !== 'paid') { 
+    gate.innerHTML = (state.auth==='free' ? '<div class="card">Subscribers only. Upgrade to save favorites <strong>($15/mo)</strong>. <div style="margin-top:8px"><button type="button" class="btn primary" data-goto-subscribe>Upgrade</button></div></div>' : '<div class="card">Subscribers only. <a href="#account" data-nav>Sign up</a> to get started.</div>'); 
+    wrap.innerHTML=''; 
+    return; 
+  }
+  gate.innerHTML = '';
+  var ids = state.favorites.map(function(f){ return f.id; });
+  var favs = picksAll.filter(function(p){ return ids.indexOf(p.id) >= 0 && canSee(p); });
+  wrap.innerHTML = favs.length ? favs.sort(byCommence).map(cardHTML).join('') : '<div class="text-sub">No favorites yet.</div>';
+}
+
+function inOutTf(iso, tf){ if (tf==='all' || !iso) return true; var cutoff = Date.now()-Number(tf)*86400000; return new Date(iso).getTime() >= cutoff; }
+function updateSelectionUI(){ var btn = document.getElementById('clearSelectedBtn'); if(btn) btn.disabled = (state.selectedOut.length===0); }
+function renderOutcomes(){
+  var container = document.getElementById('outcomesContainer');
+  if (!container) return;
+  
+  var tf = state.otf;
+  
+  // For non-subscribers, show only the upgrade message
+  if (state.auth !== 'paid') {
+    container.innerHTML = '<div><strong>My Outcomes</strong> <span class="text-sub">— results for your favorited picks</span></div>' +
+      '<div style="margin-top:12px">' + 
+      (state.auth==='free' ? 
+        '<div class="card">Subscribers only. Upgrade to view your outcomes <strong>($15/mo)</strong>. <div style="margin-top:8px"><button type="button" class="btn primary" data-goto-subscribe>Upgrade</button></div></div>' : 
+        '<div class="card">Subscribers only. <a href="#account" data-nav>Sign up</a> to get started.</div>') +
+      '</div>';
+    return;
+  }
+  
+  // For subscribers, build the full interface
+  var tabsHTML = '<div class="row" style="gap:8px; justify-content:space-between; align-items:center">' +
+    '<div><strong>My Outcomes</strong> <span class="text-sub">— results for your favorited picks</span></div>' +
+    '<div class="smalltabs" role="tablist" aria-label="Outcomes Timeframe">' +
+    '<button type="button" class="tab out-tab' + (tf==='7'?' active':'') + '" role="tab" aria-selected="' + (tf==='7') + '" data-otf="7">7d</button>' +
+    '<button type="button" class="tab out-tab' + (tf==='30'?' active':'') + '" role="tab" aria-selected="' + (tf==='30') + '" data-otf="30">30d</button>' +
+    '<button type="button" class="tab out-tab' + (tf==='180'?' active':'') + '" role="tab" aria-selected="' + (tf==='180') + '" data-otf="180">180d</button>' +
+    '<button type="button" class="tab out-tab' + (tf==='all'?' active':'') + '" role="tab" aria-selected="' + (tf==='all') + '" data-otf="all">All</button>' +
+    '</div></div>';
+    
+  var summaryHTML = '<div id="outSummary" class="text-sub" style="margin-top:8px"></div>';
+  
+  var actionsHTML = '<div class="row" id="outActions" style="gap:8px;margin-top:8px">' +
+    '<button type="button" id="selectAllBtn" class="btn">Select all</button>' +
+    '<button type="button" id="clearSelectedBtn" class="btn danger" disabled>Delete selected</button>' +
+    '<button type="button" id="clearVisibleBtn" class="btn danger">Delete visible</button>' +
+    '</div>';
+    
+  var listHTML = '<div id="outList" class="result-list"></div>';
+  
+  container.innerHTML = tabsHTML + summaryHTML + actionsHTML + listHTML;
+  
+  // Now populate the data
+  state.selectedOut = [];
+  var merged = state.favorites.map(function(f){
+    var latest = picksResults.find(function(p){ return p.id===f.id; }) || {};
+    var result = latest.result || f.result || null;
+    var settledAt = latest.settledAt || f.settledAt || null;
+    var snap = f.snap || picksAll.find(function(p){ return p.id===f.id; }) || {};
+    var base = (snap && typeof snap==='object') ? snap : {};
+    return Object.assign({}, base, { id:f.id, result:result, settledAt:settledAt });
+  });
+  var filtered = merged.filter(function(x){ return x.result && inOutTf(x.settledAt, tf); }).sort(function(a,b){ return new Date(b.settledAt)-new Date(a.settledAt); });
+  var w=0,l=0,p=0; filtered.forEach(function(x){ if (x.result==='W') w++; else if (x.result==='L') l++; else p++; });
+  var n = w+l, winPct = n ? (w*100/n).toFixed(1)+'%' : '—';
+  
+  var outSummary = document.getElementById('outSummary');
+  var outList = document.getElementById('outList');
+  if (outSummary) outSummary.textContent = 'Record: '+w+'-'+l+'-'+p+' • Win%: '+winPct;
+  if (outList) outList.innerHTML = filtered.length ? filtered.map(resultRowHTML).join('') : '<div class="text-sub">No settled favorites yet for this range.</div>';
+  updateSelectionUI();
+}
+
+// ACCOUNT views
+function accountSignedOutHTML(){
+  return '<div class="card account-wrap">'
+    + '<h3 style="margin:0 0 6px 0">Account</h3>'
+    + '<div class="text-sub">Create an account or sign in.</div>'
+    + '<div class="authTabs" role="tablist" aria-label="Auth tabs">'
+    + '  <button id="accTabSignup" class="tab '+(state.accTab==='signup'?'active':'')+'" role="tab" aria-selected="'+(state.accTab==='signup')+'">Sign up</button>'
+    + '  <button id="accTabSignin" class="tab '+(state.accTab==='signin'?'active':'')+'" role="tab" aria-selected="'+(state.accTab==='signin')+'">Sign in</button>'
+    + '</div>'
+    + (state.accTab==='signup'
+        ? ('<div style="margin-top:10px">'
+          + '<button id="googleSignup" class="btn">Sign up with Google</button>'
+          + '<div class="divider"><span class="text-sub">or</span></div>'
+          + '<input id="emailInp" class="input" placeholder="Email" aria-label="Email for signup"/>'
+          + '<input id="pwInp" class="input" placeholder="Password (8+ chars, letters & numbers)" type="password" aria-label="Password for signup"/>'
+          + '<button id="emailSignupBtn" class="btn primary">Sign up with email</button>'
+          + '<div class="helper">By creating an account you agree to our <a href="#terms" data-nav>Terms</a> and <a href="#privacy" data-nav>Privacy Policy</a>.</div>'
+          + '</div>')
+        : ('<div style="margin-top:10px">'
+          + '<button id="googleSignin" class="btn">Sign in with Google</button>'
+          + '<div class="divider"><span class="text-sub">or</span></div>'
+          + '<input id="emailInpLogin" class="input" placeholder="Email" aria-label="Email for signin"/>'
+          + '<input id="pwInpLogin" class="input" placeholder="Password" type="password" aria-label="Password for signin"/>'
+          + '<button id="emailSigninBtn" class="btn">Sign in with email</button>'
+          + '<button id="forgotBtn" class="btn ghost">Forgot password (mock)</button>'
+          + '</div>')
+      )
+    + '</div>'
+    + '<div id="turnstileSignin" class="card hidden" style="margin-top:8px">Bot check failed — try again (mock)</div>'
+    + '<div class="card" style="margin-top:12px">'
+    + '  <div class="text-sub">Dev shortcut (local-only):</div>'
+    + '  <button id="enableAdminBtn" class="btn">Enable Admin on this device (mock)</button>'
+    + '  <button id="disableAdminBtn" class="btn hidden">Disable Admin on this device</button>'
+    + '</div>';
+}
+function accountSignedInHTML(){
+  var email = localStorage.getItem('userEmail');
+  var verified = isVerified();
+  var createdAt = localStorage.getItem('userCreatedAt');
+  var lastLoginAt = localStorage.getItem('lastLoginAt');
+  var plan = localStorage.getItem('subPlan') || 'free';
+  var renew = localStorage.getItem('subCurrentPeriodEnd');
+  var autoRenew = localStorage.getItem('autoRenew') === 'true';
+  var status = (state.auth==='paid') ? 'Subscriber' : 'Signed-in (Free)';
+
+  var planCards = (state.auth==='paid')
+    ? ('<div class="card"><div class="text-sub">Plan</div><div><strong>'+ (plan==='yearly'?'Yearly':'Monthly') +'</strong></div></div>'
+      + '<div class="card"><div class="text-sub">'+(autoRenew?'Renews on':'Ends on')+'</div><div><strong>'+fmt(renew)+'</strong></div></div>')
+    : '';
+
+  return '<div class="card account-wrap">'
+    + '<h3 style="margin:0 0 6px 0">Account</h3>'
+    + '<div class="text-sub">You are signed in.</div>'
+    + (email ? '<div class="text-sub">Email: '+email+' ('+(verified?'verified':'unverified')+')</div>' : '')
+    + '<div style="margin-top:8px"><strong>Status:</strong> '+status+'</div>'
+    + '<div class="grid" style="grid-template-columns:1fr 1fr; gap:8px; margin-top:8px">'
+    +   '<div class="card"><div class="text-sub">Member since</div><div><strong>'+fmt(createdAt)+'</strong></div></div>'
+    +   '<div class="card"><div class="text-sub">Last sign-in</div><div><strong>'+fmt(lastLoginAt)+'</strong></div></div>'
+    +   planCards
+    + '</div>'
+    + '<div class="row" style="gap:8px; margin-top:12px">'
+    +   (state.auth==='free' ? '<button id="goUpgradeBtn" class="btn primary">Upgrade — $15/mo</button>' : '')
+    +   '<button id="goPicksBtn" class="btn">Back to picks</button>'
+    +   '<button id="signOutBtn" class="btn danger">Sign out</button>'
+    + '</div>'
+    + '</div>'
+    + '<div class="card" style="margin-top:12px">'
+    + '  <h4 style="margin:0 0 8px 0">' + t('settings') + '</h4>'
+    + '  <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px">'
+    + '    <div>'
+    + '      <div class="text-sub">' + t('language') + '</div>'
+    + '      <select id="languageSelect" class="input settings-select" style="margin-top:4px">'
+    + '        <option value="en">English</option>'
+    + '        <option value="es">Español</option>'
+    + '        <option value="fr">Français</option>'
+    + '        <option value="de">Deutsch</option>'
+    + '      </select>'
+    + '    </div>'
+    + '    <div>'
+    + '      <div class="text-sub">' + t('theme') + '</div>'
+    + '      <select id="themeSelect" class="input settings-select" style="margin-top:4px">'
+    + '        <option value="dark">' + t('darkTheme') + '</option>'
+    + '        <option value="light">' + t('lightTheme') + '</option>'
+    + '        <option value="auto">' + t('autoTheme') + '</option>'
+    + '      </select>'
+    + '    </div>'
+    + '  </div>'
+    + '  <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px">'
+    + '    <div>'
+    + '      <div class="text-sub">' + t('voiceSpeed') + '</div>'
+    + '      <select id="voiceSpeedSelect" class="input settings-select" style="margin-top:4px">'
+    + '        <option value="0.8">Slow</option>'
+    + '        <option value="1.0" selected>Normal</option>'
+    + '        <option value="1.2">Fast</option>'
+    + '        <option value="1.4">Very Fast</option>'
+    + '      </select>'
+    + '    </div>'
+    + '    <div>'
+    + '      <div class="text-sub">' + t('currency') + '</div>'
+    + '      <select id="currencySelect" class="input settings-select" style="margin-top:4px">'
+    + '        <option value="USD">USD ($)</option>'
+    + '        <option value="EUR">EUR (€)</option>'
+    + '        <option value="GBP">GBP (£)</option>'
+    + '        <option value="CAD">CAD (C$)</option>'
+    + '      </select>'
+    + '    </div>'
+    + '  </div>'
+    + '  <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px">'
+    + '    <div>'
+    + '      <div class="text-sub">' + t('voiceEnabled') + '</div>'
+    + '      <select id="voiceEnabledSelect" class="input settings-select" style="margin-top:4px">'
+    + '        <option value="false">Disabled</option>'
+    + '        <option value="true">Enabled</option>'
+    + '      </select>'
+    + '    </div>'
+    + '    <div></div>'
+    + '  </div>'
+    + '  <div class="row" style="gap:8px">'
+    + '    <button id="saveSettingsBtn" class="btn primary">' + t('saveSettings') + '</button>'
+    + '    <button id="resetSettingsBtn" class="btn">Reset to Default</button>'
+    + '  </div>'
+    + '</div>'
+    + '<div class="card" style="margin-top:12px">'
+    + '  <div class="text-sub">Dev shortcut (local-only):</div>'
+    + '  <button id="enableAdminBtn" class="btn'+(state.isAdmin?' hidden':'')+'">Enable Admin on this device (mock)</button>'
+    + '  <button id="disableAdminBtn" class="btn'+(state.isAdmin?'':' hidden')+'">Disable Admin on this device</button>'
+    + '</div>';
+}
+function renderAccount(){
+  var wrap = document.getElementById('accountContainer');
+  if (!wrap) return;
+  wrap.innerHTML = (state.auth==='anon') ? accountSignedOutHTML() : accountSignedInHTML();
+  var en = document.getElementById('enableAdminBtn');
+  var dis = document.getElementById('disableAdminBtn');
+  if (en && dis){ en.classList.toggle('hidden', state.isAdmin); dis.classList.toggle('hidden', !state.isAdmin); }
+  
+  // Load settings values after rendering
+  loadSettingsValues();
+}
+
+function reflectAuthButtons(){
+  ['btnAnon','btnFree','btnPaid'].forEach(function(id){ var el = document.getElementById(id); if (el) el.classList.remove('primary'); });
+  ({ anon:['btnAnon'], free:['btnFree'], paid:['btnPaid'] }[state.auth]||[]).forEach(function(id){ var el = document.getElementById(id); if (el) el.classList.add('primary'); });
+}
+function renderProfile(){
+  var el = document.getElementById('profileInfo');
+  var map = { anon:'Anonymous', free:'Signed-in (Free)', paid:'Subscriber' };
+  var email = localStorage.getItem('userEmail');
+  var emailRow = email ? '<div class="text-sub">Email: '+email+'</div>' : '';
+  var ver = (state.auth!=='anon') ? ('<div class="text-sub">Verified: '+(isVerified()?'Yes':'No')+'</div>') : '';
+  el.innerHTML = '<div class="row"><div><strong>Status:</strong> '+map[state.auth]+'</div></div>' + emailRow + ver;
+  reflectAuthButtons();
+}
+function renderSubscribe(){}
+
+function renderContact(){
+  var title = document.getElementById('contactTitle');
+  var nameLabel = document.getElementById('nameLabel');
+  var emailLabel = document.getElementById('emailLabel');
+  var subjectLabel = document.getElementById('subjectLabel');
+  var messageLabel = document.getElementById('messageLabel');
+  var sendBtn = document.getElementById('sendContactBtn');
+  var clearBtn = document.getElementById('clearContactBtn');
+  
+  if (title) title.textContent = t('contactUs');
+  if (nameLabel) nameLabel.textContent = t('name');
+  if (emailLabel) emailLabel.textContent = t('email');
+  if (subjectLabel) subjectLabel.textContent = t('subject');
+  if (messageLabel) messageLabel.textContent = t('message');
+  if (sendBtn) sendBtn.textContent = t('sendMessage');
+  if (clearBtn) clearBtn.textContent = 'Clear Form';
+}
+
+// DELEGATED CLICKS
+document.addEventListener('click', function(e){
+  var target = e.target;
+
+  // Favorite toggle
+  var favEl = target.closest && target.closest('[data-fav]');
+  if (favEl){ toggleFavorite(favEl.getAttribute('data-fav')); return; }
+
+  // Account tabs
+  if (target.id==='accTabSignup'){ state.accTab='signup'; localStorage.setItem('accTab','signup'); renderAccount(); }
+  if (target.id==='accTabSignin'){ state.accTab='signin'; localStorage.setItem('accTab','signin'); renderAccount(); }
+
+  // tabs
+  var scoreTab = target.closest && target.closest('.score-tab');
+  if (scoreTab){ state.tf = scoreTab.getAttribute('data-tf'); localStorage.setItem('tf', state.tf); renderScorecard(); }
+
+  var outTab = target.closest && target.closest('.out-tab');
+  if (outTab){ state.otf = outTab.getAttribute('data-otf'); localStorage.setItem('otf', state.otf); renderOutcomes(); }
+
+  // admin toggle (from Account)
+  if (target.id==='enableAdminBtn'){ setAdmin(true); alert('Admin enabled on this device (mock).'); updateAdminUI(); renderAccount(); }
+  if (target.id==='disableAdminBtn'){ setAdmin(false); alert('Admin disabled on this device.'); updateAdminUI(); renderAccount(); }
+
+  // admin page actions
+  if (target.id==='btnAnon') setAuth('anon');
+  if (target.id==='btnFree') setAuth('free');
+  if (target.id==='btnPaid') setAuth('paid');
+
+  if (target.id==='seedOutcomesBtn' || target.id==='seedDemoBtn'){
+    if (state.auth!=='paid') return alert('Subscriber required (mock)');
+    var demo = picksResults.slice(0,4).map(function(p){ return ({ id: p.id, snap: p, result: p.result, settledAt: p.settledAt }); });
+    state.favorites = demo;
+    localStorage.setItem('favorites', JSON.stringify(state.favorites));
+    renderFavorites(); renderOutcomes(); render();
+  }
+  if (target.id==='clearFavsBtn'){
+    state.favorites = [];
+    localStorage.setItem('favorites', JSON.stringify(state.favorites));
+    renderFavorites(); renderOutcomes(); render();
+    alert('Favorites cleared.');
+  }
+  if (target.id==='adminOffBtn'){ setAdmin(false); }
+
+  // outcomes select/delete
+  var sel = target.closest && target.closest('input[type="checkbox"][data-sel]');
+  if (sel){
+    var sid = sel.getAttribute('data-sel');
+    if (sel.checked) { if (state.selectedOut.indexOf(sid)===-1) state.selectedOut.push(sid); }
+    else { state.selectedOut = state.selectedOut.filter(function(x){ return x !== sid; }); }
+    updateSelectionUI();
+  }
+  if (target.id==='selectAllBtn'){
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('#outList [data-sel]'));
+    state.selectedOut = boxes.map(function(b){ return b.getAttribute('data-sel'); });
+    boxes.forEach(function(b){ b.checked = true; });
+    updateSelectionUI();
+  }
+  if (target.id==='clearSelectedBtn'){
+    if (state.auth!=='paid') return;
+    if (state.selectedOut.length===0) return;
+    if (!confirm('Delete all selected outcomes from your saved favorites?')) return;
+    state.favorites = state.favorites.filter(function(f){ return state.selectedOut.indexOf(f.id)===-1; });
+    state.selectedOut = [];
+    localStorage.setItem('favorites', JSON.stringify(state.favorites));
+    renderFavorites(); renderOutcomes(); render();
+  }
+  if (target.id==='clearVisibleBtn'){
+    if (state.auth!=='paid') return;
+    if (!confirm('Delete ONLY outcomes in the current timeframe view? This cannot be undone.')) return;
+    var tf = state.otf;
+    state.favorites = state.favorites.filter(function(f){
+      var t = f.settledAt ? new Date(f.settledAt).getTime() : 0;
+      var keep = (tf==='all') ? false : (Date.now() - t) > Number(tf)*86400000;
+      return keep;
+    });
+    state.selectedOut = [];
+    localStorage.setItem('favorites', JSON.stringify(state.favorites));
+    renderFavorites(); renderOutcomes(); render();
+  }
+
+  // CTAs
+  var toSignup = target.closest && target.closest('[data-goto-signup]');
+  if (toSignup){ location.hash = '#account'; route(); }
+  var toSubscribe = target.closest && target.closest('[data-goto-subscribe]');
+  if (toSubscribe){ location.hash = '#subscribe'; route(); }
+  if (target.id==='upgradeBtn' || target.id==='mobileUpgradeBtn' || target.id==='goUpgradeBtn'){ location.hash = '#subscribe'; route(); }
+
+  if (target.id==='upgradeNowBtn'){
+    var plan = document.getElementById('planYearlyBtn').classList.contains('primary') ? 'yearly' : 'monthly';
+    var start = nowIso();
+    var end = (plan === 'yearly') ? addMonthsISO(start, 12) : addMonthsISO(start, 1);
+    localStorage.setItem('subPlan', plan);
+    localStorage.setItem('subStatus', 'active');
+    localStorage.setItem('subStartedAt', start);
+    localStorage.setItem('subCurrentPeriodEnd', end);
+    localStorage.setItem('autoRenew', 'true');
+
+    setAuth('paid');
+    alert('Upgraded to Subscriber (prototype).');
+    location.hash = '#picks'; route();
+  }
+
+  if (target.id==='backToPicksBtn' || target.id==='goPicksBtn'){ location.hash = '#picks'; route(); }
+
+  // coupons
+  if (target.id==='applyCouponBtn'){
+    var inp = document.getElementById('couponCode');
+    var code = (inp && inp.value ? inp.value : '').trim().toUpperCase();
+    var note = document.getElementById('subscribeNote');
+    var upgBtn = document.getElementById('upgradeNowBtn');
+    if (!code){ alert('Enter a code first.'); return; }
+    if (code === 'SAVE20'){
+      if (note) note.textContent = 'Coupon applied: SAVE20 — New price $12 USD / month';
+      if (upgBtn) upgBtn.textContent = 'Complete subscription — $12/mo';
+      alert('Coupon applied.');
+    } else {
+      alert('Invalid code (mock). Try SAVE20.');
+    }
+  }
+  if (target.id==='planMonthlyBtn') {
+    target.classList.add('primary');
+    document.getElementById('planYearlyBtn').classList.remove('primary');
+    document.getElementById('planPrice').textContent = '$15';
+    document.getElementById('planInterval').textContent = 'USD / month';
+    document.getElementById('planName').innerHTML = '<strong>Confident Picks — Monthly</strong>';
+    document.getElementById('upgradeNowBtn').textContent = 'Complete subscription — $15/mo';
+  }
+  if (target.id==='planYearlyBtn') {
+    target.classList.add('primary');
+    document.getElementById('planMonthlyBtn').classList.remove('primary');
+    document.getElementById('planPrice').textContent = '$150';
+    document.getElementById('planInterval').textContent = 'USD / year';
+    document.getElementById('planName').innerHTML = '<strong>Confident Picks — Yearly</strong>';
+    document.getElementById('upgradeNowBtn').textContent = 'Complete subscription — $150/yr';
+  }
+
+  // auth (Account)
+  if (target.id==='googleSignup'){
+    setAuth('free');
+    localStorage.setItem('userEmail', 'google_user@example.com');
+    localStorage.setItem('emailVerified','true');
+    localStorage.setItem('userCreatedAt', localStorage.getItem('userCreatedAt') || nowIso());
+    localStorage.setItem('lastLoginAt', nowIso());
+    alert('Signed up with Google (prototype).');
+    location.hash = '#picks'; route();
+  }
+  if (target.id==='googleSignin'){
+    setAuth('free');
+    localStorage.setItem('userEmail', 'google_user@example.com');
+    localStorage.setItem('emailVerified','true');
+    localStorage.setItem('lastLoginAt', nowIso());
+    alert('Signed in with Google (prototype).');
+    location.hash = '#picks'; route();
+  }
+  if (target.id==='emailSignupBtn'){
+    var email = (document.getElementById('emailInp')||{}).value || '';
+    var pw = (document.getElementById('pwInp')||{}).value || '';
+    if (!email || email.indexOf('@')===-1) { alert('Please enter a valid email.'); return; }
+    if (!pw || pw.length < 8 || !/[A-Za-z]/.test(pw) || !/[0-9]/.test(pw)) { alert('Password must be 8+ chars, include letters and numbers.'); return; }
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userPw', pw);
+    localStorage.setItem('emailVerified','false');
+    localStorage.setItem('userCreatedAt', localStorage.getItem('userCreatedAt') || nowIso());
+    localStorage.setItem('lastLoginAt', nowIso());
+    setAuth('free');
+    alert('Account created! Please verify your email to unlock extras (mock).');
+    location.hash = '#picks'; route();
+  }
+  if (target.id==='emailSigninBtn'){
+    var email2 = (document.getElementById('emailInpLogin')||{}).value || '';
+    var pw2 = (document.getElementById('pwInpLogin')||{}).value || '';
+    var savedEmail = localStorage.getItem('userEmail');
+    var savedPw = localStorage.getItem('userPw');
+    var fails = Number(localStorage.getItem('loginFails')||'0');
+    if (!email2 || !pw2) { alert('Check your email or password.'); return; }
+    if (email2===savedEmail && pw2===savedPw){
+      setAuth('free');
+      localStorage.setItem('loginFails','0');
+      localStorage.setItem('lastLoginAt', nowIso());
+      alert('Signed in!');
+      location.hash = '#picks'; route();
+    } else {
+      fails += 1;
+      localStorage.setItem('loginFails', String(fails));
+      if (fails >= 3){
+        var t = document.getElementById('turnstileSignin'); if (t) t.classList.remove('hidden');
+      }
+      alert('Check your email or password.');
+    }
+  }
+  if (target.id==='forgotBtn'){ alert('Password reset link sent (mock).'); }
+  if (target.id==='signOutBtn'){ setAuth('anon'); location.hash = '#picks'; route(); }
+
+  // email verify controls
+  if (target.id==='sendVerifyBtn'){ alert('Verification email sent (mock).'); }
+  if (target.id==='markVerifiedBtn'){
+    localStorage.setItem('emailVerified','true');
+    alert('Email marked as verified (mock). Your account is now active.');
+    renderAccount(); maybeShowVerifyBanner();
+  }
+  if (target.id==='unverifyBtn'){
+    localStorage.setItem('emailVerified','false');
+    alert('Marked unverified (mock).');
+    renderProfile(); maybeShowVerifyBanner();
+  }
+
+  // Reset maintenance banner
+  if (target.id==='resetBannerBtn'){
+    try { localStorage.removeItem(BANNER_KEY); } catch (e) {}
+    var b = document.getElementById('maintBanner'); if (b) b.style.display = 'flex';
+    alert('Banner reset (v2).');
+  }
+
+
+
+  // Settings functionality
+  if (target.id==='saveSettingsBtn'){
+    var newSettings = {
+      language: document.getElementById('languageSelect').value,
+      theme: document.getElementById('themeSelect').value,
+      voiceSpeed: document.getElementById('voiceSpeedSelect').value,
+      currency: document.getElementById('currencySelect').value,
+      voiceEnabled: document.getElementById('voiceEnabledSelect').value
+    };
+    state.settings = newSettings;
+    localStorage.setItem('userSettings', JSON.stringify(newSettings));
+    
+    // Apply theme immediately
+    if (newSettings.theme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else if (newSettings.theme === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem('theme', newSettings.theme);
+    
+    updateAllTranslations();
+    alert(t('saveSettings') + ' - Settings saved successfully!');
+  }
+
+  if (target.id==='resetSettingsBtn'){
+    if (confirm('Reset all settings to default (English)? This cannot be undone.')) {
+      var defaultSettings = {"language":"en","theme":"dark","voiceSpeed":"1.0","currency":"USD","voiceEnabled":"false"};
+      state.settings = defaultSettings;
+      localStorage.setItem('userSettings', JSON.stringify(defaultSettings));
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'dark');
+      updateAllTranslations();
+      renderAccount();
+      alert('Settings reset to default!');
+    }
+  }
+
+  if (target.id==='readFavoritesBtn'){
+    readFavoritesAloud();
+  }
+
+  // Min Confidence steppers
+  var stepBtn = target.closest && target.closest('[data-step]');
+  if (stepBtn){
+    var delta = Number(stepBtn.getAttribute('data-step')||0);
+    changeMinConf(delta);
+  }
+});
+
+// keyboard support for star toggle
+document.addEventListener('keydown', function(e){
+  var tgt = e.target;
+  if (tgt && tgt.hasAttribute && tgt.hasAttribute('data-fav') && (e.key==='Enter' || e.key===' ')){
+    e.preventDefault();
+    var id = tgt.getAttribute('data-fav');
+    if (id) toggleFavorite(id);
+  }
+});
+
+// Global keyboard shortcuts
+document.addEventListener('keydown', function(e){
+  // Skip if user is typing in input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+  
+  switch(e.key.toLowerCase()) {
+    case '/':
+      e.preventDefault();
+      var searchInput = document.getElementById('searchInp');
+      if (searchInput) searchInput.focus();
+      break;
+    case 't':
+      if (e.ctrlKey || e.metaKey) return; // Don't interfere with browser shortcuts
+      e.preventDefault();
+      document.getElementById('themeBtn').click();
+      break;
+    case '1': case '2': case '3': case '4': case '5': case '6':
+      var navIndex = parseInt(e.key) - 1;
+      var navLinks = document.querySelectorAll('[data-nav]');
+      if (navLinks[navIndex]) navLinks[navIndex].click();
+      break;
+    case 'escape':
+      // Clear any active modals or reset search
+      var searchInput = document.getElementById('searchInp');
+      if (searchInput && searchInput.value) {
+        searchInput.value = '';
+        render();
+      }
+      break;
+  }
+});
+
+// Contact form handlers
+document.addEventListener('click', function(e){
+  if (e.target.id === 'sendContactBtn') {
+    var name = document.getElementById('contactName').value.trim();
+    var email = document.getElementById('contactEmail').value.trim();
+    var subject = document.getElementById('contactSubject').value.trim();
+    var message = document.getElementById('contactMessage').value.trim();
+    
+    if (!name || !email || !subject || !message) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    
+    // Gather user data for support context
+    var supportData = {
+      userMessage: {
+        name: name,
+        email: email,
+        subject: subject,
+        message: message
+      },
+      userContext: {
+        auth: state.auth,
+        favoritesCount: state.favorites.length,
+        settings: state.settings,
+        userAgent: navigator.userAgent,
+        timestamp: nowIso(),
+        currentPage: location.hash || '#picks'
+      },
+      localStorage: {
+        userEmail: localStorage.getItem('userEmail'),
+        emailVerified: localStorage.getItem('emailVerified'),
+        subPlan: localStorage.getItem('subPlan'),
+        theme: localStorage.getItem('theme')
+      }
+    };
+    
+    // In real app, this would POST supportData to your server
+    console.log('Support Request Data:', supportData);
+    alert('Thank you for your message! We\'ll get back to you soon.\n\n(Debug: Check console for support data)');
+    
+    // Clear form
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactEmail').value = '';
+    document.getElementById('contactSubject').value = '';
+    document.getElementById('contactMessage').value = '';
+  }
+  
+  if (e.target.id === 'clearContactBtn') {
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactEmail').value = '';
+    document.getElementById('contactSubject').value = '';
+    document.getElementById('contactMessage').value = '';
+  }
+});
+
+// Collapsible guide persistence
+(function(){
+  var sh = document.getElementById('scoreHelp');
+  if (!sh) return;
+  var saved = localStorage.getItem('scoreHelpOpen');
+  if (saved !== null) sh.open = saved === '1';
+  sh.addEventListener('toggle', function(){
+    localStorage.setItem('scoreHelpOpen', sh.open ? '1' : '0');
+  });
+})();
+
+// Maintenance banner v2
+var BANNER_KEY = 'maintBannerDismissed_v2';
+(function(){
+  var banner = document.getElementById('maintBanner');
+  if (!banner) return;
+  var params = new URLSearchParams(location.search);
+  var forceShow = params.get('showBanner') === '1';
+  var forceHide = params.get('showBanner') === '0';
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(BANNER_KEY) === '1'; } catch (e) {}
+  banner.style.display = (forceHide ? 'none' : ((forceShow || !dismissed) ? 'flex' : 'none'));
+})();
+function dismissMaintBanner(){
+  var banner = document.getElementById('maintBanner');
+  if (banner) banner.style.display = 'none';
+  try { localStorage.setItem(BANNER_KEY,'1'); } catch (e) {}
+}
+
+/* Min Confidence helpers */
+function clampMinConf(val){
+  val = Math.round(Number(val) || 0);
+  if (val < 0) val = 0; if (val > 100) val = 100;
+  return val;
+}
+function changeMinConf(delta){
+  var el = document.getElementById('minConf'); if (!el) return;
+  el.value = clampMinConf((Number(el.value)||0) + delta);
+  render();
+}
+
+/* filter listeners */
+['leagueSel','marketSel','sortSel'].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('change', render);
+});
+['searchInp','minConf'].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('input', function(){
+    if (id==='minConf') this.value = clampMinConf(this.value);
+    render();
+  });
+});
+
+/* FIREBASE & N8N INTEGRATION READY */
+// Firebase configuration (replace with your config when ready)
+var firebaseConfig = {
+  // apiKey: "your-api-key",
+  // authDomain: "your-project.firebaseapp.com", 
+  // projectId: "your-project-id",
+  // storageBucket: "your-project.appspot.com",
+  // messagingSenderId: "123456789",
+  // appId: "your-app-id"
+};
+
+// N8N webhook endpoints (replace with your URLs)
+var n8nEndpoints = {
+  // contact: 'https://your-n8n-instance.com/webhook/contact',
+  // picks: 'https://your-n8n-instance.com/webhook/picks',
+  // analytics: 'https://your-n8n-instance.com/webhook/analytics'
+};
+
+// Firebase initialization (uncomment when ready)
+/*
+if (typeof firebase !== 'undefined' && firebaseConfig.apiKey) {
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+  var auth = firebase.auth();
+  
+  // Replace mock auth with real Firebase Auth
+  function authenticateWithGoogle() {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    return auth.signInWithPopup(provider);
+  }
+  
+  function authenticateWithEmail(email, password) {
+    return auth.signInWithEmailAndPassword(email, password);
+  }
+  
+  function createUserWithEmail(email, password) {
+    return auth.createUserWithEmailAndPassword(email, password);
+  }
+}
+*/
+
+// N8N webhook functions (ready to use)
+async function sendToN8N(endpoint, data) {
+  if (!n8nEndpoints[endpoint]) {
+    console.warn('N8N endpoint not configured:', endpoint);
+    return null;
+  }
+  
+  try {
+    var response = await fetch(n8nEndpoints[endpoint], {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('N8N webhook error:', error);
+    showMessage('Connection error. Please try again.', 'error');
+    return null;
+  }
+}
+
+// Ready for real data feeds
+async function fetchPicksFromAPI() {
+  // Replace static data with real API calls
+  return sendToN8N('picks', {action: 'fetch'});
+}
+
+async function submitContactToN8N(formData) {
+  return sendToN8N('contact', formData);
+}
+
+/* INIT */
+try{ route(); }catch(e){ console.error('route()', e); }
+try{ render(); }catch(e){ console.error('render()', e); }
+try{ renderScorecard(); }catch(e){ console.error('renderScorecard()', e); }
+try{ renderAccount(); }catch(e){ console.error('renderAccount()', e); }
+try{ renderProfile(); }catch(e){ console.error('renderProfile()', e); }
+try{ reflectAuthButtons(); }catch(e){ console.error('reflectAuthButtons()', e); }
+try{ updateHeaderUI(); }catch(e){ console.error('updateHeaderUI()', e); }
+</script>
+</body>
+</html>
