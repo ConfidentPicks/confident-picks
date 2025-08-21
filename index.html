@@ -253,9 +253,35 @@ input[type=number]{ -moz-appearance:textfield; appearance:textfield; }
 
 footer{color:var(--sub);font-size:14px;padding:24px 0;text-align:center}
 footer a{ color:var(--sub); text-decoration:underline }
+/* Password gate (temporary) */
+#gate{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6); z-index:2000; }
+#gate .box{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; width:min(420px,92vw); }
+#gate .title{ font-weight:700; margin-bottom:8px; }
+#gate .sub{ color:var(--sub); font-size:14px; margin-bottom:12px; }
+html.gated #gate{ display:flex; }
+html.gated body > *:not(#gate){ display:none !important; }
 </style>
+<script>
+(function(){
+  try {
+    var ok = localStorage.getItem('cp_gate_ok') === '1';
+    if (!ok) document.documentElement.classList.add('gated');
+  } catch(e){ document.documentElement.classList.add('gated'); }
+})();
+</script>
 </head>
 <body>
+
+<div id="gate">
+	<div class="box">
+		<div class="title">Enter site password</div>
+		<div class="sub">Temporary access while we finish up.</div>
+		<div class="grid" style="grid-template-columns:1fr auto; gap:8px">
+			<input id="gateInput" type="password" autocomplete="current-password" placeholder="Password"/>
+			<button id="gateBtn" class="btn primary">Enter</button>
+		</div>
+	</div>
+</div>
 
 <div class="header">
   <div class="container row">
@@ -553,6 +579,36 @@ footer a{ color:var(--sub); text-decoration:underline }
 </div>
 
 <script>
+// PASSWORD GATE (temporary)
+(function(){
+	var PASS = 'getmoney'; // change this to your temporary password
+	var gate = document.getElementById('gate');
+	if (!gate) return;
+	var ok = false;
+	try { ok = localStorage.getItem('cp_gate_ok') === '1'; } catch(e){}
+	if (ok){
+		document.documentElement.classList.remove('gated');
+		gate.remove();
+		return;
+	}
+	function unlock(){
+		try { localStorage.setItem('cp_gate_ok','1'); } catch(e){}
+		document.documentElement.classList.remove('gated');
+		gate.remove();
+		try{ render(); route(); }catch(e){}
+	}
+	var btn = document.getElementById('gateBtn');
+	var inp = document.getElementById('gateInput');
+	if (btn && inp){
+		btn.addEventListener('click', function(){
+			var v = (inp.value||'').trim();
+			if (v === PASS) unlock();
+			else alert('Incorrect password.');
+		});
+		inp.addEventListener('keydown', function(e){ if (e.key==='Enter') btn.click(); });
+	}
+})();
+
 // THEME
 (function(){
   var saved = localStorage.getItem('theme') || 'dark';
