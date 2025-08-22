@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Confident Picks — Prototype</title>
+<title>Confident Picks - Expert Sports Betting Analysis</title>
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
@@ -11,9 +11,9 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0B0F14">
 
-<meta name="description" content="Data-driven sports betting picks with confidence ratings. For entertainment purposes only.">
-<meta property="og:title" content="Confident Picks">
-<meta property="og:description" content="Data-driven sports betting picks with confidence ratings.">
+<meta name="description" content="Get confident sports betting picks with real-time results tracking. Expert analysis and performance metrics to improve your betting strategy.">
+<meta property="og:title" content="Confident Picks - Expert Sports Betting Analysis">
+<meta property="og:description" content="Get confident sports betting picks with real-time results tracking. Expert analysis and performance metrics to improve your betting strategy.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="/og-image.png">
 <meta property="og:url" content="https://confident-picks.com">
@@ -57,6 +57,93 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);co
 .btn.danger{border-color:var(--red);color:var(--red);background:transparent}
 .btn.ghost{background:transparent}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* Loading states */
+.btn.loading{position:relative;pointer-events:none}
+.btn.loading::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:16px;height:16px;border:2px solid currentColor;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite}
+.btn.loading .btn-text{opacity:0}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* Theme toggle icon styling */
+.theme-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+.theme-icon::before {
+  content: '☽';
+  color: #ffffff;
+}
+:root[data-theme="light"] .theme-icon::before {
+  content: '☀';
+  color: #0B0F14;
+}
+
+/* Help modal styling */
+.help-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 20px;
+}
+.help-modal.active {
+  display: flex;
+}
+.help-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.help-shortcuts {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+.help-shortcut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.help-shortcut:last-child {
+  border-bottom: none;
+}
+.kbd {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Enhanced button styling for key actions */
+.btn.enhanced {
+  border-radius: 999px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-weight: 600;
+}
+.btn.enhanced:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.btn.enhanced.primary {
+  box-shadow: 0 3px 8px rgba(77,163,255,0.3);
+}
+.btn.enhanced.primary:hover {
+  box-shadow: 0 4px 12px rgba(77,163,255,0.4);
+}
 .badge{display:inline-block;padding:2px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;margin-left:6px}
 .badge.win{color:var(--green);border-color:var(--green)}
 .badge.loss{color:var(--red);border-color:var(--red)}
@@ -159,6 +246,21 @@ input,select,textarea{width:100%;padding:10px;border-radius:var(--r);border:1px 
   color: var(--select-popup-text) !important;
   font-weight:600;
 }
+
+/* Contact form dropdown styling */
+#contactSubject { 
+  background: rgba(255,255,255,.12) !important; 
+  border-color: #ffffff2e !important; 
+  color: var(--text) !important; 
+  font-weight: 600 !important;
+  color-scheme: dark;
+}
+:root[data-theme="light"] #contactSubject { color-scheme: light; }
+#contactSubject option, #contactSubject optgroup {
+  background-color: var(--select-popup-bg) !important;
+  color: var(--select-popup-text) !important;
+  font-weight: 600;
+}
 :focus-visible { outline:2px solid var(--blue); outline-offset:2px; border-radius:6px; }
 
 /* Min Confidence — compact v38 format (prevents click-masking) */
@@ -260,6 +362,147 @@ footer a{ color:var(--sub); text-decoration:underline }
 #gate .sub{ color:var(--sub); font-size:14px; margin-bottom:12px; }
 html.gated #gate{ display:flex; }
 html.gated body > *:not(#gate){ display:none !important; }
+
+/* Admin Portal Styles */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  margin-bottom: 16px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+  background: rgba(255,255,255,.05);
+  color: var(--text);
+}
+
+.tab.active {
+  background: rgba(255,255,255,.1);
+  color: var(--text);
+  border-bottom-color: var(--primary);
+}
+
+.admin-tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.metrics .card {
+  padding: 12px;
+  text-align: center;
+  background: rgba(255,255,255,.02);
+}
+
+.metrics .label {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 4px;
+}
+
+.metrics .value {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+/* Navigation Tab Highlighting */
+.nav a[data-nav] {
+  position: relative;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+.nav a[data-nav]:hover {
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+}
+
+.nav a[data-nav].active {
+  background: rgba(77,163,255,.15);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.nav a[data-nav].active::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 1px;
+}
+
+/* Enhanced Tooltips */
+.tooltip {
+  position: relative;
+  cursor: help;
+  border-bottom: 1px dotted var(--text-sub);
+}
+
+.tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+  margin-bottom: 4px;
+}
+
+.tooltip:hover::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: rgba(0,0,0,0.9);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Better confidence display */
+.confidence-badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.confidence-high { background: rgba(34,197,94,0.2); color: var(--green); }
+.confidence-medium { background: rgba(77,163,255,0.2); color: var(--blue); }
+.confidence-low { background: rgba(255,193,7,0.2); color: #ffa500; }
+
+
+
+
 </style>
 <script>
 (function(){
@@ -285,7 +528,7 @@ html.gated body > *:not(#gate){ display:none !important; }
 
 <div class="header">
   <div class="container row">
-    <div class="logo">
+    <div class="logo" id="logoHome" style="cursor: pointer;" aria-label="Return to home">
       <svg class="brandmark" viewBox="0 0 48 48" aria-hidden="true">
         <defs><linearGradient id="g1" x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4DA3FF"/><stop offset="1" stop-color="#22C55E"/></linearGradient></defs>
         <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#g1)"/>
@@ -300,9 +543,9 @@ html.gated body > *:not(#gate){ display:none !important; }
       <a href="#favorites" data-nav>Favorites</a>
       <a href="#account" data-nav id="navAccount">Account</a>
       <a href="#admin" data-nav id="navAdmin" class="hidden">Admin</a>
-      <button type="button" id="themeBtn" class="btn">Theme</button>
-      <button type="button" id="authBtn" class="btn primary">Sign up for free</button>
-      <button type="button" id="upgradeBtn" class="btn primary hidden">Upgrade</button>
+      <button type="button" id="themeBtn" class="btn enhanced" aria-label="Toggle theme"><span class="theme-icon" aria-hidden="true"></span></button>
+      <button type="button" id="authBtn" class="btn primary enhanced">Sign up for free</button>
+      <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade</button>
     </div>
   </div>
 </div>
@@ -322,14 +565,25 @@ html.gated body > *:not(#gate){ display:none !important; }
         <option value="">All Leagues</option>
         <option>MLB</option>
         <option>NFL</option>
+        <option>NBA</option>
+        <option>NHL</option>
+        <option>CFB</option>
+        <option>CBB</option>
+        <option>MLS</option>
+        <option>UFC</option>
       </select>
+      
       <select id="marketSel">
         <option value="">All Markets</option>
         <option value="moneyline">Moneyline</option>
         <option value="spread">Spread</option>
         <option value="totals">Totals</option>
         <option value="props">Props</option>
+        <option value="player-props">Player Props</option>
+        <option value="team-props">Team Props</option>
+        <option value="alt-lines">Alt Lines</option>
       </select>
+      
       <select id="sortSel">
         <option value="commence">Sort: Commence Time</option>
         <option value="confidence">Sort: Confidence</option>
@@ -353,7 +607,7 @@ html.gated body > *:not(#gate){ display:none !important; }
       <div><strong>Verify your email</strong> to unlock free extras.</div>
       <div style="display:flex; gap:8px">
         <button id="sendVerifyBtn" class="btn" aria-label="Send email verification">Send verification</button>
-        <button id="markVerifiedBtn" class="btn primary" aria-label="Mark email as verified (mock)">Mark verified (mock)</button>
+        <button id="markVerifiedBtn" class="btn primary" aria-label="Mark email as verified">Mark verified</button>
       </div>
     </div>
 
@@ -417,57 +671,232 @@ html.gated body > *:not(#gate){ display:none !important; }
     <div class="account-wrap" id="accountContainer"></div>
   </section>
 
-  <!-- ADMIN -->
+  <!-- ADMIN PORTAL -->
   <section id="view-admin" class="hidden">
+    <!-- Admin Navigation Tabs -->
+    <div class="tabs" style="margin-bottom: 16px;">
+      <button class="tab active" id="adminTabOverview" data-admin-tab="overview">Overview</button>
+      <button class="tab" id="adminTabBanners" data-admin-tab="banners">Banners</button>
+      <button class="tab" id="adminTabContent" data-admin-tab="content">Content</button>
+      <button class="tab" id="adminTabUsers" data-admin-tab="users">Users</button>
+      <button class="tab" id="adminTabSystem" data-admin-tab="system">System</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="adminOverview" class="admin-tab-content">
     <div class="card">
-      <h3 style="margin:0 0 8px 0">Admin (local dev)</h3>
+        <h3 style="margin:0 0 16px 0">Admin Dashboard</h3>
       <div id="profileInfo"></div>
-      <div style="margin-top:12px" class="text-sub">Switch auth state:</div>
-      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:8px;gap:8px">
-        <button type="button" class="btn" id="btnAnon">Anon</button>
-        <button type="button" class="btn" id="btnFree">Signed-in (Free)</button>
-        <button type="button" class="btn" id="btnPaid">Subscriber</button>
+        
+        <div class="metrics" style="margin-top: 16px;">
+          <div class="card">
+            <div class="label">Total Users</div>
+            <div class="value" id="adminUserCount">1</div>
       </div>
-      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
-        <button id="resetBannerBtn" class="btn">Reset maintenance banner</button>
-        <button id="markVerifiedBtn" class="btn">Mark email verified (mock)</button>
-        <button id="unverifyBtn" class="btn">Mark email unverified (mock)</button>
+          <div class="card">
+            <div class="label">Active Subscriptions</div>
+            <div class="value" id="adminSubCount">0</div>
       </div>
-      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
-        <button id="seedOutcomesBtn" class="btn">Seed demo outcomes</button>
-        <button id="clearFavsBtn" class="btn danger">Clear favorites</button>
-        <button id="seedDemoBtn" class="btn">Add demo outcomes</button>
       </div>
-      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
-        <button id="toggleAutoRenewBtn" class="btn" onclick="toggleAutoRenew()">Toggle auto-renew (mock)</button>
-        <div></div>
-        <div></div>
-      </div>
-      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:12px;gap:8px">
-        <button id="adminOffBtn" class="btn">Exit Admin (hide link)</button>
-        <div></div>
+        
+        <div class="text-sub" style="margin-top: 16px;">Quick Actions:</div>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:8px;gap:8px">
+          <button type="button" class="btn enhanced" id="btnAnon">Switch to Anon</button>
+          <button type="button" class="btn enhanced" id="btnFree">Switch to Free</button>
+          <button type="button" class="btn enhanced" id="btnPaid">Switch to Paid</button>
+        </div>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:8px;gap:8px">
+          <button type="button" class="btn enhanced" id="btnAdmin">Switch to Admin</button>
+          <button id="adminOffBtn" class="btn danger enhanced">Exit Admin</button>
         <div></div>
       </div>
-      <div class="card" style="margin-top:12px">
-        <div class="text-sub">Keyboard: <span class="kbd">/</span> focus search • <span class="kbd">t</span> toggle theme • <span class="kbd">1-6</span> navigate • <span class="kbd">esc</span> clear search</div>
+      </div>
+    </div>
+
+    <!-- Banner Management Tab -->
+    <div id="adminBanners" class="admin-tab-content hidden">
+      <div class="card">
+        <h4 style="margin:0 0 16px 0">Banner Management</h4>
+        
+        <!-- Current Banner Status -->
+        <div class="card" style="background: rgba(255,255,255,.04); margin-bottom: 16px;">
+          <div class="text-sub">Current Banner Status:</div>
+          <div id="bannerStatus" style="margin-top: 8px;">
+            <strong id="bannerStatusText">No active banner</strong>
+          </div>
+        </div>
+        
+        <!-- Banner Creator -->
+        <div style="margin-bottom: 16px;">
+          <div class="text-sub" style="margin-bottom: 8px;">Create/Edit Banner:</div>
+          <select id="bannerType" class="input enhanced" style="margin-bottom: 8px;">
+            <option value="maintenance">Maintenance Notice</option>
+            <option value="announcement">Announcement</option>
+            <option value="warning">Warning</option>
+            <option value="info">Information</option>
+          </select>
+          <input id="bannerTitle" class="input" placeholder="Banner title..." style="margin-bottom: 8px;"/>
+          <textarea id="bannerMessage" class="input" placeholder="Banner message..." style="min-height: 80px; margin-bottom: 8px;"></textarea>
+          <div class="row" style="gap: 8px;">
+            <button id="previewBannerBtn" class="btn enhanced">Preview</button>
+            <button id="activateBannerBtn" class="btn primary enhanced">Activate Banner</button>
+            <button id="hideBannerBtn" class="btn danger enhanced">Hide Banner</button>
+          </div>
+        </div>
+        
+        <!-- Banner Templates -->
+        <div class="text-sub" style="margin-bottom: 8px;">Quick Templates:</div>
+        <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:8px">
+          <button class="btn enhanced" id="maintenanceTemplateBtn">Maintenance Template</button>
+          <button class="btn enhanced" id="updateTemplateBtn">Update Announcement</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Management Tab -->
+    <div id="adminContent" class="admin-tab-content hidden">
+      <div class="card">
+        <h4 style="margin:0 0 16px 0">Content Management</h4>
+        
+        <!-- Legal Pages Editor -->
+        <div style="margin-bottom: 20px;">
+          <div class="text-sub" style="margin-bottom: 8px;">Legal Pages:</div>
+          <div class="row" style="gap: 8px; margin-bottom: 12px;">
+            <button class="btn enhanced" id="editTermsBtn">Edit Terms of Service</button>
+            <button class="btn enhanced" id="editPrivacyBtn">Edit Privacy Policy</button>
+          </div>
+          
+          <div id="legalEditor" class="hidden">
+            <div class="text-sub" style="margin-bottom: 8px;">Editing: <span id="editingPageTitle">Terms of Service</span></div>
+            <textarea id="legalContent" class="input" style="min-height: 200px; margin-bottom: 8px;" placeholder="Legal page content..."></textarea>
+            <div class="row" style="gap: 8px;">
+              <button id="saveLegalBtn" class="btn primary enhanced">Save Changes</button>
+              <button id="cancelLegalBtn" class="btn enhanced">Cancel</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- System Messages -->
+        <div>
+          <div class="text-sub" style="margin-bottom: 8px;">System Messages:</div>
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <label class="text-sub" style="font-size: 12px;">Gate Message:</label>
+              <textarea id="gateMessage" class="input" placeholder="Enter site password message..." style="min-height: 60px;"></textarea>
+            </div>
+            <div>
+              <label class="text-sub" style="font-size: 12px;">Upgrade CTA:</label>
+              <textarea id="upgradeCTA" class="input" placeholder="Upgrade call-to-action text..." style="min-height: 60px;"></textarea>
+            </div>
+          </div>
+          <button id="saveMessagesBtn" class="btn primary enhanced" style="margin-top: 8px;">Save Messages</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Management Tab -->
+    <div id="adminUsers" class="admin-tab-content hidden">
+      <div class="card">
+        <h4 style="margin:0 0 16px 0">User Management</h4>
+        
+        <!-- Current User Info -->
+        <div class="card" style="background: rgba(255,255,255,.04); margin-bottom: 16px;">
+          <div class="text-sub">Current User Session:</div>
+          <div style="margin-top: 8px;">
+            <div><strong>Status:</strong> <span id="currentUserStatus">Administrator</span></div>
+            <div><strong>Email:</strong> <span id="currentUserEmail">admin@confident-picks.com</span></div>
+            <div><strong>Created:</strong> <span id="currentUserCreated">Today</span></div>
+          </div>
+        </div>
+        
+        <!-- User Actions -->
+        <div style="margin-bottom: 16px;">
+          <div class="text-sub" style="margin-bottom: 8px;">User Actions:</div>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px">
+            <button id="markVerifiedBtn" class="btn enhanced">Mark Verified</button>
+            <button id="unverifyBtn" class="btn enhanced">Remove Verification</button>
+            <button id="grantSubBtn" class="btn enhanced">Grant Subscription</button>
+          </div>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
+            <button id="revokeSubBtn" class="btn enhanced">Revoke Subscription</button>
+            <button id="resetUserBtn" class="btn danger enhanced">Reset User Data</button>
+        <div></div>
+      </div>
       </div>
       
-      <!-- Admin Dashboard Prep -->
-      <div class="card" style="margin-top:12px">
-        <h4 style="margin:0 0 8px 0">Dashboard Ready</h4>
-        <div class="text-sub">Infrastructure prepared for:</div>
-        <ul class="text-sub" style="margin:8px 0; padding-left:20px;">
-          <li>Firebase Authentication</li>
-          <li>Real-time data feeds</li>
-          <li>User management</li>
-          <li>Content moderation</li>
-          <li>Analytics integration</li>
-          <li>N8N webhook handlers</li>
-        </ul>
-        <div class="row" style="gap:8px; margin-top:8px">
-          <button id="setupFirebaseBtn" class="btn primary" disabled>Setup Firebase</button>
-          <button id="setupN8NBtn" class="btn primary" disabled>Setup N8N</button>
-          <button id="setupDomainBtn" class="btn primary" disabled>Setup Domain</button>
+        <!-- Bulk Operations -->
+        <div>
+          <div class="text-sub" style="margin-bottom: 8px;">Development Tools:</div>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px">
+            <button id="seedOutcomesBtn" class="btn enhanced">Seed Demo Data</button>
+            <button id="clearFavsBtn" class="btn danger enhanced">Clear All Favorites</button>
+            <button id="resetAllDataBtn" class="btn danger enhanced">Reset All Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- System Management Tab -->
+    <div id="adminSystem" class="admin-tab-content hidden">
+      <div class="card">
+        <h4 style="margin:0 0 16px 0">System Management</h4>
+        
+        <!-- Feature Flags -->
+        <div style="margin-bottom: 20px;">
+          <div class="text-sub" style="margin-bottom: 8px;">Feature Flags:</div>
+          <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="gateEnabledFlag" checked>
+                <span>Password Gate Enabled</span>
+              </label>
+            </div>
+            <div>
+              <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="subscriptionEnabledFlag" checked>
+                <span>Subscriptions Enabled</span>
+              </label>
+            </div>
+            <div>
+              <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="contactEnabledFlag" checked>
+                <span>Contact Form Enabled</span>
+              </label>
+            </div>
+            <div>
+              <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="favoritesEnabledFlag" checked>
+                <span>Favorites Enabled</span>
+              </label>
+            </div>
+          </div>
+          <button id="saveFlagsBtn" class="btn primary enhanced" style="margin-top: 8px;">Save Feature Flags</button>
+        </div>
+        
+        <!-- System Info -->
+        <div style="margin-bottom: 20px;">
+          <div class="text-sub" style="margin-bottom: 8px;">System Information:</div>
+          <div class="card" style="background: rgba(255,255,255,.04);">
+            <div><strong>Version:</strong> 1.0.0</div>
+            <div><strong>Environment:</strong> Development</div>
+            <div><strong>Last Updated:</strong> <span id="lastUpdateTime">Just now</span></div>
+            <div><strong>Storage Used:</strong> <span id="storageUsed">~50KB</span></div>
+          </div>
+        </div>
+        
+        <!-- System Actions -->
+        <div>
+          <div class="text-sub" style="margin-bottom: 8px;">System Actions:</div>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px">
+            <button id="clearCacheBtn" class="btn enhanced">Clear Cache</button>
+            <button id="exportDataBtn" class="btn enhanced">Export Data</button>
+            <button id="importDataBtn" class="btn enhanced">Import Data</button>
+          </div>
+          <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
+            <button id="systemResetBtn" class="btn danger enhanced">System Reset</button>
+            <button id="backupDataBtn" class="btn enhanced">Backup Data</button>
+            <div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -508,23 +937,9 @@ html.gated body > *:not(#gate){ display:none !important; }
   </section>
 
   <!-- Legal pages -->
-  <section id="view-terms" class="hidden">
-    <div class="card"><h3 style="margin:0 0 6px 0">Terms of Service (Preview)</h3><div class="text-sub">Placeholder copy for preview/testing. Final legal text will be added later.</div></div>
-  </section>
-  <section id="view-privacy" class="hidden">
-    <div class="card"><h3 style="margin:0 0 6px 0">Privacy Policy (Preview)</h3><div class="text-sub">Placeholder copy for preview/testing. Final legal text will be added later.</div></div>
-  </section>
-  <section id="view-responsible" class="hidden">
-    <div class="card">
-      <h3 style="margin:0 0 6px 0">Responsible Gaming</h3>
-      <div class="text-sub">If you or someone you know has a gambling problem, help is available.</div>
-      <ul class="text-sub">
-        <li>Call or text 1-800-GAMBLER (where available).</li>
-        <li>Set limits and never wager more than you can afford to lose.</li>
-        <li>Confident Picks does not facilitate wagering.</li>
-      </ul>
-    </div>
-    </section>
+
+
+  
 
   <!-- Contact Form -->
   <section id="view-contact" class="hidden">
@@ -539,13 +954,23 @@ html.gated body > *:not(#gate){ display:none !important; }
         </div>
         <div>
           <div class="text-sub" id="emailLabel">Email</div>
-          <input id="contactEmail" type="email" class="input" style="margin-top:4px" placeholder="your@email.com"/>
+          <input id="contactEmail" type="email" class="input" style="margin-top:4px; background:var(--card); opacity:0.7" placeholder="Auto-filled from your account" readonly/>
         </div>
       </div>
       
       <div style="margin-bottom:12px">
         <div class="text-sub" id="subjectLabel">Subject</div>
-        <input id="contactSubject" class="input" style="margin-top:4px" placeholder="What's this about?"/>
+        <select id="contactSubject" class="input" style="margin-top:4px">
+          <option value="">Select a topic...</option>
+          <option value="general">General Inquiry</option>
+          <option value="account">Account Issues</option>
+          <option value="billing">Billing/Subscription</option>
+          <option value="picks">Picks/Data Questions</option>
+          <option value="technical">Technical Support</option>
+          <option value="feedback">Feedback/Suggestions</option>
+          <option value="partnership">Partnership/Business</option>
+          <option value="other">Other</option>
+        </select>
       </div>
       
       <div style="margin-bottom:12px">
@@ -554,28 +979,252 @@ html.gated body > *:not(#gate){ display:none !important; }
       </div>
       
       <div class="row" style="gap:8px">
-        <button id="sendContactBtn" class="btn primary" id="sendBtn">Send Message</button>
-        <button id="clearContactBtn" class="btn">Clear Form</button>
+        <button id="sendContactBtn" class="btn primary enhanced" id="sendBtn">Send Message</button>
+        <button id="clearContactBtn" class="btn enhanced">Clear Form</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESPONSIBLE GAMING -->
+  <section id="view-responsible" class="hidden">
+    <div class="container">
+      <h2>Responsible Gambling</h2>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>Our Commitment</h3>
+        <p>Confident Picks is committed to promoting responsible gambling practices. Our content is provided for entertainment and educational purposes only.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>Important Guidelines</h3>
+        <ul style="margin: 12px 0; padding-left: 20px; color: var(--text);">
+          <li>Never bet more than you can afford to lose</li>
+          <li>Set limits on time and money spent on gambling activities</li>
+          <li>Don't chase losses with bigger bets</li>
+          <li>Take regular breaks from gambling activities</li>
+          <li>Seek help if gambling becomes problematic</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>Age Restrictions</h3>
+        <p>You must be 21 years or older (or the legal gambling age in your jurisdiction) to use our services. We do not knowingly provide services to minors.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>Problem Gambling Resources</h3>
+        <p>If you or someone you know has a gambling problem, help is available:</p>
+        <ul style="margin: 12px 0; padding-left: 20px; color: var(--text);">
+          <li><strong>National Problem Gambling Helpline:</strong> 1-800-522-4700</li>
+          <li><strong>Gamblers Anonymous:</strong> <a href="https://www.gamblersanonymous.org" target="_blank" style="color: var(--blue);">gamblersanonymous.org</a></li>
+          <li><strong>National Council on Problem Gambling:</strong> <a href="https://www.ncpgambling.org" target="_blank" style="color: var(--blue);">ncpgambling.org</a></li>
+          <li><strong>Gam-Anon (for families):</strong> <a href="https://www.gam-anon.org" target="_blank" style="color: var(--blue);">gam-anon.org</a></li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <h3>Self-Exclusion</h3>
+        <p>If you wish to exclude yourself from our services, please contact us at support@confident-picks.com. We will process your request within 24 hours.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMS OF SERVICE -->
+  <section id="view-terms" class="hidden">
+    <div class="container">
+      <h2>Terms of Service</h2>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>1. Acceptance of Terms</h3>
+        <p>By accessing and using Confident Picks, you accept and agree to be bound by the terms and provision of this agreement.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>2. Service Description</h3>
+        <p>Confident Picks provides sports betting analysis, predictions, and educational content for entertainment purposes only. We do not operate as a sportsbook or gambling platform.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>3. Disclaimer</h3>
+        <p>All predictions and analysis are for entertainment and educational purposes only. Past performance does not guarantee future results. We are not responsible for any losses incurred from following our analysis.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>4. User Responsibilities</h3>
+        <ul style="margin: 12px 0; padding-left: 20px; color: var(--text);">
+          <li>You must be 21+ or the legal age in your jurisdiction</li>
+          <li>You are responsible for complying with local laws</li>
+          <li>You agree to use the service responsibly</li>
+          <li>You will not share account credentials</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>5. Intellectual Property</h3>
+        <p>All content, analysis, and materials on Confident Picks are proprietary and protected by copyright laws. Unauthorized reproduction or distribution is prohibited.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>6. Limitation of Liability</h3>
+        <p>Confident Picks shall not be liable for any direct, indirect, incidental, or consequential damages arising from the use of our service.</p>
+      </div>
+      
+      <div class="card">
+        <h3>7. Contact Information</h3>
+        <p>For questions about these terms, contact us at legal@confident-picks.com</p>
+        <p><strong>Last updated:</strong> January 2025</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY POLICY -->
+  <section id="view-privacy" class="hidden">
+    <div class="container">
+      <h2>Privacy Policy</h2>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>1. Information We Collect</h3>
+        <p>We collect information you provide directly to us, such as when you create an account, subscribe to our service, or contact us for support.</p>
+        <ul style="margin: 12px 0; padding-left: 20px; color: var(--text);">
+          <li>Email address and account credentials</li>
+          <li>Payment information (processed securely by third parties)</li>
+          <li>Communication preferences</li>
+          <li>Usage data and analytics</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>2. How We Use Your Information</h3>
+        <ul style="margin: 12px 0; padding-left: 20px; color: var(--text);">
+          <li>Provide and improve our services</li>
+          <li>Send you updates and promotional content</li>
+          <li>Process payments and subscriptions</li>
+          <li>Respond to your inquiries and support requests</li>
+          <li>Comply with legal obligations</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>3. Information Sharing</h3>
+        <p>We do not sell, trade, or rent your personal information to third parties. We may share information in these limited circumstances:</p>
+        <ul style="margin: 12px 0; padding-left: 20px; color: var(--text);">
+          <li>With service providers who assist in our operations</li>
+          <li>When required by law or to protect our rights</li>
+          <li>In connection with a business transfer or merger</li>
+        </ul>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>4. Data Security</h3>
+        <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>5. Cookies and Tracking</h3>
+        <p>We use cookies and similar technologies to improve your experience, analyze usage patterns, and provide personalized content.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 20px;">
+        <h3>6. Your Rights</h3>
+        <ul style="margin: 12px 0; padding-left: 20px; color: var(--text);">
+          <li>Access and review your personal information</li>
+          <li>Request corrections to inaccurate data</li>
+          <li>Delete your account and associated data</li>
+          <li>Opt out of marketing communications</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <h3>7. Contact Us</h3>
+        <p>For questions about this privacy policy or to exercise your rights, contact us at privacy@confident-picks.com</p>
+        <p><strong>Last updated:</strong> January 2025</p>
       </div>
     </div>
   </section>
 
   <footer>
-    For entertainment/education only. If you or someone you know has a gambling problem, seek help.
-    <a href="#responsible" data-nav>Responsible gaming</a> ·
+    For entertainment and educational purposes only. Not gambling advice. If you or someone you know has a gambling problem, seek help.
+    <br><br>
+    <a href="#responsible" data-nav>Responsible gambling</a> ·
     <a href="#terms" data-nav>Terms</a> ·
     <a href="#privacy" data-nav>Privacy</a> ·
     <a href="#contact" data-nav>Contact</a> ·
     <strong>21+ where applicable</strong>
+    <br><br>
+    © <span id="copyrightYear">2024</span> Confident Picks. All rights reserved.
 </footer>
 </div>
 
 <div id="mobileBanner" class="mobile-banner">
   <div>
-    <div><strong>Upgrade to unlock all picks</strong></div>
-    <div class="text-sub">$15 USD / month</div>
+    <div id="mobileBannerTitle"><strong>Upgrade to unlock all picks</strong></div>
+    <div id="mobileBannerSubtext" class="text-sub">$15 USD / month</div>
   </div>
-  <button id="mobileUpgradeBtn" class="btn primary">Upgrade</button>
+  <button id="mobileUpgradeBtn" class="btn primary enhanced">Upgrade</button>
+</div>
+
+<!-- Keyboard Shortcuts Help Modal -->
+<div id="helpModal" class="help-modal">
+  <div class="help-content">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <h3 style="margin: 0;">Keyboard Shortcuts</h3>
+      <button id="closeHelpBtn" class="btn" style="padding: 4px 8px;">✕</button>
+    </div>
+    <div class="text-sub" style="margin-bottom: 16px;">Use these shortcuts to navigate faster:</div>
+    
+    <div class="help-shortcuts">
+      <div class="help-shortcut">
+        <span>Focus search</span>
+        <kbd>/</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Toggle theme</span>
+        <kbd>t</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Navigate to Picks</span>
+        <kbd>1</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Navigate to Scorecard</span>
+        <kbd>2</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Navigate to Outcomes</span>
+        <kbd>3</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Navigate to Favorites</span>
+        <kbd>4</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Navigate to Account</span>
+        <kbd>5</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Navigate to Admin</span>
+        <kbd>6</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Clear search</span>
+        <kbd>Esc</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Show this help</span>
+        <kbd>?</kbd>
+      </div>
+      <div class="help-shortcut">
+        <span>Toggle favorite (on pick card)</span>
+        <kbd>Enter</kbd> or <kbd>Space</kbd>
+      </div>
+    </div>
+    
+    <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center;">
+      <div class="text-sub" style="font-size: 12px;">
+        Press <kbd>Esc</kbd> or click outside to close
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -733,14 +1382,28 @@ function t(key) {
 
 // STATE
 var state = {
-  auth: localStorage.getItem('auth') || 'anon',
-  favorites: JSON.parse(localStorage.getItem('favorites')||'[]'),
-  tf: localStorage.getItem('tf') || '7',
-  otf: localStorage.getItem('otf') || '30',
+  auth: safeGetStorage('auth', 'anon'),
+  favorites: (function() {
+    try {
+      return JSON.parse(safeGetStorage('favorites', '[]'));
+    } catch (e) {
+      console.warn('Invalid favorites data in localStorage, resetting to empty array');
+      return [];
+    }
+  })(),
+  tf: safeGetStorage('tf', '7'),
+  otf: safeGetStorage('otf', '30'),
   selectedOut: [],
-  isAdmin: localStorage.getItem('isAdmin') === '1',
-  accTab: localStorage.getItem('accTab') || 'signup',
-  settings: JSON.parse(localStorage.getItem('userSettings') || '{"language":"en","theme":"dark","voiceSpeed":"1.0","currency":"USD","voiceEnabled":"false"}'),
+  isAdmin: safeGetStorage('isAdmin') === '1',
+  accTab: safeGetStorage('accTab', 'signup'),
+  settings: (function() {
+    try {
+      return JSON.parse(safeGetStorage('userSettings', '{"language":"en","theme":"dark","voiceSpeed":"1.0","currency":"USD","voiceEnabled":"false"}'));
+    } catch (e) {
+      console.warn('Invalid settings data in localStorage, using defaults');
+      return {"language":"en","theme":"dark","voiceSpeed":"1.0","currency":"USD","voiceEnabled":"false"};
+    }
+  })(),
   isReading: false
 };
 // Normalize any legacy favorites (ids -> {id})
@@ -777,20 +1440,24 @@ function setAdmin(on){
 // DATA
 function daysAgo(n){ var d = new Date(Date.now() - n*86400000); return d.toISOString(); }
 var picksLive = [
-  {id:'1', league:'MLB', marketType:'moneyline', pickDesc:'Rays ML vs Yankees', oddsAmerican:-120, modelConfidence:82, commenceTime:daysAgo(-0.2), tier:'public', riskTag:'safe', reasoning:'Rays bullpen rested; model edge ~1.9%.'},
-  {id:'2', league:'NFL', marketType:'props', pickDesc:'Mahomes Over 2.5 TD', oddsAmerican:140, modelConfidence:71, commenceTime:daysAgo(-22), tier:'public', riskTag:'degen', reasoning:'RZ pass rate up; opponent man-heavy.'},
-  {id:'3', league:'MLB', marketType:'totals', pickDesc:'Under 8.0 CLE@DET', oddsAmerican:-105, modelConfidence:88, commenceTime:daysAgo(-0.1), tier:'public', riskTag:'safe', reasoning:'GB% arms + cool weather; model 7.3.'},
-  {id:'4', league:'MLB', marketType:'spread', pickDesc:'Braves -1.5 vs Nats', oddsAmerican:115, modelConfidence:76, commenceTime:daysAgo(-0.05), tier:'free', riskTag:'safe', reasoning:'K-BB% gap + hard-hit edge.'}
+  {id:'1', league:'NBA', marketType:'player-props', pickDesc:'LeBron James Over 25.5 Points', oddsAmerican:-115, modelConfidence:78, commenceTime:daysAgo(-0.2), tier:'public', riskTag:'safe', reasoning:'LeBron averaging 28.2 PPG vs this matchup, 7/10 recent overs.'},
+  {id:'2', league:'UFC', marketType:'moneyline', pickDesc:'Jon Jones ML vs Stipe', oddsAmerican:-180, modelConfidence:85, commenceTime:daysAgo(-0.5), tier:'public', riskTag:'safe', reasoning:'Jones 18-1 in title fights, reach advantage, superior ground game.'},
+  {id:'3', league:'NHL', marketType:'totals', pickDesc:'Over 6.5 Goals EDM@VGK', oddsAmerican:105, modelConfidence:72, commenceTime:daysAgo(-0.1), tier:'public', riskTag:'degen', reasoning:'Both teams averaging 3.8 goals/game, weak goaltending matchup.'},
+  {id:'4', league:'CFB', marketType:'spread', pickDesc:'Alabama -14 vs Tennessee', oddsAmerican:-110, modelConfidence:81, commenceTime:daysAgo(-1), tier:'free', riskTag:'safe', reasoning:'Alabama 9-1 ATS as home favorites, Tennessee missing key OL.'},
+  {id:'5', league:'CBB', marketType:'team-props', pickDesc:'Duke Team Total Over 78.5', oddsAmerican:-105, modelConfidence:74, commenceTime:daysAgo(-0.3), tier:'paid', riskTag:'safe', reasoning:'Duke averaging 84.2 PPG at home, opponent allows 81.5 PPG.'},
+  {id:'6', league:'MLS', marketType:'alt-lines', pickDesc:'LAFC -0.5 (Alt Line)', oddsAmerican:140, modelConfidence:69, commenceTime:daysAgo(-0.7), tier:'free', riskTag:'degen', reasoning:'LAFC 12-3-1 at home, but Seattle strong on road defense.'},
+  {id:'7', league:'MLB', marketType:'moneyline', pickDesc:'Rays ML vs Yankees', oddsAmerican:-120, modelConfidence:82, commenceTime:daysAgo(-0.2), tier:'public', riskTag:'safe', reasoning:'Rays bullpen rested; model edge ~1.9%.'},
+  {id:'8', league:'NFL', marketType:'props', pickDesc:'Mahomes Over 2.5 TD', oddsAmerican:140, modelConfidence:71, commenceTime:daysAgo(-22), tier:'public', riskTag:'degen', reasoning:'RZ pass rate up; opponent man-heavy.'}
 ];
 var picksResults = [
-  {id:'r1', league:'MLB', marketType:'moneyline', pickDesc:'Dodgers ML vs Mets', oddsAmerican:-135, modelConfidence:83, commenceTime:daysAgo(1.5), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(1.3), reasoning:'LAD #2 vs RHP last 30d; fair -146.'},
-  {id:'r2', league:'NFL', marketType:'totals', pickDesc:'Over 47.5 KC@BUF', oddsAmerican:-105, modelConfidence:72, commenceTime:daysAgo(2), tier:'paid', riskTag:'degen', result:'L', settledAt:daysAgo(1.9), reasoning:'Pace-up; both top-8 pass rate.'},
-  {id:'r3', league:'MLB', marketType:'props', pickDesc:'Acuña 2+ Bases', oddsAmerican:135, modelConfidence:81, commenceTime:daysAgo(3), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(2.8), reasoning:'Barrel% allowed; median 2.2 TB.'},
-  {id:'r4', league:'NFL', marketType:'spread', pickDesc:'49ers -3 vs SEA', oddsAmerican:-110, modelConfidence:86, commenceTime:daysAgo(4), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(3.9), reasoning:'Pressure mismatch; SEA OL issues.'},
-  {id:'r5', league:'MLB', marketType:'totals', pickDesc:'Over 7.5 NYY@TB', oddsAmerican:100, modelConfidence:69, commenceTime:daysAgo(5), tier:'free', riskTag:'degen', result:'L', settledAt:daysAgo(4.9), reasoning:'Pens taxed; hitting-friendly ump.'},
-  {id:'r6', league:'NFL', marketType:'moneyline', pickDesc:'Jets ML vs NE', oddsAmerican:120, modelConfidence:77, commenceTime:daysAgo(6), tier:'free', riskTag:'safe', result:'W', settledAt:daysAgo(5.8), reasoning:'Defense edge + home; QB health.'},
-  {id:'r7', league:'MLB', marketType:'spread', pickDesc:"Blue Jays -1.5 vs O's", oddsAmerican:140, modelConfidence:75, commenceTime:daysAgo(12), tier:'paid', riskTag:'degen', result:'L', settledAt:daysAgo(11.8), reasoning:'Buy-low vs LHP; pen fresher.'},
-  {id:'r8', league:'NFL', marketType:'moneyline', pickDesc:'Chiefs ML vs CIN', oddsAmerican:-125, modelConfidence:73, commenceTime:daysAgo(14), tier:'public', riskTag:'safe', result:'W', settledAt:daysAgo(13.8), reasoning:'CB cluster injuries; fair -132.'},
+  {id:'r1', league:'NBA', marketType:'player-props', pickDesc:'Stephen Curry Over 4.5 Threes', oddsAmerican:120, modelConfidence:76, commenceTime:daysAgo(1.5), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(1.3), reasoning:'Curry 7/10 overs vs this defense, pace advantage.'},
+  {id:'r2', league:'UFC', marketType:'team-props', pickDesc:'Fight Goes Distance', oddsAmerican:-135, modelConfidence:82, commenceTime:daysAgo(2), tier:'paid', riskTag:'safe', result:'L', settledAt:daysAgo(1.9), reasoning:'Both fighters cardio-heavy, defensive styles.'},
+  {id:'r3', league:'NHL', marketType:'alt-lines', pickDesc:'Connor McDavid Over 1.5 Points (Alt)', oddsAmerican:165, modelConfidence:71, commenceTime:daysAgo(3), tier:'paid', riskTag:'degen', result:'W', settledAt:daysAgo(2.8), reasoning:'McDavid 15 points in last 8 games, matchup advantage.'},
+  {id:'r4', league:'CFB', marketType:'totals', pickDesc:'Under 52.5 Points', oddsAmerican:-110, modelConfidence:79, commenceTime:daysAgo(4), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(3.9), reasoning:'Weather conditions, both teams run-heavy offense.'},
+  {id:'r5', league:'CBB', marketType:'spread', pickDesc:'Gonzaga -8.5 vs Saint Marys', oddsAmerican:-105, modelConfidence:73, commenceTime:daysAgo(5), tier:'free', riskTag:'safe', result:'L', settledAt:daysAgo(4.9), reasoning:'Gonzaga 8-2 ATS as road favorites this season.'},
+  {id:'r6', league:'MLS', marketType:'moneyline', pickDesc:'Inter Miami ML vs Atlanta', oddsAmerican:-125, modelConfidence:68, commenceTime:daysAgo(6), tier:'free', riskTag:'safe', result:'W', settledAt:daysAgo(5.8), reasoning:'Messi effect + home field advantage in playoffs.'},
+  {id:'r7', league:'MLB', marketType:'moneyline', pickDesc:'Dodgers ML vs Mets', oddsAmerican:-135, modelConfidence:83, commenceTime:daysAgo(1.5), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(1.3), reasoning:'LAD #2 vs RHP last 30d; fair -146.'},
+  {id:'r8', league:'NFL', marketType:'totals', pickDesc:'Over 47.5 KC@BUF', oddsAmerican:-105, modelConfidence:72, commenceTime:daysAgo(2), tier:'paid', riskTag:'degen', result:'L', settledAt:daysAgo(1.9), reasoning:'Pace-up; both top-8 pass rate.'},
   {id:'r9', league:'MLB', marketType:'totals', pickDesc:'Under 7.5 LAD@SF', oddsAmerican:-102, modelConfidence:70, commenceTime:daysAgo(20), tier:'free', riskTag:'safe', result:'W', settledAt:daysAgo(19.8), reasoning:'Marine layer; model 7.0.'},
   {id:'r10', league:'MLB', marketType:'moneyline', pickDesc:'Astros ML vs TEX', oddsAmerican:-150, modelConfidence:90, commenceTime:daysAgo(35), tier:'paid', riskTag:'safe', result:'W', settledAt:daysAgo(34.8), reasoning:''},
   {id:'r11', league:'NFL', marketType:'spread', pickDesc:'Eagles -7 vs NYG', oddsAmerican:-110, modelConfidence:85, commenceTime:daysAgo(40), tier:'public', riskTag:'safe', result:'W', settledAt:daysAgo(39.8), reasoning:''}
@@ -834,6 +1501,52 @@ function showMessage(message, type = 'info') {
     msgEl.style.transform = 'translateX(100%)';
     setTimeout(function() { msgEl.remove(); }, 300);
   }, 4000);
+}
+
+// Loading state helpers
+function setButtonLoading(buttonId, loading) {
+  var btn = document.getElementById(buttonId);
+  if (!btn) return;
+  
+  if (loading) {
+    btn.classList.add('loading');
+    btn.disabled = true;
+    // Wrap existing text in span for fade effect
+    if (!btn.querySelector('.btn-text')) {
+      btn.innerHTML = '<span class="btn-text">' + btn.textContent + '</span>';
+    }
+  } else {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+// Safe localStorage helpers
+function safeGetStorage(key, fallback) {
+  try {
+    return localStorage.getItem(key) || fallback || null;
+  } catch (e) {
+    console.warn('localStorage access failed for key:', key, e);
+    return fallback || null;
+  }
+}
+
+function safeSetStorage(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (e) {
+    console.warn('localStorage write failed for key:', key, e);
+    return false;
+  }
+}
+
+function getUserEmail() {
+  var email = safeGetStorage('userEmail');
+  if (!email && state.auth !== 'anon') {
+    console.warn('User appears logged in but no email found in storage');
+  }
+  return email;
 }
 
 // SETTINGS HELPER FUNCTIONS
@@ -984,9 +1697,23 @@ function canSee(p){
 }
 function updateMobileBanner(){
   var banner = document.getElementById('mobileBanner');
-  if (!banner) return;
-  if (state.auth === 'free') banner.classList.add('visible');
-  else banner.classList.remove('visible');
+  var title = document.getElementById('mobileBannerTitle');
+  var subtext = document.getElementById('mobileBannerSubtext');
+  var button = document.getElementById('mobileUpgradeBtn');
+  
+  if (!banner || !title || !subtext || !button) return;
+  
+  if (state.auth === 'anon') {
+    // Anonymous user - show sign up (they don't have top upgrade button)
+    title.innerHTML = '<strong>Sign up for free picks</strong>';
+    subtext.textContent = 'Get started with confident picks';
+    button.textContent = 'Sign Up Free';
+    button.onclick = function() { location.hash = '#account'; };
+    banner.classList.add('visible');
+  } else {
+    // Free and paid users - hide banner (upgrade button available at top)
+    banner.classList.remove('visible');
+  }
 }
 
 // FAVORITES (paid only)
@@ -1010,16 +1737,30 @@ function toggleFavorite(id){
 
 // RENDERERS
 function cardHTML(p){
-  var confColor = p.modelConfidence >= 80 ? 'var(--green)' : 'var(--blue)';
+  var confColor, confClass, confLevel;
+  if (p.modelConfidence >= 80) {
+    confColor = 'var(--green)';
+    confClass = 'confidence-high';
+    confLevel = 'Very High';
+  } else if (p.modelConfidence >= 65) {
+    confColor = 'var(--blue)';
+    confClass = 'confidence-medium';
+    confLevel = 'High';
+  } else {
+    confColor = '#ffa500';
+    confClass = 'confidence-low';
+    confLevel = 'Medium';
+  }
+  
   var on = state.favorites.find(function(f){ return f.id===p.id; }) ? 'on' : '';
   var risk = p.riskTag ? p.riskTag.toUpperCase() : '';
   var star = (state.auth==='paid')
     ? ('<div class="star '+on+'" title="Favorite" role="button" aria-pressed="'+(on?'true':'false')+'" tabindex="0" data-fav="'+p.id+'"></div>')
     : '<div class="text-sub">(Favorites for subscribers)</div>';
   return '<div class="card">'
-    + '<div class="text-sub">'+p.league+' • '+p.marketType+'</div>'
+    + '<div class="text-sub">'+p.league+' • <span class="market-type">'+p.marketType+'</span></div>'
     + '<div class="row" style="gap:8px"><div><strong>'+p.pickDesc+'</strong></div><div class="chip '+(p.riskTag==='safe'?'safe':'degen')+'">'+risk+'</div></div>'
-    + '<div class="text-sub">Confidence: <span style="color:'+confColor+'">'+p.modelConfidence+'</span> • Odds: '+oddsString(p.oddsAmerican)+'</div>'
+    + '<div class="text-sub">Confidence: <span class="tooltip confidence-badge ' + confClass + '" data-tooltip="Model confidence: ' + p.modelConfidence + '% (' + confLevel + ')" style="color:'+confColor+'">' + p.modelConfidence + '%</span> • Odds: '+oddsString(p.oddsAmerican)+'</div>'
     + '<div class="reasoning">Reasoning: '+esc(p.reasoning || '—')+'</div>'
     + '<div class="row" style="margin-top:6px;gap:8px"><div class="text-sub">Commences: '+formatDate(p.commenceTime)+'</div>'+star+'</div>'
     + '</div>';
@@ -1092,27 +1833,42 @@ function render(){
     note.textContent = 'Sign up for free to see 3 more picks.';
     note.classList.remove('hidden');
   } else if (state.auth==='free') {
-    note.innerHTML = 'Upgrade to see all picks & unlock Favorites/Outcomes <strong>($15/mo)</strong>. <button type="button" class="btn primary" data-goto-subscribe>Upgrade</button>';
+    note.innerHTML = 'Upgrade to see all picks & unlock Favorites/Outcomes <strong>($15/mo)</strong>. <button type="button" class="btn primary enhanced" data-goto-subscribe>Upgrade</button>';
     note.classList.remove('hidden');
   } else {
     note.classList.add('hidden');
   }
   var league = (document.getElementById('leagueSel')).value;
   var market = (document.getElementById('marketSel')).value;
+  
   var sort = (document.getElementById('sortSel')).value;
   var min = Number((document.getElementById('minConf')).value || 0);
   var search = (document.getElementById('searchInp')).value.trim().toLowerCase();
 
   var arr = picksAll.filter(function(p){ return canSee(p); });
+  
   if (league) arr = arr.filter(function(p){ return p.league===league; });
   if (market) arr = arr.filter(function(p){ return p.marketType===market; });
+  
   if (min>0) arr = arr.filter(function(p){ return p.modelConfidence >= min; });
   if (search) arr = arr.filter(function(p){ return p.pickDesc.toLowerCase().includes(search); });
   arr.sort(sort==='confidence' ? byConfidence : byCommence);
 
   var list = document.getElementById('list');
   if (arr.length > 0) list.innerHTML = arr.map(cardHTML).join('');
-  else list.innerHTML = '<div class="card text-sub">No picks match your current filters.</div>';
+  else {
+    var hasFilters = league || market || min > 0;
+    var message = search ? 
+      'No picks found for "' + search + '". Try different keywords or <button onclick="clearSearch()" class="btn ghost" style="padding:2px 6px;font-size:inherit;">clear search</button>.' :
+      hasFilters ? 
+        'No picks match your current filters. Try <button onclick="clearAllFilters()" class="btn ghost" style="padding:2px 6px;font-size:inherit;">clearing filters</button> or adjusting your criteria.' :
+        'No picks available right now. Check back soon for expert analysis! 🏆';
+    
+    list.innerHTML = '<div class="card text-sub" style="text-align:center;padding:32px;">' +
+                    '<div style="font-size:48px;margin-bottom:16px;">🏈</div>' +
+                    '<div>' + message + '</div>' +
+                    '</div>';
+  }
 
   var _authBtn = document.getElementById('authBtn');
   if (_authBtn) _authBtn.textContent = state.auth==='anon' ? 'Sign up for free' : 'Sign out';
@@ -1165,7 +1921,7 @@ function renderFavorites(){
   var gate = document.getElementById('favGate');
   var wrap = document.getElementById('favList');
   if (state.auth !== 'paid') { 
-    gate.innerHTML = (state.auth==='free' ? '<div class="card">Subscribers only. Upgrade to save favorites <strong>($15/mo)</strong>. <div style="margin-top:8px"><button type="button" class="btn primary" data-goto-subscribe>Upgrade</button></div></div>' : '<div class="card">Subscribers only. <a href="#account" data-nav>Sign up</a> to get started.</div>'); 
+    gate.innerHTML = (state.auth==='free' ? '<div class="card">Subscribers only. Upgrade to save favorites <strong>($15/mo)</strong>. <div style="margin-top:8px"><button type="button" class="btn primary enhanced" data-goto-subscribe>Upgrade</button></div></div>' : '<div class="card">Subscribers only. <a href="#account" data-nav>Sign up</a> to get started.</div>'); 
     wrap.innerHTML=''; 
     return; 
   }
@@ -1188,7 +1944,7 @@ function renderOutcomes(){
     container.innerHTML = '<div><strong>My Outcomes</strong> <span class="text-sub">— results for your favorited picks</span></div>' +
       '<div style="margin-top:12px">' + 
       (state.auth==='free' ? 
-        '<div class="card">Subscribers only. Upgrade to view your outcomes <strong>($15/mo)</strong>. <div style="margin-top:8px"><button type="button" class="btn primary" data-goto-subscribe>Upgrade</button></div></div>' : 
+        '<div class="card">Subscribers only. Upgrade to view your outcomes <strong>($15/mo)</strong>. <div style="margin-top:8px"><button type="button" class="btn primary enhanced" data-goto-subscribe>Upgrade</button></div></div>' : 
         '<div class="card">Subscribers only. <a href="#account" data-nav>Sign up</a> to get started.</div>') +
       '</div>';
     return;
@@ -1248,20 +2004,20 @@ function accountSignedOutHTML(){
     + '</div>'
     + (state.accTab==='signup'
         ? ('<div style="margin-top:10px">'
-          + '<button id="googleSignup" class="btn">Sign up with Google</button>'
+          + '<button id="googleSignup" class="btn enhanced">Sign up with Google</button>'
           + '<div class="divider"><span class="text-sub">or</span></div>'
           + '<input id="emailInp" class="input" placeholder="Email" aria-label="Email for signup"/>'
           + '<input id="pwInp" class="input" placeholder="Password (8+ chars, letters & numbers)" type="password" aria-label="Password for signup"/>'
-          + '<button id="emailSignupBtn" class="btn primary">Sign up with email</button>'
+          + '<button id="emailSignupBtn" class="btn primary enhanced">Sign up with email</button>'
           + '<div class="helper">By creating an account you agree to our <a href="#terms" data-nav>Terms</a> and <a href="#privacy" data-nav>Privacy Policy</a>.</div>'
           + '</div>')
         : ('<div style="margin-top:10px">'
-          + '<button id="googleSignin" class="btn">Sign in with Google</button>'
+          + '<button id="googleSignin" class="btn enhanced">Sign in with Google</button>'
           + '<div class="divider"><span class="text-sub">or</span></div>'
           + '<input id="emailInpLogin" class="input" placeholder="Email" aria-label="Email for signin"/>'
           + '<input id="pwInpLogin" class="input" placeholder="Password" type="password" aria-label="Password for signin"/>'
-          + '<button id="emailSigninBtn" class="btn">Sign in with email</button>'
-          + '<button id="forgotBtn" class="btn ghost">Forgot password (mock)</button>'
+          + '<button id="emailSigninBtn" class="btn enhanced">Sign in with email</button>'
+          + '<button id="forgotBtn" class="btn ghost enhanced">Forgot password (mock)</button>'
           + '</div>')
       )
     + '</div>'
@@ -1273,14 +2029,20 @@ function accountSignedOutHTML(){
     + '</div>';
 }
 function accountSignedInHTML(){
-  var email = localStorage.getItem('userEmail');
+  var email = getUserEmail();
   var verified = isVerified();
-  var createdAt = localStorage.getItem('userCreatedAt');
-  var lastLoginAt = localStorage.getItem('lastLoginAt');
-  var plan = localStorage.getItem('subPlan') || 'free';
-  var renew = localStorage.getItem('subCurrentPeriodEnd');
-  var autoRenew = localStorage.getItem('autoRenew') === 'true';
+  var createdAt = safeGetStorage('userCreatedAt');
+  var lastLoginAt = safeGetStorage('lastLoginAt');
+  var plan = safeGetStorage('subPlan', 'free');
+  var renew = safeGetStorage('subCurrentPeriodEnd');
+  var autoRenew = safeGetStorage('autoRenew') === 'true';
   var status = (state.auth==='paid') ? 'Subscriber' : 'Signed-in (Free)';
+  
+  // Handle missing email case
+  if (!email && state.auth !== 'anon') {
+    email = 'Error: Email not found';
+    console.error('User is logged in but email is missing from localStorage');
+  }
 
   var planCards = (state.auth==='paid')
     ? ('<div class="card"><div class="text-sub">Plan</div><div><strong>'+ (plan==='yearly'?'Yearly':'Monthly') +'</strong></div></div>'
@@ -1298,9 +2060,9 @@ function accountSignedInHTML(){
     +   planCards
     + '</div>'
     + '<div class="row" style="gap:8px; margin-top:12px">'
-    +   (state.auth==='free' ? '<button id="goUpgradeBtn" class="btn primary">Upgrade — $15/mo</button>' : '')
-    +   '<button id="goPicksBtn" class="btn">Back to picks</button>'
-    +   '<button id="signOutBtn" class="btn danger">Sign out</button>'
+    +   (state.auth==='free' ? '<button id="goUpgradeBtn" class="btn primary enhanced">Upgrade — $15/mo</button>' : '')
+    +   '<button id="goPicksBtn" class="btn enhanced">Back to picks</button>'
+    +   '<button id="signOutBtn" class="btn danger enhanced">Sign out</button>'
     + '</div>'
     + '</div>'
     + '<div class="card" style="margin-top:12px">'
@@ -1355,8 +2117,8 @@ function accountSignedInHTML(){
     + '    <div></div>'
     + '  </div>'
     + '  <div class="row" style="gap:8px">'
-    + '    <button id="saveSettingsBtn" class="btn primary">' + t('saveSettings') + '</button>'
-    + '    <button id="resetSettingsBtn" class="btn">Reset to Default</button>'
+    + '    <button id="saveSettingsBtn" class="btn primary enhanced">' + t('saveSettings') + '</button>'
+    + '    <button id="resetSettingsBtn" class="btn enhanced">Reset to Default</button>'
     + '  </div>'
     + '</div>'
     + '<div class="card" style="margin-top:12px">'
@@ -1378,14 +2140,20 @@ function renderAccount(){
 }
 
 function reflectAuthButtons(){
-  ['btnAnon','btnFree','btnPaid'].forEach(function(id){ var el = document.getElementById(id); if (el) el.classList.remove('primary'); });
-  ({ anon:['btnAnon'], free:['btnFree'], paid:['btnPaid'] }[state.auth]||[]).forEach(function(id){ var el = document.getElementById(id); if (el) el.classList.add('primary'); });
+  ['btnAnon','btnFree','btnPaid','btnAdmin'].forEach(function(id){ var el = document.getElementById(id); if (el) el.classList.remove('primary'); });
+  ({ anon:['btnAnon'], free:['btnFree'], paid:['btnPaid'], admin:['btnAdmin'] }[state.auth]||[]).forEach(function(id){ var el = document.getElementById(id); if (el) el.classList.add('primary'); });
 }
 function renderProfile(){
   var el = document.getElementById('profileInfo');
-  var map = { anon:'Anonymous', free:'Signed-in (Free)', paid:'Subscriber' };
-  var email = localStorage.getItem('userEmail');
+  var map = { anon:'Anonymous', free:'Signed-in (Free)', paid:'Subscriber', admin:'Administrator' };
+  var email = getUserEmail();
   var emailRow = email ? '<div class="text-sub">Email: '+email+'</div>' : '';
+  
+  // Show warning if user appears logged in but no email
+  if (!email && state.auth !== 'anon') {
+    emailRow = '<div class="text-sub" style="color: var(--red);">Email: Missing (localStorage error)</div>';
+  }
+  
   var ver = (state.auth!=='anon') ? ('<div class="text-sub">Verified: '+(isVerified()?'Yes':'No')+'</div>') : '';
   el.innerHTML = '<div class="row"><div><strong>Status:</strong> '+map[state.auth]+'</div></div>' + emailRow + ver;
   reflectAuthButtons();
@@ -1407,6 +2175,18 @@ function renderContact(){
   if (subjectLabel) subjectLabel.textContent = t('subject');
   if (messageLabel) messageLabel.textContent = t('message');
   if (sendBtn) sendBtn.textContent = t('sendMessage');
+  
+  // Auto-fill email from logged-in account
+  var emailInput = document.getElementById('contactEmail');
+  var userEmail = getUserEmail();
+  if (emailInput) {
+    if (userEmail) {
+      emailInput.value = userEmail;
+    } else if (state.auth !== 'anon') {
+      emailInput.placeholder = 'Email missing from storage';
+      emailInput.style.color = 'var(--red)';
+    }
+  }
   if (clearBtn) clearBtn.textContent = 'Clear Form';
 }
 
@@ -1437,6 +2217,105 @@ document.addEventListener('click', function(e){
   if (target.id==='btnAnon') setAuth('anon');
   if (target.id==='btnFree') setAuth('free');
   if (target.id==='btnPaid') setAuth('paid');
+  if (target.id==='btnAdmin') {
+    setAuth('admin');
+    adminUnlocked = true; // Grant admin access when switching to admin mode
+    checkAdminAccess();
+  }
+
+  // Admin Portal Tab Navigation
+  if (target.dataset && target.dataset.adminTab) {
+    switchAdminTab(target.dataset.adminTab);
+  }
+  
+  // Banner Management
+  if (target.id==='previewBannerBtn') previewBanner();
+  if (target.id==='activateBannerBtn') activateBanner();
+  if (target.id==='hideBannerBtn') hideBanner();
+  if (target.id==='maintenanceTemplateBtn') loadMaintenanceTemplate();
+  if (target.id==='updateTemplateBtn') loadUpdateTemplate();
+  
+  // Content Management
+  if (target.id==='editTermsBtn') editLegalPage('terms');
+  if (target.id==='editPrivacyBtn') editLegalPage('privacy');
+  if (target.id==='saveLegalBtn') saveLegalPage();
+  if (target.id==='cancelLegalBtn') cancelLegalEdit();
+  if (target.id==='saveMessagesBtn') saveSystemMessages();
+  
+  // User Management - Legacy handlers
+  if (target.id==='markVerifiedBtn'){ alert('Email marked as verified (mock)'); render(); }
+  if (target.id==='unverifyBtn'){ alert('Email marked as unverified (mock)'); render(); }
+  if (target.id==='clearFavsBtn'){ if(confirm('Clear favorites?')){ state.favorites=[]; setStorage('favorites',state.favorites); render(); } }
+  if (target.id==='seedOutcomesBtn') seedTestOutcomes();
+  
+  // Logo click to return home
+  if (target.id==='logoHome' || target.closest('#logoHome')) {
+    location.hash = '#picks';
+    route();
+    return;
+  }
+  
+  // Multi-select filter handlers removed (no longer needed)
+  
+  // User Management - New handlers
+  if (target.id==='grantSubBtn') grantSubscription();
+  if (target.id==='revokeSubBtn') revokeSubscription();
+  if (target.id==='resetUserBtn') resetUserData();
+  if (target.id==='resetAllDataBtn') resetAllData();
+  
+  // System Management
+  if (target.id==='saveFlagsBtn') saveFeatureFlags();
+  if (target.id==='clearCacheBtn') clearSystemCache();
+  if (target.id==='exportDataBtn') exportSystemData();
+  if (target.id==='importDataBtn') importSystemData();
+  if (target.id==='systemResetBtn') performSystemReset();
+  if (target.id==='backupDataBtn') backupSystemData();
+  
+  // Auth buttons with loading states
+  if (target.id==='googleSignup' || target.id==='googleSignin') {
+    setButtonLoading(target.id, true);
+    setTimeout(function() {
+      setButtonLoading(target.id, false);
+      setAuth('free');
+      showMessage('Signed in with Google! (mock)', 'success');
+    }, 2000);
+  }
+  
+  if (target.id==='emailSignupBtn') {
+    var email = document.getElementById('emailInp');
+    var pw = document.getElementById('pwInp');
+    if (!email || !pw || !email.value.trim() || !pw.value.trim()) {
+      alert('Please fill in email and password.');
+      return;
+    }
+    setButtonLoading('emailSignupBtn', true);
+    setTimeout(function() {
+      setButtonLoading('emailSignupBtn', false);
+      if (!safeSetStorage('userEmail', email.value.trim())) {
+        showMessage('Warning: Could not save email to storage', 'error');
+      }
+      setAuth('free');
+      showMessage('Account created successfully!', 'success');
+    }, 2500);
+  }
+  
+  if (target.id==='emailSigninBtn') {
+    var email = document.getElementById('emailInpLogin');
+    var pw = document.getElementById('pwInpLogin');
+    if (!email || !pw || !email.value.trim() || !pw.value.trim()) {
+      alert('Please fill in email and password.');
+      return;
+    }
+    setButtonLoading('emailSigninBtn', true);
+    setTimeout(function() {
+      setButtonLoading('emailSigninBtn', false);
+      if (!safeSetStorage('userEmail', email.value.trim())) {
+        showMessage('Warning: Could not save email to storage', 'error');
+      }
+      setAuth('free');
+      showMessage('Signed in successfully!', 'success');
+    }, 2000);
+  }
 
   if (target.id==='seedOutcomesBtn' || target.id==='seedDemoBtn'){
     if (state.auth!=='paid') return alert('Subscriber required (mock)');
@@ -1705,7 +2584,17 @@ document.addEventListener('keydown', function(e){
       var navLinks = document.querySelectorAll('[data-nav]');
       if (navLinks[navIndex]) navLinks[navIndex].click();
       break;
+    case '?':
+      e.preventDefault();
+      document.getElementById('helpModal').classList.add('active');
+      break;
     case 'escape':
+      // Close help modal first, then clear search
+      var helpModal = document.getElementById('helpModal');
+      if (helpModal && helpModal.classList.contains('active')) {
+        helpModal.classList.remove('active');
+        break;
+      }
       // Clear any active modals or reset search
       var searchInput = document.getElementById('searchInp');
       if (searchInput && searchInput.value) {
@@ -1716,18 +2605,54 @@ document.addEventListener('keydown', function(e){
   }
 });
 
+// Help modal handlers
+document.addEventListener('click', function(e){
+  var helpModal = document.getElementById('helpModal');
+  
+  // Close help modal
+  if (e.target.id === 'closeHelpBtn' || 
+      (e.target === helpModal && helpModal.classList.contains('active'))) {
+    helpModal.classList.remove('active');
+    return;
+  }
+});
+
 // Contact form handlers
 document.addEventListener('click', function(e){
   if (e.target.id === 'sendContactBtn') {
-    var name = document.getElementById('contactName').value.trim();
-    var email = document.getElementById('contactEmail').value.trim();
-    var subject = document.getElementById('contactSubject').value.trim();
-    var message = document.getElementById('contactMessage').value.trim();
-    
-    if (!name || !email || !subject || !message) {
-      alert('Please fill in all fields.');
+    // Check if user is logged in first
+    if (state.auth === 'anon') {
+      alert('Please log in to submit a support ticket.\n\nThis helps us:\n• Track your request\n• Provide better support\n• Follow up with updates\n\nClick "Account" to sign in or create an account.');
       return;
     }
+    
+    // Show loading state
+    setButtonLoading('sendContactBtn', true);
+    
+    var name = document.getElementById('contactName').value.trim();
+    var email = document.getElementById('contactEmail').value.trim();
+    var subject = document.getElementById('contactSubject').value;
+    var message = document.getElementById('contactMessage').value.trim();
+    
+    // Auto-fill email from logged-in account
+    var userEmail = getUserEmail();
+    if (userEmail && email !== userEmail) {
+      document.getElementById('contactEmail').value = userEmail;
+      email = userEmail;
+    } else if (!userEmail && state.auth !== 'anon') {
+      setButtonLoading('sendContactBtn', false);
+      alert('Error: Your email address is missing from storage. Please sign out and sign back in.');
+      return;
+    }
+    
+    // Validation
+    if (!name || !subject || !message) {
+      setButtonLoading('sendContactBtn', false);
+      alert('Please fill in all required fields.');
+      return;
+    }
+    
+    // Email is auto-filled from account, so no manual validation needed
     
     // Gather user data for support context
     var supportData = {
@@ -1735,7 +2660,8 @@ document.addEventListener('click', function(e){
         name: name,
         email: email,
         subject: subject,
-        message: message
+        message: message,
+        accountStatus: 'logged-in'
       },
       userContext: {
         auth: state.auth,
@@ -1746,15 +2672,19 @@ document.addEventListener('click', function(e){
         currentPage: location.hash || '#picks'
       },
       localStorage: {
-        userEmail: localStorage.getItem('userEmail'),
-        emailVerified: localStorage.getItem('emailVerified'),
-        subPlan: localStorage.getItem('subPlan'),
-        theme: localStorage.getItem('theme')
+        userEmail: safeGetStorage('userEmail'),
+        emailVerified: safeGetStorage('emailVerified'),
+        subPlan: safeGetStorage('subPlan'),
+        theme: safeGetStorage('theme')
       }
     };
     
     // In real app, this would POST supportData to your server
     console.log('Support Request Data:', supportData);
+    
+    // Simulate async operation
+    setTimeout(function() {
+      setButtonLoading('sendContactBtn', false);
     alert('Thank you for your message! We\'ll get back to you soon.\n\n(Debug: Check console for support data)');
     
     // Clear form
@@ -1762,6 +2692,7 @@ document.addEventListener('click', function(e){
     document.getElementById('contactEmail').value = '';
     document.getElementById('contactSubject').value = '';
     document.getElementById('contactMessage').value = '';
+    }, 1500); // 1.5 second delay to show loading state
   }
   
   if (e.target.id === 'clearContactBtn') {
@@ -1826,6 +2757,521 @@ function changeMinConf(delta){
   });
 });
 
+/* ADMIN PORTAL FUNCTIONS */
+
+// Admin Tab Management
+function switchAdminTab(tabName) {
+  // Hide all tab contents
+  document.querySelectorAll('.admin-tab-content').forEach(function(el) {
+    el.classList.add('hidden');
+  });
+  
+  // Show selected tab content
+  var targetTab = document.getElementById('admin' + tabName.charAt(0).toUpperCase() + tabName.slice(1));
+  if (targetTab) targetTab.classList.remove('hidden');
+  
+  // Update tab button states
+  document.querySelectorAll('.tab').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  
+  var activeButton = document.querySelector('[data-admin-tab="' + tabName + '"]');
+  if (activeButton) activeButton.classList.add('active');
+  
+  // Update admin dashboard data when switching to overview
+  if (tabName === 'overview') updateAdminMetrics();
+}
+
+// Update admin overview metrics
+function updateAdminMetrics() {
+  var userCount = 1; // Mock data - would come from Firebase
+  var subCount = (state.auth === 'paid') ? 1 : 0;
+  
+  var userCountEl = document.getElementById('adminUserCount');
+  var subCountEl = document.getElementById('adminSubCount');
+  
+  if (userCountEl) userCountEl.textContent = userCount;
+  if (subCountEl) subCountEl.textContent = subCount;
+}
+
+// Banner Management Functions
+function previewBanner() {
+  var type = document.getElementById('bannerType').value;
+  var title = document.getElementById('bannerTitle').value || 'Sample Title';
+  var message = document.getElementById('bannerMessage').value || 'Sample message text';
+  
+  alert('BANNER PREVIEW\\n\\nType: ' + type + '\\nTitle: ' + title + '\\nMessage: ' + message);
+}
+
+function activateBanner() {
+  var type = document.getElementById('bannerType').value;
+  var title = document.getElementById('bannerTitle').value;
+  var message = document.getElementById('bannerMessage').value;
+  
+  if (!title || !message) {
+    alert('Please enter both title and message');
+    return;
+  }
+  
+  // Store banner data
+  var bannerData = { type: type, title: title, message: message, active: true };
+  safeSetStorage('adminBanner', JSON.stringify(bannerData));
+  
+  // Update the actual banner on the page
+  updateLiveBanner();
+  
+  // Update status display
+  updateBannerStatus();
+  alert('Banner activated successfully!');
+}
+
+function hideBanner() {
+  safeSetStorage('adminBanner', JSON.stringify({ active: false }));
+  
+  // Hide the actual banner on the page
+  updateLiveBanner();
+  
+  updateBannerStatus();
+  alert('Banner hidden successfully!');
+}
+
+// Update the actual visible banner on the page
+function updateLiveBanner() {
+  var bannerData = JSON.parse(safeGetStorage('adminBanner', '{"active":false}'));
+  var banner = document.getElementById('maintBanner');
+  
+  if (!banner) return;
+  
+  if (bannerData.active && bannerData.title && bannerData.message) {
+    // Show and update banner content
+    var labelEl = banner.querySelector('.label');
+    var textEl = banner.querySelector('.text-sub');
+    
+    if (labelEl) labelEl.textContent = bannerData.title + ':';
+    if (textEl) textEl.textContent = bannerData.message;
+    
+    // Apply styling based on banner type
+    var bgClass = {
+      'maintenance': 'linear-gradient(180deg, rgba(255,193,7,.18), rgba(255,87,34,.18))',
+      'announcement': 'linear-gradient(180deg, rgba(77,163,255,.18), rgba(34,197,94,.18))',
+      'warning': 'linear-gradient(180deg, rgba(255,87,34,.18), rgba(244,67,54,.18))',
+      'info': 'linear-gradient(180deg, rgba(77,163,255,.18), rgba(156,39,176,.18))'
+    };
+    
+    banner.style.background = bgClass[bannerData.type] || bgClass.announcement;
+    banner.style.display = 'flex';
+    
+    // Clear any dismissed state
+    try { localStorage.removeItem(BANNER_KEY); } catch (e) {}
+  } else {
+    // Hide banner
+    banner.style.display = 'none';
+  }
+}
+
+function updateBannerStatus() {
+  var bannerData = JSON.parse(safeGetStorage('adminBanner', '{"active":false}'));
+  var statusEl = document.getElementById('bannerStatusText');
+  
+  if (statusEl) {
+    if (bannerData.active) {
+      statusEl.textContent = 'Active: ' + (bannerData.title || 'Untitled Banner');
+      statusEl.style.color = 'var(--green)';
+    } else {
+      statusEl.textContent = 'No active banner';
+      statusEl.style.color = 'var(--text-sub)';
+    }
+  }
+}
+
+function loadMaintenanceTemplate() {
+  document.getElementById('bannerType').value = 'maintenance';
+  document.getElementById('bannerTitle').value = 'Scheduled Maintenance';
+  document.getElementById('bannerMessage').value = 'We are performing scheduled maintenance. The site will be back online shortly. Thank you for your patience.';
+}
+
+function loadUpdateTemplate() {
+  document.getElementById('bannerType').value = 'announcement';
+  document.getElementById('bannerTitle').value = 'New Features Available';
+  document.getElementById('bannerMessage').value = 'We have exciting new features and improvements available! Check out the latest updates to enhance your experience.';
+}
+
+// Content Management Functions
+var currentEditingPage = '';
+
+function editLegalPage(pageType) {
+  currentEditingPage = pageType;
+  var editor = document.getElementById('legalEditor');
+  var titleEl = document.getElementById('editingPageTitle');
+  var contentEl = document.getElementById('legalContent');
+  
+  var titles = { terms: 'Terms of Service', privacy: 'Privacy Policy' };
+  var defaultContent = {
+    terms: 'TERMS OF SERVICE\\n\\nLast updated: ' + new Date().toDateString() + '\\n\\n1. Acceptance of Terms\\nBy using this service, you agree to these terms...\\n\\n2. Use License\\nPermission is granted to temporarily use this service...\\n\\n3. Disclaimer\\nThis service is provided as-is for entertainment purposes...',
+    privacy: 'PRIVACY POLICY\\n\\nLast updated: ' + new Date().toDateString() + '\\n\\n1. Information We Collect\\nWe collect information you provide directly...\\n\\n2. How We Use Information\\nWe use the information to provide and improve...\\n\\n3. Information Sharing\\nWe do not sell or rent personal information...'
+  };
+  
+  if (titleEl) titleEl.textContent = titles[pageType] || pageType;
+  if (contentEl) contentEl.value = safeGetStorage('legal_' + pageType, defaultContent[pageType] || '');
+  if (editor) editor.classList.remove('hidden');
+}
+
+function saveLegalPage() {
+  if (!currentEditingPage) return;
+  
+  var content = document.getElementById('legalContent').value;
+  safeSetStorage('legal_' + currentEditingPage, content);
+  
+  alert('Legal page saved successfully!');
+  cancelLegalEdit();
+}
+
+function cancelLegalEdit() {
+  var editor = document.getElementById('legalEditor');
+  if (editor) editor.classList.add('hidden');
+  currentEditingPage = '';
+}
+
+function saveSystemMessages() {
+  var gateMsg = document.getElementById('gateMessage').value;
+  var upgradeMsg = document.getElementById('upgradeCTA').value;
+  
+  if (gateMsg) safeSetStorage('gateMessage', gateMsg);
+  if (upgradeMsg) safeSetStorage('upgradeCTA', upgradeMsg);
+  
+  alert('System messages saved successfully!');
+}
+
+// User Management Functions
+function grantSubscription() {
+  if (confirm('Grant subscription to current user?')) {
+    setAuth('paid');
+    alert('Subscription granted successfully!');
+  }
+}
+
+function revokeSubscription() {
+  if (confirm('Revoke subscription from current user?')) {
+    setAuth('free');
+    alert('Subscription revoked successfully!');
+  }
+}
+
+function resetUserData() {
+  if (confirm('Reset current user data? This will clear favorites and settings.')) {
+    state.favorites = [];
+    safeSetStorage('favorites', JSON.stringify(state.favorites));
+    safeSetStorage('userSettings', '{}');
+    render();
+    alert('User data reset successfully!');
+  }
+}
+
+function resetAllData() {
+  if (confirm('DANGER: Reset ALL system data? This cannot be undone!')) {
+    if (confirm('Are you absolutely sure? This will clear everything!')) {
+      ['favorites', 'userSettings', 'adminBanner', 'legal_terms', 'legal_privacy', 'gateMessage', 'upgradeCTA'].forEach(function(key) {
+        localStorage.removeItem(key);
+      });
+      state.favorites = [];
+      render();
+      alert('All system data reset successfully!');
+    }
+  }
+}
+
+// System Management Functions
+function saveFeatureFlags() {
+  var flags = {
+    gateEnabled: document.getElementById('gateEnabledFlag').checked,
+    subscriptionEnabled: document.getElementById('subscriptionEnabledFlag').checked,
+    contactEnabled: document.getElementById('contactEnabledFlag').checked,
+    favoritesEnabled: document.getElementById('favoritesEnabledFlag').checked
+  };
+  
+  safeSetStorage('featureFlags', JSON.stringify(flags));
+  alert('Feature flags saved successfully!');
+}
+
+function clearSystemCache() {
+  // Clear any cached data (mock implementation)
+  alert('System cache cleared successfully!');
+}
+
+function exportSystemData() {
+  var data = {
+    favorites: state.favorites,
+    settings: JSON.parse(safeGetStorage('userSettings', '{}')),
+    flags: JSON.parse(safeGetStorage('featureFlags', '{}')),
+    legal: {
+      terms: safeGetStorage('legal_terms', ''),
+      privacy: safeGetStorage('legal_privacy', '')
+    },
+    messages: {
+      gate: safeGetStorage('gateMessage', ''),
+      upgrade: safeGetStorage('upgradeCTA', '')
+    },
+    banner: JSON.parse(safeGetStorage('adminBanner', '{}'))
+  };
+  
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'confident-picks-data-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importSystemData() {
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = function(e) {
+    var file = e.target.files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var data = JSON.parse(e.target.result);
+          
+          if (data.favorites) { state.favorites = data.favorites; safeSetStorage('favorites', JSON.stringify(data.favorites)); }
+          if (data.settings) safeSetStorage('userSettings', JSON.stringify(data.settings));
+          if (data.flags) safeSetStorage('featureFlags', JSON.stringify(data.flags));
+          if (data.legal) {
+            if (data.legal.terms) safeSetStorage('legal_terms', data.legal.terms);
+            if (data.legal.privacy) safeSetStorage('legal_privacy', data.legal.privacy);
+          }
+          if (data.messages) {
+            if (data.messages.gate) safeSetStorage('gateMessage', data.messages.gate);
+            if (data.messages.upgrade) safeSetStorage('upgradeCTA', data.messages.upgrade);
+          }
+          if (data.banner) safeSetStorage('adminBanner', JSON.stringify(data.banner));
+          
+          render();
+          alert('Data imported successfully!');
+        } catch (err) {
+          alert('Error importing data: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+  input.click();
+}
+
+function performSystemReset() {
+  if (confirm('DANGER: Perform complete system reset? This will delete everything!')) {
+    if (confirm('Final confirmation: Delete all data and settings?')) {
+      localStorage.clear();
+      location.reload();
+    }
+  }
+}
+
+function backupSystemData() {
+  exportSystemData(); // Same as export for now
+  alert('Backup created and downloaded!');
+}
+
+// Initialize admin portal when page loads
+if (typeof initAdminPortal === 'undefined') {
+  var initAdminPortal = function() {
+    // Set up initial admin state
+    updateBannerStatus();
+    updateAdminMetrics();
+    
+    // Update live banner from stored data
+    updateLiveBanner();
+    
+    // Load current system messages
+    var gateEl = document.getElementById('gateMessage');
+    var upgradeEl = document.getElementById('upgradeCTA');
+    if (gateEl) gateEl.value = safeGetStorage('gateMessage', '');
+    if (upgradeEl) upgradeEl.value = safeGetStorage('upgradeCTA', '');
+    
+    // Load feature flags
+    var flags = JSON.parse(safeGetStorage('featureFlags', '{}'));
+    if (document.getElementById('gateEnabledFlag')) document.getElementById('gateEnabledFlag').checked = flags.gateEnabled !== false;
+    if (document.getElementById('subscriptionEnabledFlag')) document.getElementById('subscriptionEnabledFlag').checked = flags.subscriptionEnabled !== false;
+    if (document.getElementById('contactEnabledFlag')) document.getElementById('contactEnabledFlag').checked = flags.contactEnabled !== false;
+    if (document.getElementById('favoritesEnabledFlag')) document.getElementById('favoritesEnabledFlag').checked = flags.favoritesEnabled !== false;
+  };
+  
+  // Call on page load and when switching to admin
+  setTimeout(initAdminPortal, 100);
+}
+
+// Initialize banner system on page load
+setTimeout(function() {
+  updateLiveBanner();
+}, 200);
+
+/* NAVIGATION HIGHLIGHTING & ADMIN PROTECTION */
+
+// Track current view and update navigation highlights
+function updateNavHighlights() {
+  // Get current view from URL hash or default to 'picks'
+  var currentView = location.hash.replace('#', '') || 'picks';
+  
+  // Update nav link highlights
+  document.querySelectorAll('.nav a[data-nav]').forEach(function(link) {
+    var linkView = link.getAttribute('href').replace('#', '');
+    if (linkView === currentView) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+}
+
+// Admin protection system
+var adminPassword = 'getmoney'; // [[memory:6876140]] For consistency with site password
+var adminUnlocked = false;
+
+function checkAdminAccess() {
+  var navAdmin = document.getElementById('navAdmin');
+  if (!navAdmin) return;
+  
+  // Check if admin is unlocked or if user has admin auth
+  if (adminUnlocked || state.auth === 'admin') {
+    navAdmin.classList.remove('hidden');
+  } else {
+    navAdmin.classList.add('hidden');
+  }
+}
+
+function promptAdminPassword() {
+  var password = prompt('Enter admin password:');
+  if (password === adminPassword) {
+    adminUnlocked = true;
+    checkAdminAccess();
+    alert('Admin access granted!');
+    return true;
+  } else if (password !== null) {
+    alert('Incorrect password!');
+  }
+  return false;
+}
+
+// Handle navigation clicks
+document.addEventListener('click', function(e) {
+  var target = e.target;
+  
+  // Handle navigation links
+  if (target.matches('.nav a[data-nav]')) {
+    var view = target.getAttribute('href').replace('#', '');
+    
+    // Special handling for admin view
+    if (view === 'admin' && !adminUnlocked && state.auth !== 'admin') {
+      e.preventDefault();
+      if (promptAdminPassword()) {
+        location.hash = '#admin';
+      }
+      return;
+    }
+    
+    // Update highlights after a brief delay to let hash change
+    setTimeout(updateNavHighlights, 10);
+  }
+});
+
+// Handle hash changes (back/forward buttons, direct URL access)
+window.addEventListener('hashchange', function() {
+  var view = location.hash.replace('#', '');
+  
+  // Protect admin view access
+  if (view === 'admin' && !adminUnlocked && state.auth !== 'admin') {
+    if (!promptAdminPassword()) {
+      // Redirect to picks if password incorrect
+      location.hash = '#picks';
+      return;
+    }
+  }
+  
+  updateNavHighlights();
+});
+
+// Initialize navigation on page load
+setTimeout(function() {
+  updateNavHighlights();
+  checkAdminAccess();
+}, 300);
+
+// Helper functions for better UX
+function clearSearch() {
+  document.getElementById('searchInp').value = '';
+  render();
+}
+
+function clearFilters() {
+  document.getElementById('leagueSel').value = '';
+  document.getElementById('marketSel').value = '';
+  document.getElementById('minConf').value = '0';
+  render();
+}
+
+function clearAllFilters() {
+  clearFilters();
+  clearSearch();
+}
+
+// Enhanced confidence calculation
+function calculateRealisticConfidence(league, marketType, riskTag, odds) {
+  var baseConfidence = 50;
+  
+  // League reliability bonus
+  var leagueBonus = {
+    'NFL': 12, 'NBA': 8, 'NHL': 7, 'MLB': 6,
+    'CFB': 5, 'CBB': 4, 'MLS': 3, 'UFC': 10
+  };
+  baseConfidence += leagueBonus[league] || 0;
+  
+  // Market type difficulty
+  var marketBonus = {
+    'moneyline': 15, 'spread': 10, 'totals': 8,
+    'props': 5, 'player-props': 3, 'team-props': 6, 'alt-lines': 4
+  };
+  baseConfidence += marketBonus[marketType] || 0;
+  
+  // Risk assessment
+  if (riskTag === 'safe') baseConfidence += 12;
+  if (riskTag === 'degen') baseConfidence -= 8;
+  
+  // Odds impact (favorites vs underdogs)
+  if (odds <= -150) baseConfidence += 8;
+  if (odds >= 200) baseConfidence -= 5;
+  
+  // Add realistic variance (±7%)
+  var variance = Math.floor(Math.random() * 15) - 7;
+  
+  return Math.max(45, Math.min(95, baseConfidence + variance));
+}
+
+// Apply realistic confidence to existing picks on page load
+setTimeout(function() {
+  picksLive.forEach(function(pick) {
+    pick.modelConfidence = calculateRealisticConfidence(
+      pick.league, pick.marketType, pick.riskTag, pick.oddsAmerican
+    );
+  });
+  
+  picksResults.forEach(function(pick) {
+    pick.modelConfidence = calculateRealisticConfidence(
+      pick.league, pick.marketType, pick.riskTag, pick.oddsAmerican
+    );
+  });
+  
+  // Re-render picks if we're on the picks view
+  if (location.hash === '#picks' || location.hash === '') {
+    render();
+  }
+}, 1000);
+
+
+
+
+
 /* FIREBASE & N8N INTEGRATION READY */
 // Firebase configuration (replace with your config when ready)
 var firebaseConfig = {
@@ -1871,6 +3317,10 @@ if (typeof firebase !== 'undefined' && firebaseConfig.apiKey) {
 async function sendToN8N(endpoint, data) {
   if (!n8nEndpoints[endpoint]) {
     console.warn('N8N endpoint not configured:', endpoint);
+    // Fallback for contact form
+    if (endpoint === 'contact') {
+      alert('Thank you for your message! We\'ll get back to you soon.');
+    }
     return null;
   }
   
@@ -1898,14 +3348,25 @@ async function submitContactToN8N(formData) {
   return sendToN8N('contact', formData);
 }
 
+
+
 /* INIT */
 try{ route(); }catch(e){ console.error('route()', e); }
 try{ render(); }catch(e){ console.error('render()', e); }
+
+// Update copyright year dynamically
+try {
+  var yearSpan = document.getElementById('copyrightYear');
+  if (yearSpan) {
+    yearSpan.textContent = new Date().getFullYear();
+  }
+} catch(e){ console.error('copyright year update', e); }
 try{ renderScorecard(); }catch(e){ console.error('renderScorecard()', e); }
 try{ renderAccount(); }catch(e){ console.error('renderAccount()', e); }
 try{ renderProfile(); }catch(e){ console.error('renderProfile()', e); }
 try{ reflectAuthButtons(); }catch(e){ console.error('reflectAuthButtons()', e); }
 try{ updateHeaderUI(); }catch(e){ console.error('updateHeaderUI()', e); }
+try{ updateMobileBanner(); }catch(e){ console.error('updateMobileBanner()', e); }
 </script>
 </body>
 </html>
