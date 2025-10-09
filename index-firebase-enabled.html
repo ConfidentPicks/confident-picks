@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Confident Picks - Expert Sports Betting Analysis</title>
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0B0F14">
+
+<meta name="description" content="Get confident sports betting picks with real-time results tracking. Expert analysis and performance metrics to improve your betting strategy.">
+<meta property="og:title" content="Confident Picks - Expert Sports Betting Analysis">
+<meta property="og:description" content="Get confident sports betting picks with real-time results tracking. Expert analysis and performance metrics to improve your betting strategy.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/og-image.png">
+<meta property="og:url" content="https://confident-picks.com">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Firebase SDK v9+ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA48rKRZiwka1h3_GA3hVNxk8WjOAKpM6U",
+  authDomain: "confident-picks-app-8-25.firebaseapp.com",
+  projectId: "confident-picks-app-8-25",
+  storageBucket: "confident-picks-app-8-25.firebasestorage.app",
+  messagingSenderId: "560353454758",
+  appId: "1:560353454758:web:0d0a6eb9f1892669ab2267",
+  measurementId: "G-PDFMST5FZW"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Make Firebase available globally
+window.db = db;
+window.auth = auth;
+window.firebaseReady = true;
+
+console.log('🔥 Firebase initialized successfully');
+console.log('📊 Database:', db);
+</script>
+
+<style>
+:root{
+  --bg:#0B0F14; --card:#121820; --text:#E6EDF3; --sub:#98A6B3;
+  --blue:#4DA3FF; --green:#22C55E; --red:#FF6B6B; --border:#ffffff18; --r:12px;
+
+  --select-popup-bg:#0B0F14;
+  --select-popup-text:#E6EDF3;
+}
+:root[data-theme="light"]{
+  --bg:#ffffff; --card:#F4F6F8; --text:#0B0F14; --sub:#475569; --border:#00000014;
+  --select-popup-bg:#ffffff;
+  --select-popup-text:#0B0F14;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);color:var(--text); color-scheme: dark;}
+:root[data-theme="light"] body{ color-scheme: light; }
+
+.container{max-width:1024px;margin:0 auto;padding:16px}
+.hidden{display:none}
+.header{position:sticky;top:0;background:rgba(0,0,0,.2);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);z-index:1000}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px}
+.logo .brandmark{ width:28px; height:28px; display:inline-block; }
+.logo strong{ letter-spacing:.2px; }
+
+.btn{padding:8px 12px;border-radius:var(--r);border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);cursor:pointer;text-decoration:none;display:inline-block;font-size:14px;font-weight:500;transition:all .2s}
+.btn.primary{background:var(--blue);color:#0B0F14;border-color:transparent}
+.btn:hover{background:rgba(255,255,255,.12)}
+.btn.primary:hover{background:#3d8bff}
+
+.nav{display:flex;gap:8px;align-items:center}
+.nav a{color:var(--text);text-decoration:none;padding:8px 12px;border-radius:var(--r);transition:all .2s}
+.nav a:hover{background:rgba(255,255,255,.06)}
+.nav a.active{background:var(--blue);color:#0B0F14}
+
+.mobile-menu{display:none}
+@media (max-width:768px){
+  .mobile-menu{display:block}
+  .nav{display:none}
+}
+
+/* Gate CSS */
+#gate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+#gate .gate-content {
+  background: var(--card);
+  padding: 32px;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+#gate h2 {
+  margin: 0 0 16px 0;
+  color: var(--text);
+}
+
+#gate input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--bg);
+  color: var(--text);
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+#gate button {
+  width: 100%;
+  padding: 12px;
+  background: var(--blue);
+  color: #0B0F14;
+  border: none;
+  border-radius: var(--r);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#gate .error {
+  color: var(--red);
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+/* Cards */
+.card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px;margin-bottom:16px}
+.card h2{margin:0 0 12px 0;font-size:18px;font-weight:600}
+.card h3{margin:0 0 8px 0;font-size:16px;font-weight:600}
+
+/* Picks */
+.picks-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.pick-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px;position:relative}
+.pick-card .pick-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.pick-card .pick-league{font-size:12px;color:var(--sub);text-transform:uppercase;font-weight:600}
+.pick-card .pick-confidence{background:var(--blue);color:#0B0F14;padding:4px 8px;border-radius:4px;font-size:12px;font-weight:600}
+.pick-card .pick-desc{font-size:16px;font-weight:600;margin-bottom:8px;line-height:1.4}
+.pick-card .pick-details{font-size:14px;color:var(--sub);margin-bottom:8px}
+.pick-card .pick-reasoning{font-size:14px;color:var(--text);line-height:1.5}
+.pick-card .pick-tier{position:absolute;top:12px;right:12px;font-size:10px;text-transform:uppercase;font-weight:600;padding:2px 6px;border-radius:3px}
+.pick-card .tier-public{background:rgba(34,197,94,0.2);color:var(--green)}
+.pick-card .tier-free{background:rgba(77,163,255,0.2);color:var(--blue)}
+.pick-card .tier-paid{background:rgba(255,107,107,0.2);color:var(--red)}
+
+/* Results */
+.results-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.result-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px}
+.result-card .result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.result-card .result-status{font-size:12px;font-weight:600;padding:4px 8px;border-radius:4px}
+.result-card .status-win{background:rgba(34,197,94,0.2);color:var(--green)}
+.result-card .status-loss{background:rgba(255,107,107,0.2);color:var(--red)}
+.result-card .status-pending{background:rgba(77,163,255,0.2);color:var(--blue)}
+
+/* Stats */
+.stats-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.stat-card{background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:16px;text-align:center}
+.stat-card .stat-value{font-size:24px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.stat-card .stat-label{font-size:14px;color:var(--sub);text-transform:uppercase;font-weight:600}
+
+/* Forms */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;margin-bottom:8px;font-weight:500;color:var(--text)}
+.form-group input, .form-group select, .form-group textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg);color:var(--text);font-size:14px}
+.form-group textarea{min-height:100px;resize:vertical}
+
+/* Loading */
+.loading{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top:2px solid var(--blue);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+/* Responsive */
+@media (max-width:768px){
+  .container{padding:12px}
+  .picks-grid, .results-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .header .row{flex-direction:column;gap:8px;align-items:stretch}
+  .header .nav{justify-content:center}
+}
+
+/* Firebase Status Indicator */
+.firebase-status {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 1001;
+  transition: all 0.3s ease;
+}
+
+.firebase-status.connected {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+
+.firebase-status.disconnected {
+  background: rgba(255, 107, 107, 0.2);
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+.firebase-status.loading {
+  background: rgba(77, 163, 255, 0.2);
+  color: var(--blue);
+  border: 1px solid var(--blue);
+}
+</style>
+</head>
+<body>
+
+<!-- Firebase Status Indicator -->
+<div id="firebase-status" class="firebase-status loading">Firebase Loading...</div>
+
+<!-- Gate -->
+<div id="gate">
+  <div class="gate-content">
+    <h2>🔐 Access Required</h2>
+    <input type="password" id="gate-password" placeholder="Enter access code" />
+    <button onclick="checkGate()">Enter</button>
+    <div id="gate-error" class="error hidden"></div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="header">
+  <div class="container row">
+    <div class="logo">
+      <svg class="brandmark" viewBox="0 0 48 48" aria-hidden="true">
+        <defs><linearGradient id="g1" x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4DA3FF"/><stop offset="1" stop-color="#22C55E"/></linearGradient></defs>
+        <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#g1)"/>
+        <path d="M14 25 L21 32 L34 17" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <strong>Confident Picks</strong>
+    </div>
+    <nav class="nav">
+      <a href="#" data-nav="picks" class="active">Live Picks</a>
+      <a href="#" data-nav="results">Results</a>
+      <a href="#" data-nav="stats">Stats</a>
+      <a href="#" data-nav="admin">Admin</a>
+    </nav>
+    <div class="mobile-menu">
+      <button class="btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+  <!-- Live Picks Section -->
+  <section id="picks-section" class="section">
+    <div class="card">
+      <h2>🎯 Live Picks</h2>
+      <p class="text-sub">Expert analysis and confident predictions</p>
+      <div id="picks-container" class="picks-grid">
+        <div class="loading">Loading picks...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results Section -->
+  <section id="results-section" class="section hidden">
+    <div class="card">
+      <h2>📊 Results</h2>
+      <p class="text-sub">Track performance and outcomes</p>
+      <div id="results-container" class="results-grid">
+        <div class="loading">Loading results...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section id="stats-section" class="section hidden">
+    <div class="card">
+      <h2>📈 Statistics</h2>
+      <p class="text-sub">Performance metrics and analytics</p>
+      <div id="stats-container" class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="total-picks">-</div>
+          <div class="stat-label">Total Picks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="win-rate">-</div>
+          <div class="stat-label">Win Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="avg-confidence">-</div>
+          <div class="stat-label">Avg Confidence</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="roi">-</div>
+          <div class="stat-label">ROI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Section -->
+  <section id="admin-section" class="section hidden">
+    <div class="card">
+      <h2>⚙️ Admin Panel</h2>
+      <p class="text-sub">System management and diagnostics</p>
+      
+      <div class="card">
+        <h3>Firebase Status</h3>
+        <div id="admin-firebase-status">
+          <div class="loading">Checking Firebase...</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>Data Management</h3>
+        <button class="btn primary" onclick="loadFirebaseData()">Reload Firebase Data</button>
+        <button class="btn" onclick="testFirebaseConnection()">Test Connection</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+// App State
+const state = {
+  auth: 'anon',
+  currentSection: 'picks',
+  firebaseReady: false,
+  firebaseData: [],
+  staticData: {
+    picksLive: [
+      {id:'1', league:'NBA', marketType:'player-props', pickDesc:'LeBron James Over 25.5 Points', oddsAmerican:-115, modelConfidence:78, commenceTime:daysAgo(-0.2), tier:'public', riskTag:'safe', reasoning:'LeBron averaging 28.2 PPG vs this matchup, 7/10 recent overs.'},
+      {id:'2', league:'UFC', marketType:'moneyline', pickDesc:'Jon Jones ML vs Stipe', oddsAmerican:-180, modelConfidence:85, commenceTime:daysAgo(-0.5), tier:'public', riskTag:'safe', reasoning:'Jones 18-1 in title fights, reach advantage, superior ground game.'},
+      {id:'3', league:'NHL', marketType:'totals', pickDesc:'Over 6.5 Goals EDM@VGK', oddsAmerican:105, modelConfidence:72, commenceTime:daysAgo(-0.1), tier:'public', riskTag:'degen', reasoning:'Both teams averaging 3.8 goals/game, weak goaltending matchup.'},
+      {id:'4', league:'CFB', marketType:'spread', pickDesc:'Alabama -14 vs Tennessee', oddsAmerican:-110, modelConfidence:81, commenceTime:daysAgo(-1), tier:'free', riskTag:'safe', reasoning:'Alabama 9-1 ATS as home favorites, Tennessee missing key OL.'},
+      {id:'5', league:'CBB', marketType:'team-props', pickDesc:'Duke Team Total Over 78.5', oddsAmerican:-105, modelConfidence:74, commenceTime:daysAgo(-0.3), tier:'paid', riskTag:'safe', reasoning:'Duke averaging 84.2 PPG at home, opponent allows 81.5 PPG.'},
+      {id:'6', league:'MLS', marketType:'alt-lines', pickDesc:'LAFC -0.5 (Alt Line)', oddsAmerican:140, modelConfidence:69, commenceTime:daysAgo(-0.7), tier:'free', riskTag:'degen', reasoning:'LAFC 12-3-1 at home, but Seattle strong on road defense.'},
+      {id:'7', league:'MLB', marketType:'moneyline', pickDesc:'Rays ML vs Yankees', oddsAmerican:-120, modelConfidence:82, commenceTime:daysAgo(-0.2), tier:'public', riskTag:'safe', reasoning:'Rays bullpen rested; model edge ~1.9%.'},
+      {id:'8', league:'NFL', marketType:'props', pickDesc:'Mahomes Over 2.5 TD', oddsAmerican:140, modelConfidence:71, commenceTime:daysAgo(-22), tier:'public', riskTag:'degen', reasoning:'RZ pass rate up; opponent man-heavy.'}
+    ],
+    picksResults: [
+      {id:'r1', league:'NFL', pickDesc:'Chiefs -3 vs Bills', result:'win', confidence:85, odds:-110, reasoning:'Mahomes at home, weather advantage.'},
+      {id:'r2', league:'NBA', pickDesc:'Lakers Over 225.5', result:'loss', confidence:72, odds:105, reasoning:'High pace game expected.'},
+      {id:'r3', league:'MLB', pickDesc:'Dodgers ML vs Giants', result:'win', confidence:88, odds:-140, reasoning:'Superior pitching matchup.'}
+    ]
+  }
+};
+
+// Utility Functions
+function daysAgo(days) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString();
+}
+
+// Firebase Functions
+async function loadFirebaseData() {
+  if (!window.firebaseReady || !window.db) {
+    console.log('Firebase not ready, using static data');
+    renderPicks(state.staticData.picksLive);
+    return;
+  }
+
+  try {
+    console.log('🔄 Loading data from Firebase...');
+    updateFirebaseStatus('loading', 'Loading data...');
+    
+    const { collection, getDocs } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
+    const snapshot = await getDocs(collection(window.db, 'mlb_picks'));
+    
+    if (snapshot.empty) {
+      console.log('No Firebase data found, using static data');
+      renderPicks(state.staticData.picksLive);
+      updateFirebaseStatus('disconnected', 'No Firebase data');
+      return;
+    }
+    
+    // Convert Firebase data to app format
+    const firebasePicks = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      firebasePicks.push({
+        id: doc.id,
+        league: 'MLB',
+        marketType: 'moneyline',
+        pickDesc: `${data.awayTeam || 'Away'} vs ${data.homeTeam || 'Home'}`,
+        oddsAmerican: -110, // Default odds
+        modelConfidence: Math.round(parseFloat(data.confidence || 0) * 100),
+        commenceTime: new Date().toISOString(),
+        tier: 'public',
+        riskTag: 'safe',
+        reasoning: `Firebase pick: ${data.consensus?.prediction || data.prediction || 'No prediction available'}`
+      });
+    });
+    
+    state.firebaseData = firebasePicks;
+    renderPicks(firebasePicks);
+    updateFirebaseStatus('connected', `Loaded ${firebasePicks.length} picks`);
+    console.log(`✅ Successfully loaded ${firebasePicks.length} picks from Firebase`);
+    
+  } catch (error) {
+    console.error('Firebase data loading failed:', error);
+    renderPicks(state.staticData.picksLive);
+    updateFirebaseStatus('disconnected', 'Firebase error');
+  }
+}
+
+async function testFirebaseConnection() {
+  if (!window.firebaseReady || !window.db) {
+    updateFirebaseStatus('disconnected', 'Firebase not initialized');
+    return false;
+  }
+
+  try {
+    console.log('🧪 Testing Firebase connection...');
+    updateFirebaseStatus('loading', 'Testing connection...');
+    
+    const { collection, getDocs, limit, query } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
+    const testQuery = query(collection(window.db, 'mlb_picks'), limit(1));
+    const testDoc = await getDocs(testQuery);
+    
+    updateFirebaseStatus('connected', `Connected (${testDoc.size} docs)`);
+    console.log(`✅ Firebase connection successful! Found ${testDoc.size} documents`);
+    return true;
+  } catch (error) {
+    console.error('Firebase connection failed:', error);
+    updateFirebaseStatus('disconnected', 'Connection failed');
+    return false;
+  }
+}
+
+function updateFirebaseStatus(status, message) {
+  const statusEl = document.getElementById('firebase-status');
+  if (statusEl) {
+    statusEl.className = `firebase-status ${status}`;
+    statusEl.textContent = message;
+  }
+}
+
+// Gate Functions
+function checkGate() {
+  const password = document.getElementById('gate-password').value;
+  const errorEl = document.getElementById('gate-error');
+  const gateEl = document.getElementById('gate');
+  
+  if (password === 'confident2025') {
+    gateEl.style.display = 'none';
+    initializeApp();
+  } else {
+    errorEl.textContent = 'Invalid access code';
+    errorEl.classList.remove('hidden');
+  }
+}
+
+// Navigation
+var navLinks = [];
+
+function initializeEventListeners() {
+  // Initialize navigation links
+  navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-nav]'));
+  
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const section = this.getAttribute('data-nav');
+      showSection(section);
+      
+      // Update active state
+      navLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+function showSection(sectionName) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(section => {
+    section.classList.add('hidden');
+  });
+  
+  // Show selected section
+  const targetSection = document.getElementById(sectionName + '-section');
+  if (targetSection) {
+    targetSection.classList.remove('hidden');
+    state.currentSection = sectionName;
+  }
+}
+
+// Rendering Functions
+function renderPicks(picks) {
+  const container = document.getElementById('picks-container');
+  if (!container) return;
+  
+  if (!picks || picks.length === 0) {
+    container.innerHTML = '<div class="text-sub">No picks available</div>';
+    return;
+  }
+  
+  const html = picks.map(pick => `
+    <div class="pick-card">
+      <div class="pick-header">
+        <div class="pick-league">${pick.league}</div>
+        <div class="pick-confidence">${pick.modelConfidence}%</div>
+      </div>
+      <div class="pick-tier tier-${pick.tier}">${pick.tier}</div>
+      <div class="pick-desc">${pick.pickDesc}</div>
+      <div class="pick-details">
+        ${pick.oddsAmerican > 0 ? '+' : ''}${pick.oddsAmerican} | ${pick.marketType} | ${pick.riskTag}
+      </div>
+      <div class="pick-reasoning">${pick.reasoning}</div>
+    </div>
+  `).join('');
+  
+  container.innerHTML = html;
+}
+
+function renderResults(results) {
+  const container = document.getElementById('results-container');
+  if (!container) return;
+  
+  if (!results || results.length === 0) {
+    container.innerHTML = '<div class="text-sub">No results available</div>';
+    return;
+  }
+  
+  const html = results.map(result => `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-league">${result.league}</div>
+        <div class="result-status status-${result.result}">${result.result}</div>
+      </div>
+      <div class="result-desc">${result.pickDesc}</div>
+      <div class="result-details">
+        Confidence: ${result.confidence}% | Odds: ${result.odds > 0 ? '+' : ''}${result.odds}
+      </div>
+      <div class="result-reasoning">${result.reasoning}</div>
+    </div>
+  `).join('');
+  
+  container.innerHTML = html;
+}
+
+function updateStats() {
+  const totalPicks = state.staticData.picksResults.length;
+  const wins = state.staticData.picksResults.filter(r => r.result === 'win').length;
+  const winRate = totalPicks > 0 ? Math.round((wins / totalPicks) * 100) : 0;
+  const avgConfidence = totalPicks > 0 ? Math.round(state.staticData.picksResults.reduce((sum, r) => sum + r.confidence, 0) / totalPicks) : 0;
+  
+  document.getElementById('total-picks').textContent = totalPicks;
+  document.getElementById('win-rate').textContent = winRate + '%';
+  document.getElementById('avg-confidence').textContent = avgConfidence + '%';
+  document.getElementById('roi').textContent = '+12.5%'; // Placeholder
+}
+
+// Admin Functions
+function updateAdminFirebaseStatus() {
+  const container = document.getElementById('admin-firebase-status');
+  if (!container) return;
+  
+  if (window.firebaseReady && window.db) {
+    container.innerHTML = `
+      <div class="status success">✅ Firebase Connected</div>
+      <div class="text-sub">Database: ${window.db.app.options.projectId}</div>
+      <div class="text-sub">Data loaded: ${state.firebaseData.length} picks</div>
+    `;
+  } else {
+    container.innerHTML = `
+      <div class="status error">❌ Firebase Disconnected</div>
+      <div class="text-sub">Using static data fallback</div>
+    `;
+  }
+}
+
+// Mobile Menu
+function toggleMobileMenu() {
+  const nav = document.querySelector('.nav');
+  nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+}
+
+// App Initialization
+function initializeApp() {
+  console.log('🚀 Initializing app...');
+  
+  // Initialize event listeners
+  initializeEventListeners();
+  
+  // Load initial data
+  loadFirebaseData();
+  renderResults(state.staticData.picksResults);
+  updateStats();
+  
+  // Update admin status
+  updateAdminFirebaseStatus();
+  
+  console.log('✅ App initialized successfully');
+}
+
+// Wait for Firebase to be ready
+function waitForFirebase() {
+  if (window.firebaseReady) {
+    console.log('🔥 Firebase ready');
+    updateFirebaseStatus('connected', 'Firebase Ready');
+  } else {
+    setTimeout(waitForFirebase, 100);
+  }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 DOM ready');
+  waitForFirebase();
+});
+</script>
+
+</body>
+</html>
+

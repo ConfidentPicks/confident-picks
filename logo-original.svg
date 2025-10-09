@@ -1,0 +1,67 @@
+<svg width="200" height="120" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Original Confident Picks Logo -->
+  <defs>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2D5A5A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A3A3A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Shield with man's profile -->
+  <path d="M25 15 L25 25 L35 30 L35 45 L25 50 L15 45 L15 30 L25 25 Z"
+        fill="url(#shieldGradient)"
+        stroke="#2D5A5A"
+        stroke-width="1.5"/>
+
+  <!-- Man's profile (head and shoulders) -->
+  <path d="M20 18 Q20 15 22 15 Q24 15 24 18 L24 22 Q24 25 22 25 Q20 25 20 22 Z"
+        fill="url(#shieldGradient)"/>
+  
+  <!-- Shoulders -->
+  <path d="M18 22 L26 22 L26 25 L18 25 Z"
+        fill="url(#shieldGradient)"/>
+
+  <!-- White outlined checkmark -->
+  <path d="M16 32 L22 38 L28 26"
+        stroke="white"
+        stroke-width="3"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+  
+  <!-- Checkmark outline -->
+  <path d="M16 32 L22 38 L28 26"
+        stroke="#2D5A5A"
+        stroke-width="5"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Text: CONFIDENT -->
+  <text x="50" y="35"
+        font-family="Arial, sans-serif"
+        font-size="16"
+        font-weight="bold"
+        text-anchor="start"
+        fill="#2D5A5A">CONFIDENT</text>
+
+  <!-- Text: PICKS -->
+  <text x="50" y="55"
+        font-family="Arial, sans-serif"
+        font-size="16"
+        font-weight="bold"
+        text-anchor="start"
+        fill="#2D5A5A">PICKS</text>
+
+  <!-- Text: SPORTS ANALYTICS -->
+  <text x="50" y="75"
+        font-family="Arial, sans-serif"
+        font-size="12"
+        font-weight="normal"
+        text-anchor="start"
+        fill="#2D5A5A"
+        letter-spacing="1">SPORTS ANALYTICS</text>
+</svg>
+
+
+

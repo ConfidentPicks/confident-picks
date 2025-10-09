@@ -1,0 +1,23 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield with checkmark - Original design but larger -->
+  <defs>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2D5A5A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A3A3A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Shield shape -->
+  <path d="M12 6 L12 16 L22 20 L22 28 L12 32 L2 28 L2 20 L12 16 Z" 
+        fill="url(#shieldGradient)" 
+        stroke="#2D5A5A" 
+        stroke-width="1.5"/>
+  
+  <!-- Checkmark inside shield -->
+  <path d="M8 20 L12 24 L18 14" 
+        stroke="white" 
+        stroke-width="4" 
+        fill="none" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+</svg>
