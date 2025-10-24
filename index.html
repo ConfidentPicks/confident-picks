@@ -74,7 +74,7 @@ async function ensureCollectionsExist() {
 
   const requiredCollections = [
     { name: 'qa_picks', description: 'QA workflow picks (draft, rejected)' },
-    { name: 'live_picks', description: 'Approved picks for website display' },
+    { name: 'test_picks', description: 'Approved picks for website display' },
     { name: 'scoring', description: 'Concluded games for hit/miss tracking' },
     { name: 'deleted_picks', description: 'Soft-deleted picks archive' },
     { name: 'backups', description: 'System backup metadata' }
@@ -118,7 +118,7 @@ async function exportAllData() {
 
   try {
     console.log('📦 Starting full data backup...');
-    const collections = ['qa_picks', 'live_picks', 'scoring', 'deleted_picks', 'users'];
+    const collections = ['qa_picks', 'test_picks', 'scoring', 'deleted_picks', 'users'];
     const allData = {
       exportDate: new Date().toISOString(),
       version: '1.0',
@@ -283,7 +283,7 @@ async function moveCompletedGamesToScoring() {
     console.log('🔄 Moving completed games to scoring collection...');
     
     // Get all live picks
-    const livePicksSnapshot = await getDocs(collection(window.db, 'live_picks'));
+    const livePicksSnapshot = await getDocs(collection(window.db, 'test_picks'));
     const completedPicks = [];
     
     livePicksSnapshot.forEach(doc => {
@@ -309,16 +309,16 @@ async function moveCompletedGamesToScoring() {
           ...pick.data,
           status: 'pending',
           movedToScoring: new Date().toISOString(),
-          originalCollection: 'live_picks',
+          originalCollection: 'test_picks',
           originalId: pick.id
         };
         
         await addDoc(collection(window.db, 'scoring'), scoringData);
         console.log(`✅ Moved pick ${pick.id} to scoring collection`);
         
-        // Remove from live_picks
-        await deleteDoc(doc(window.db, 'live_picks', pick.id));
-        console.log(`🗑️ Removed pick ${pick.id} from live_picks`);
+        // Remove from test_picks
+        await deleteDoc(doc(window.db, 'test_picks', pick.id));
+        console.log(`🗑️ Removed pick ${pick.id} from test_picks`);
         
       } catch (error) {
         console.error(`❌ Error moving pick ${pick.id}:`, error);
@@ -435,8 +435,8 @@ async function debugScoringSystem() {
   try {
     console.log('🔍 Debugging scoring system...');
     
-    // Check live_picks collection
-    const livePicksSnapshot = await getDocs(collection(window.db, 'live_picks'));
+    // Check test_picks collection
+    const livePicksSnapshot = await getDocs(collection(window.db, 'test_picks'));
     console.log(`📊 Live picks count: ${livePicksSnapshot.size}`);
     
     const now = new Date();
@@ -4936,14 +4936,14 @@ async function loadQAPicks() {
       });
       console.log(`✅ Loaded ${qaSnapshot.size} picks from qa_picks collection`);
       
-      // Load from live_picks collection
-      const liveSnapshot = await getDocs(collection(window.db, 'live_picks'));
+      // Load from test_picks collection
+      const liveSnapshot = await getDocs(collection(window.db, 'test_picks'));
       liveSnapshot.forEach(doc => {
         const data = doc.data();
-        const pick = mapFirebaseDataToQAPick(doc.id, data, 'live_picks');
+        const pick = mapFirebaseDataToQAPick(doc.id, data, 'test_picks');
         qaPicks.push(pick);
       });
-      console.log(`✅ Loaded ${liveSnapshot.size} picks from live_picks collection`);
+      console.log(`✅ Loaded ${liveSnapshot.size} picks from test_picks collection`);
       
       // Load from scoring collection
       const scoringSnapshot = await getDocs(collection(window.db, 'scoring'));
@@ -4966,14 +4966,14 @@ async function loadQAPicks() {
       });
       console.log(`✅ Loaded ${qaPicks.length} picks from deleted_picks collection`);
     } else if (currentQAFilter === 'live') {
-      // Load from live_picks collection
-      const snapshot = await getDocs(collection(window.db, 'live_picks'));
+      // Load from test_picks collection
+      const snapshot = await getDocs(collection(window.db, 'test_picks'));
       snapshot.forEach(doc => {
         const data = doc.data();
-        const pick = mapFirebaseDataToQAPick(doc.id, data, 'live_picks');
+        const pick = mapFirebaseDataToQAPick(doc.id, data, 'test_picks');
         qaPicks.push(pick);
       });
-      console.log(`✅ Loaded ${qaPicks.length} picks from live_picks collection`);
+      console.log(`✅ Loaded ${qaPicks.length} picks from test_picks collection`);
     } else if (currentQAFilter === 'scoring') {
       // Load from scoring collection (pending, hit, miss)
       const snapshot = await getDocs(collection(window.db, 'scoring'));
@@ -5053,7 +5053,7 @@ function renderQAPicks() {
       );
     } else if (currentQAFilter === 'live') {
       // Show live picks
-      filteredPicks = qaPicks.filter(pick => pick.status === 'live' || pick.originalCollection === 'live_picks');
+      filteredPicks = qaPicks.filter(pick => pick.status === 'live' || pick.originalCollection === 'test_picks');
     } else if (currentQAFilter === 'rejected') {
       // Show rejected picks
       filteredPicks = qaPicks.filter(pick => pick.status === 'rejected');
@@ -5307,7 +5307,7 @@ async function approveAndMakeLive(pickId) {
     pick.approvedAt = new Date().toISOString();
     pick.liveAt = new Date().toISOString();
 
-    // Move pick from scoring to live_picks collection
+    // Move pick from scoring to test_picks collection
     if (window.db) {
       const { doc, updateDoc, addDoc, deleteDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
       
@@ -5319,7 +5319,7 @@ async function approveAndMakeLive(pickId) {
         if (qaPickSnap.exists()) {
           const pickData = qaPickSnap.data();
           
-          // 2. Add to live_picks collection with live status
+          // 2. Add to test_picks collection with live status
           const livePickData = {
             ...pickData,
             status: 'live',
@@ -5328,8 +5328,8 @@ async function approveAndMakeLive(pickId) {
             movedToLive: new Date().toISOString()
           };
           
-          await addDoc(collection(window.db, 'live_picks'), livePickData);
-          console.log('✅ Pick moved to live_picks collection');
+          await addDoc(collection(window.db, 'test_picks'), livePickData);
+          console.log('✅ Pick moved to test_picks collection');
           
           // 3. Delete from qa_picks collection
           await deleteDoc(qaPickRef);
@@ -5338,7 +5338,7 @@ async function approveAndMakeLive(pickId) {
           console.warn(`Pick ${pickId} not found in qa_picks collection`);
         }
       } catch (error) {
-        console.error('Error moving pick to live_picks:', error);
+        console.error('Error moving pick to test_picks:', error);
         // Fallback: just update status in scoring collection
         await updateDoc(doc(window.db, 'scoring', pickId), { 
           status: 'live', 
@@ -6108,7 +6108,7 @@ function filterQAPicksArray() {
       p.originalCollection !== 'scoring'
     );
   } else if (currentQAFilter === 'live') {
-    return qaPicks.filter(p => p.status === 'live' || p.originalCollection === 'live_picks');
+    return qaPicks.filter(p => p.status === 'live' || p.originalCollection === 'test_picks');
   } else if (currentQAFilter === 'rejected') {
     return qaPicks.filter(p => p.status === 'rejected');
   } else if (currentQAFilter === 'scoring') {
@@ -6596,8 +6596,8 @@ async function loadFirebaseData() {
     console.log('🔄 Loading Firebase data...');
     const { collection, getDocs, query, where } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
     
-    // Only load approved/live picks for the main website from live_picks collection
-    const approvedQuery = query(collection(window.db, 'live_picks'), where('status', 'in', ['approved', 'live']));
+    // Only load approved/live picks for the main website from test_picks collection
+    const approvedQuery = query(collection(window.db, 'test_picks'), where('status', 'in', ['approved', 'live']));
     const snapshot = await getDocs(approvedQuery);
     
     if (!snapshot.empty) {
@@ -6729,7 +6729,7 @@ async function moveCompletedGamesToScoring() {
     console.log('Current time:', now.toISOString());
     
     // Get all live picks that should have started
-    const liveQuery = query(collection(window.db, 'live_picks'));
+    const liveQuery = query(collection(window.db, 'test_picks'));
     const liveSnapshot = await getDocs(liveQuery);
     
     let movedCount = 0;
@@ -6751,7 +6751,7 @@ async function moveCompletedGamesToScoring() {
           ...data,
           status: 'pending', // Will be updated to 'hit' or 'miss' when results are in
           movedToScoringAt: new Date().toISOString(),
-          originalCollection: 'live_picks',
+          originalCollection: 'test_picks',
           originalDocId: liveDoc.id
         };
         
@@ -7154,7 +7154,7 @@ window.debugFirebaseData = async function() {
       console.log(`Document ${doc.id}:`, data);
     });
     
-    // Check live_picks collection
+    // Check test_picks collection
     const liveQuery = query(collection(window.db, 'live_picks'));
     const liveSnapshot = await getDocs(liveQuery);
     
