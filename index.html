@@ -1040,7 +1040,7 @@ html.gated body > *:not(#gate){ display:none !important; }
       <a href="#admin" data-nav id="navAdmin" class="hidden">Admin</a>
       <button type="button" id="themeBtn" class="btn enhanced" aria-label="Toggle theme"><span class="theme-icon" aria-hidden="true"></span></button>
       <button type="button" id="authBtn" class="btn primary enhanced">Sign up for free</button>
-      <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade <span style="font-size:10px; opacity:0.7;">(Sandbox)</span></button>
+      <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade</button>
     </div>
   </div>
 </div>
@@ -3008,7 +3008,7 @@ function accountSignedInHTML(){
     +   planCards
     + '</div>'
     + '<div class="row" style="gap:8px; margin-top:12px">'
-    +   (state.auth==='free' ? '<button id="goUpgradeBtn" class="btn primary enhanced">Upgrade — $15/mo <span style="font-size:10px; opacity:0.7;">(Sandbox)</span></button>' : '')
+    +   (state.auth==='free' ? '<button id="goUpgradeBtn" class="btn primary enhanced">Upgrade — $15/mo</button>' : '')
     +   (state.auth==='admin' ? '<button id="goAdminBtn" class="btn enhanced" onclick="location.hash=\'#admin\'">Go to Admin Panel</button>' : '')
     +   '<button id="goPicksBtn" class="btn enhanced">Back to picks</button>'
     +   '<button id="signOutBtn" class="btn danger enhanced">Sign out</button>'
@@ -7309,30 +7309,28 @@ window.signIn = signIn;
 window.signOut = signOut;
 
 // ============================================================================
-// STRIPE CONFIGURATION - CURRENTLY IN SANDBOX MODE
+// STRIPE CONFIGURATION - PRODUCTION MODE
 // ============================================================================
 // 
-// 🧪 SANDBOX MODE (Current):
-//    - Uses test publishable key (pk_test_...)
-//    - Simulates payment flow with confirm dialogs
-//    - No real payments are processed
-//    - Perfect for testing and development
+// 🚀 PRODUCTION MODE (Current):
+//    - Uses live publishable key (pk_live_...)
+//    - Real payment processing enabled
+//    - Webhook endpoint needed for payment confirmations
 //
-// 🚀 TO SWITCH TO PRODUCTION MODE:
-//    1. Replace publishableKey with live key (pk_live_...)
-//    2. Replace priceId with live price ID (price_...)
-//    3. Create backend endpoint to create Stripe Checkout Sessions
-//    4. Update redirectToCheckout() to call your backend
-//    5. Set up Stripe webhook to handle payment confirmations
-//    6. Remove "(Sandbox)" labels from upgrade buttons
+// ⚠️ IMPORTANT NEXT STEPS:
+//    1. Create a live mode price in Stripe Dashboard
+//    2. Update priceId below with your live price ID
+//    3. Set up webhook endpoint: https://confident-picks.com/api/stripe-webhook
+//    4. Configure webhook to listen for: checkout.session.completed
+//    5. Add webhook signing secret to your backend
 //
 // 📚 Documentation: https://stripe.com/docs/payments/checkout
 // ============================================================================
 
 const stripeConfig = {
-  publishableKey: 'pk_test_51SF4k51G2mT1SwALg87INrgpI1PEOrm6nIwtLOsPANooLpWvcmbYoP6bI2FHDtUYVKNa4f5gIVC6gCsSiQqACaT1004GLTrovT',
-  priceId: 'price_1SF51I1G2mT1SwALThzOjtiQ',
-  mode: 'sandbox' // 'sandbox' or 'production'
+  publishableKey: 'pk_live_51SF4js02IY0KoVm6AxcpbreXtU28vvWkdMseKkry69DhDtdqDI8z1d5MZrfIznAYljsnfwrVAIf1UEladjV2CK7H00qFnhZbkH',
+  priceId: 'price_1SF51I1G2mT1SwALThzOjtiQ', // You'll need to create a live mode price in Stripe
+  mode: 'production' // 'sandbox' or 'production'
 };
 
 // Initialize Stripe
@@ -7379,89 +7377,35 @@ async function createCheckoutSession(priceId) {
 
 async function redirectToCheckout(priceId) {
   try {
-    // For sandbox testing, we'll simulate a successful checkout
-    // In production, you'd create a real checkout session on your backend
-    console.log('🚀 Simulating Stripe checkout for sandbox testing...');
+    console.log('🚀 Initiating Stripe checkout...');
     
-    // Simulate checkout process
-    const confirmed = confirm(
-      '🧪 STRIPE SANDBOX MODE - SIMULATION ONLY\n\n' +
-      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-      'This is a simulated payment flow for testing.\n' +
-      'No real payment will be processed.\n\n' +
-      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-      '💳 Stripe Integration Details:\n' +
-      '   • Publishable Key: ' + stripeConfig.publishableKey.substring(0, 20) + '...\n' +
-      '   • Price ID: ' + stripeConfig.priceId + '\n' +
-      '   • Amount: $15.00 USD / month\n\n' +
-      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-      'In production, this would:\n' +
-      '   1. Create a Stripe Checkout Session via backend\n' +
-      '   2. Redirect to secure Stripe payment page\n' +
-      '   3. Process real payment with Stripe\n' +
-      '   4. Receive webhook confirmation\n' +
-      '   5. Activate premium subscription\n\n' +
-      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-      'Click OK to simulate successful payment\n' +
-      'Click Cancel to simulate canceled payment'
-    );
+    if (!stripe) {
+      throw new Error('Stripe is not initialized');
+    }
     
-    if (confirmed) {
-      // Simulate successful payment
-      console.log('✅ Simulated successful payment');
-      console.log('📊 Payment Details:', {
-        priceId: priceId,
-        amount: '$15.00',
-        currency: 'USD',
-        interval: 'month',
-        timestamp: new Date().toISOString()
-      });
-      
-      // Update user subscription status
-      if (window.auth?.currentUser) {
-        await updateUserSubscription(window.auth.currentUser.uid, {
-          status: 'active',
-          tier: 'premium',
-          priceId: priceId,
-          startedAt: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-        });
-        
-        // Update local auth state
-        setAuth('paid');
-        
-        alert(
-          '🎉 SIMULATED PAYMENT SUCCESSFUL!\n\n' +
-          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-          'Welcome to Premium!\n\n' +
-          '✅ Subscription Status: Active\n' +
-          '✅ Tier: Premium\n' +
-          '✅ Billing: $15/month (simulated)\n' +
-          '✅ Next Billing: ' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString() + '\n\n' +
-          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-          'You now have access to:\n' +
-          '   • All premium picks (unlimited)\n' +
-          '   • Favorites feature\n' +
-          '   • Outcomes tracking\n' +
-          '   • Priority support\n\n' +
-          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
-          '⚠️ Remember: This is sandbox mode.\n' +
-          'No real payment was processed.'
-        );
-        
-        // Refresh the page to show updated status
-        location.hash = '#account';
-        route();
-      }
-    } else {
-      // Simulate canceled payment
-      console.log('❌ Simulated canceled payment');
-      alert(
-        '❌ Payment Canceled\n\n' +
-        'The payment process was canceled.\n' +
-        'You can try again anytime from the Account page.\n\n' +
-        '(Sandbox simulation - no real payment was attempted)'
-      );
+    if (!window.auth?.currentUser) {
+      alert('Please sign in to upgrade your account.');
+      return;
+    }
+    
+    // Create checkout session via Stripe Checkout
+    // Note: For production, you should create the session on your backend
+    // and return the session ID to avoid exposing your price ID
+    const { error } = await stripe.redirectToCheckout({
+      lineItems: [{
+        price: priceId,
+        quantity: 1
+      }],
+      mode: 'subscription',
+      successUrl: window.location.origin + '/?session_id={CHECKOUT_SESSION_ID}&success=true',
+      cancelUrl: window.location.origin + '/?canceled=true',
+      customerEmail: window.auth.currentUser.email,
+      clientReferenceId: window.auth.currentUser.uid
+    });
+    
+    if (error) {
+      console.error('Stripe checkout error:', error);
+      alert('Sorry, there was an error redirecting to checkout. Please try again.');
     }
     
   } catch (error) {
