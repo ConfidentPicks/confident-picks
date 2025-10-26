@@ -3585,48 +3585,42 @@ document.addEventListener('click', function(e){
 
   // auth (Account)
   if (target.id==='googleSignup'){
-    // Real Firebase Google Sign-In (same as sign-in, Firebase handles new users automatically)
-    if (typeof firebase === 'undefined' || !firebase.auth) {
-      console.error('❌ Firebase not loaded yet');
-      alert('Please wait a moment and try again (Firebase is loading)');
-      return;
-    }
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider)
-      .then((result) => {
+    // Real Firebase Google Sign-In (Modern SDK - same as sign-in, Firebase handles new users automatically)
+    (async () => {
+      try {
+        const { GoogleAuthProvider, signInWithPopup } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js');
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(window.auth, provider);
         const user = result.user;
         const isNewUser = result.additionalUserInfo?.isNewUser;
         console.log('✅ Google sign-up successful:', user.email, 'New user:', isNewUser);
         // Firebase auth state listener will handle the rest
         location.hash = '#picks';
         route();
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('❌ Google sign-up error:', error);
         alert('Sign-up failed: ' + error.message);
-      });
+      }
+    })();
     return; // Prevent default mock behavior
   }
   if (target.id==='googleSignin'){
-    // Real Firebase Google Sign-In
-    if (typeof firebase === 'undefined' || !firebase.auth) {
-      console.error('❌ Firebase not loaded yet');
-      alert('Please wait a moment and try again (Firebase is loading)');
-      return;
-    }
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider)
-      .then((result) => {
+    // Real Firebase Google Sign-In (Modern SDK)
+    (async () => {
+      try {
+        const { GoogleAuthProvider, signInWithPopup } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js');
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(window.auth, provider);
         const user = result.user;
         console.log('✅ Google sign-in successful:', user.email);
         // Firebase auth state listener will handle the rest
         location.hash = '#picks';
         route();
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error('❌ Google sign-in error:', error);
         alert('Sign-in failed: ' + error.message);
-      });
+      }
+    })();
     return; // Prevent default mock behavior
   }
   if (target.id==='emailSignupBtn'){
