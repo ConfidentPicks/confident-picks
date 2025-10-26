@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================================================
+    // USERS COLLECTION
+    // ============================================================================
+    match /users/{userId} {
+      // Users can read their own data
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Users can create their own document on first sign-up
+      allow create: if request.auth != null && request.auth.uid == userId;
+      
+      // Users can update their own data EXCEPT role and subscription fields
+      // This prevents users from giving themselves admin access or premium subscriptions
+      allow update: if request.auth != null 
+                    && request.auth.uid == userId
+                    && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'subscription']);
+      
+      // Only admins can modify role and subscription fields
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // ============================================================================
+    // APPROVED MODELS COLLECTION (Read-only for users, write for admins/scripts)
+    // ============================================================================
+    match /approved_models/{modelId} {
+      // Anyone can read approved models
+      allow read: if true;
+      
+      // Only admins can write/update models
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // ============================================================================
+    // PICKS COLLECTIONS (live_picks, test_picks, completed_picks, etc.)
+    // ============================================================================
+    match /live_picks/{pickId} {
+      // Authenticated users can read
+      allow read: if request.auth != null;
+      
+      // Only admins can write
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    match /test_picks/{pickId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    match /completed_picks/{pickId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    match /all_picks/{pickId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    match /nhl_test_picks/{pickId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    match /nhl_completed_picks/{pickId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+                   && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                   && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // ============================================================================
+    // ANALYTICS & SYSTEM COLLECTIONS
+    // ============================================================================
+    match /analytics/{document=**} {
+      // Admins only
+      allow read, write: if request.auth != null 
+                         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    match /system/{document=**} {
+      // Admins only
+      allow read, write: if request.auth != null 
+                         && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // ============================================================================
+    // DEFAULT DENY (Catch-all for any other collections)
+    // ============================================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

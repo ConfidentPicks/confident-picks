@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Performance Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .tab-bar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .tab-btn {
+            padding: 12px 30px;
+            border: none;
+            background: #e9ecef;
+            color: #495057;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+        
+        .tab-btn:hover {
+            background: #dee2e6;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .team-cell {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .prop-cell {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .model-cell {
+            background: #e3f2fd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #1976d2;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-testing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .accuracy-cell {
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .accuracy-high {
+            color: #155724;
+            background: #d4edda;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .accuracy-medium {
+            color: #856404;
+            background: #fff3cd;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .accuracy-low {
+            color: #721c24;
+            background: #f8d7da;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: white;
+            font-size: 1.2em;
+        }
+        
+        .badge-pending-count {
+            background: #ffc107;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: 8px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Model Performance Dashboard</h1>
+            <p class="subtitle">Production-ready models & pending evaluations</p>
+            <div style="text-align: center; margin: 15px 0;">
+                <button onclick="clearCacheAndRefresh()" style="padding: 10px 20px; background: #ff6b6b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                    🔄 Clear Cache & Refresh
+                </button>
+            </div>
+            
+                         <div class="tab-bar" id="tabBar" style="display: none;">
+                 <button class="tab-btn active" data-tab="approved">✅ Approved Models</button>
+                 <button class="tab-btn" data-tab="pending">⏳ Pending Review<span class="badge-pending-count" id="pendingCount">0</span></button>
+                 <button class="tab-btn" data-tab="all">📋 All Models</button>
+             </div>
+            
+            <div class="stats-summary" id="statsSummary" style="display: none;">
+                <div class="stat-card">
+                    <h3>Active Models</h3>
+                    <div class="value" id="activeModels">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Teams @ 70%+</h3>
+                    <div class="value" id="teams70Plus">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg Accuracy</h3>
+                    <div class="value" id="avgAccuracy">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Review</h3>
+                    <div class="value" id="pendingModels">0</div>
+                </div>
+            </div>
+            
+            <div class="filter-bar" id="filterBar" style="display: none;">
+                <button class="filter-btn active" onclick="filterBySport('all')" data-sport="all">All Sports</button>
+                <button class="filter-btn" onclick="filterBySport('nhl')" data-sport="nhl">🏒 NHL</button>
+                <button class="filter-btn" onclick="filterBySport('nfl')" data-sport="nfl">🏈 NFL</button>
+                <button class="filter-btn" onclick="filterBySport('mlb')" data-sport="mlb">⚾ MLB</button>
+                <button class="filter-btn" onclick="filterBySport('nba')" data-sport="nba">🏀 NBA</button>
+            </div>
+        </div>
+        
+        <!-- Training Progress Section -->
+        <div class="header" id="trainingProgress" style="margin-bottom: 20px;">
+            <p style="text-align: center; color: #666;">Loading training progress...</p>
+        </div>
+        
+                 <!-- Single Table Container -->
+         <div class="table-container" id="mainTable" style="display: none;">
+             <table>
+                 <thead>
+                     <tr id="tableHeader">
+                         <th>Sport</th>
+                         <th>Team</th>
+                         <th>Prop</th>
+                         <th>Model Name</th>
+                         <th>Historical</th>
+                         <th>Current</th>
+                         <th>Status</th>
+                     </tr>
+                 </thead>
+                 <tbody id="tableBody">
+                 </tbody>
+             </table>
+         </div>
+        
+        <div id="loading" class="loading">
+            <div>Loading model performance data...</div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js';
+        import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA48rKRZiwka1h3_GA3hVNxk8WjOAKpM6U",
+            authDomain: "confident-picks-app-8-25.firebaseapp.com",
+            projectId: "confident-picks-app-8-25",
+            storageBucket: "confident-picks-app-8-25.firebasestorage.app",
+            messagingSenderId: "560353454758",
+            appId: "1:560353454758:web:0d0a6eb9f1892669ab2267"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        window.firebaseDB = db;
+        window.firebaseReady = true;
+    </script>
+    
+    <script>
+        let allData = [];
+        let currentFilter = 'all';
+        let currentTab = 'approved';
+        
+        // Wait for Firebase to be ready
+        function waitForFirebase() {
+            return new Promise((resolve) => {
+                if (window.firebaseReady && window.firebaseDB) {
+                    resolve();
+                } else {
+                    setTimeout(() => waitForFirebase().then(resolve), 100);
+                }
+            });
+        }
+        
+        function getAccuracyClass(accuracy) {
+            if (accuracy >= 70) return 'accuracy-high';
+            if (accuracy >= 60) return 'accuracy-medium';
+            return 'accuracy-low';
+        }
+        
+        function formatPercent(value) {
+            if (value === null || value === undefined || value === 'TBD') return 'TBD';
+            return value.toFixed(1) + '%';
+        }
+        
+        function getStatusBadge(status) {
+            const badges = {
+                'approved': '<span class="status-badge status-approved">✓ Approved</span>',
+                'pending': '<span class="status-badge status-pending">⏳ Pending</span>',
+                'testing': '<span class="status-badge status-testing">🧪 Testing</span>',
+                'rejected': '<span class="status-badge" style="background:#f8d7da;color:#721c24">✗ Rejected</span>'
+            };
+            return badges[status] || badges['pending'];
+        }
+        
+        async function fetchModelData(sport) {
+            try {
+                // Wait for Firebase to be ready
+                await waitForFirebase();
+                
+                // Try to fetch from Firebase first
+                const { collection, getDocs, query, where } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
+                const modelRef = collection(window.firebaseDB, 'approved_models');
+                const sportQuery = query(modelRef, where('sport', '==', sport.toUpperCase()));
+                const snapshot = await getDocs(sportQuery);
+                
+                if (!snapshot.empty) {
+                    console.log(`✅ Found ${snapshot.size} models in Firebase for ${sport}`);
+                    const data = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    return data;
+                } else {
+                    console.log(`ℹ️ No Firebase data for ${sport} yet - models still training`);
+                    // Return empty array - no mock data
+                    return [];
+                }
+            } catch (error) {
+                console.error(`Error fetching ${sport} data:`, error);
+                // Return empty array on error - no mock data
+                return [];
+            }
+        }
+        
+        // MOCK DATA FUNCTIONS REMOVED - REAL DATA ONLY
+        // Dashboard now shows actual model training progress from Firebase
+        // If you see "No models found", it means training is still in progress
+        
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-tab') === tab) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            renderTable();
+        }
+        
+        function renderTable() {
+            const filteredData = currentFilter === 'all' 
+                ? allData 
+                : allData.filter(d => d.sport.toLowerCase() === currentFilter);
+            
+            let displayData = [];
+            
+            if (currentTab === 'approved') {
+                displayData = filteredData.filter(d => d.status === 'approved');
+            } else if (currentTab === 'pending') {
+                displayData = filteredData.filter(d => d.status === 'pending' || d.status === 'testing');
+            } else {
+                displayData = filteredData;
+            }
+            
+            const tbody = document.getElementById('tableBody');
+            const header = document.getElementById('tableHeader');
+            
+            // Update header for pending tab
+            if (currentTab === 'pending') {
+                header.innerHTML = `
+                    <th>Sport</th>
+                    <th>Team</th>
+                    <th>Prop</th>
+                    <th>Model Name</th>
+                    <th>Historical</th>
+                    <th>Current</th>
+                    <th>Days Testing</th>
+                `;
+            } else {
+                header.innerHTML = `
+                    <th>Sport</th>
+                    <th>Team</th>
+                    <th>Prop</th>
+                    <th>Model Name</th>
+                    <th>Historical</th>
+                    <th>Current</th>
+                    <th>Status</th>
+                `;
+            }
+            
+            if (displayData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No models found in this category</td></tr>';
+            } else {
+                tbody.innerHTML = displayData.map(row => {
+                    if (currentTab === 'pending') {
+                        return `
+                            <tr>
+                                <td>${row.sport}</td>
+                                <td class="team-cell">${row.team}</td>
+                                <td class="prop-cell">${row.prop}</td>
+                                <td><span class="model-cell">${row.modelName}</span></td>
+                                <td class="accuracy-cell">
+                                    <span class="${getAccuracyClass(row.historicalAccuracy)}">
+                                        ${formatPercent(row.historicalAccuracy)}
+                                    </span>
+                                </td>
+                                <td class="accuracy-cell">
+                                    <span class="${getAccuracyClass(row.currentAccuracy)}">
+                                        ${formatPercent(row.currentAccuracy)}
+                                    </span>
+                                </td>
+                                <td>${row.daysTesting} days</td>
+                            </tr>
+                        `;
+                    } else {
+                        return `
+                            <tr>
+                                <td>${row.sport}</td>
+                                <td class="team-cell">${row.team}</td>
+                                <td class="prop-cell">${row.prop}</td>
+                                <td><span class="model-cell">${row.modelName}</span></td>
+                                <td class="accuracy-cell">
+                                    <span class="${getAccuracyClass(row.historicalAccuracy)}">
+                                        ${formatPercent(row.historicalAccuracy)}
+                                    </span>
+                                </td>
+                                <td class="accuracy-cell">
+                                    <span class="${getAccuracyClass(row.currentAccuracy)}">
+                                        ${formatPercent(row.currentAccuracy)}
+                                    </span>
+                                </td>
+                                <td>${getStatusBadge(row.status)}</td>
+                            </tr>
+                        `;
+                    }
+                }).join('');
+            }
+            
+            updateStats();
+        }
+        
+        function updateStats() {
+            const approved = allData.filter(d => d.status === 'approved');
+            const pending = allData.filter(d => d.status === 'pending' || d.status === 'testing');
+            
+            const activeModels = approved.length;
+            const teams70Plus = approved.filter(d => 
+                d.historicalAccuracy >= 70 && d.currentAccuracy >= 65
+            ).length;
+            
+            const approvedAccs = approved.map(d => Math.max(d.historicalAccuracy, d.currentAccuracy));
+            const avgAccuracy = approvedAccs.length > 0 
+                ? (approvedAccs.reduce((a, b) => a + b, 0) / approvedAccs.length).toFixed(1)
+                : 0;
+            
+            document.getElementById('activeModels').textContent = activeModels;
+            document.getElementById('teams70Plus').textContent = teams70Plus;
+            document.getElementById('avgAccuracy').textContent = avgAccuracy + '%';
+            document.getElementById('pendingModels').textContent = pending.length;
+            document.getElementById('pendingCount').textContent = pending.length;
+        }
+        
+        function filterBySport(sport) {
+            currentFilter = sport;
+            
+            // Update button states
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach((btn, index) => {
+                btn.classList.remove('active');
+                // The first button is "All Sports", rest are in order: nhl, nfl, mlb, nba
+                if (index === 0 && sport === 'all') {
+                    btn.classList.add('active');
+                } else if (index === 1 && sport === 'nhl') {
+                    btn.classList.add('active');
+                } else if (index === 2 && sport === 'nfl') {
+                    btn.classList.add('active');
+                } else if (index === 3 && sport === 'mlb') {
+                    btn.classList.add('active');
+                } else if (index === 4 && sport === 'nba') {
+                    btn.classList.add('active');
+                }
+            });
+            
+            renderTable();
+        }
+        
+        function clearCacheAndRefresh() {
+            console.log('🗑️ Clearing browser cache...');
+            
+            // Clear localStorage
+            localStorage.clear();
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            
+            // Force reload from server (bypass cache)
+            location.reload(true);
+        }
+        
+        async function loadDashboard() {
+            const loading = document.getElementById('loading');
+            const filterBar = document.getElementById('filterBar');
+            const statsSummary = document.getElementById('statsSummary');
+            const tabBar = document.getElementById('tabBar');
+            const mainTable = document.getElementById('mainTable');
+            
+            loading.style.display = 'block';
+            filterBar.style.display = 'none';
+            statsSummary.style.display = 'none';
+            tabBar.style.display = 'none';
+            mainTable.style.display = 'none';
+            
+            try {
+                const [nhlData, nflData] = await Promise.all([
+                    fetchModelData('nhl'),
+                    fetchModelData('nfl')
+                ]);
+                
+                allData = [...nhlData, ...nflData];
+                
+                // Set up tab button listeners
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const tab = btn.getAttribute('data-tab');
+                        switchTab(tab);
+                    });
+                });
+                
+                // Default to showing approved tab
+                switchTab('approved');
+                
+                loading.style.display = 'none';
+                filterBar.style.display = 'flex';
+                statsSummary.style.display = 'grid';
+                tabBar.style.display = 'flex';
+                mainTable.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                loading.innerHTML = '<div style="color: #f8d7da;">Error loading dashboard. Please check console.</div>';
+            }
+        }
+        
+        // Load training progress from JSON files
+        async function loadTrainingProgress() {
+            const progressFiles = [
+                { file: 'nhl_model_test_progress.json', sport: 'NHL', prop: 'Moneyline' },
+                { file: 'nhl_puckline_progress.json', sport: 'NHL', prop: 'Puck Line' },
+                { file: 'nfl_spread_progress.json', sport: 'NFL', prop: 'Spread' },
+                { file: 'nfl_total_progress.json', sport: 'NFL', prop: 'Total' }
+            ];
+            
+            const progressContainer = document.getElementById('trainingProgress');
+            if (!progressContainer) return;
+            
+            let html = '<h3 style="margin-bottom: 15px; color: #333;">🔄 Active Training Sessions</h3>';
+            html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">';
+            
+            for (const config of progressFiles) {
+                try {
+                    const response = await fetch(config.file);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const teamsCompleted = data.teamsCompleted || data.best_teams_at_70plus || 0;
+                        const target = data.teamsTarget || 32;
+                        const status = data.status || 'unknown';
+                        const percentage = Math.round((teamsCompleted / target) * 100);
+                        
+                        const statusColor = status === 'completed' ? '#22c55e' : 
+                                          status === 'testing' ? '#3b82f6' : '#6b7280';
+                        const statusText = status === 'completed' ? '✅ Complete' :
+                                         status === 'testing' ? '🔄 Running' : '⏸️ Pending';
+                        
+                        html += `
+                            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid ${statusColor};">
+                                <div style="font-weight: 600; color: #333; margin-bottom: 8px;">
+                                    ${config.sport} ${config.prop}
+                                </div>
+                                <div style="font-size: 24px; font-weight: 700; color: ${statusColor}; margin-bottom: 8px;">
+                                    ${teamsCompleted}/${target} teams
+                                </div>
+                                <div style="background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 8px;">
+                                    <div style="background: ${statusColor}; height: 100%; width: ${percentage}%; transition: width 0.3s ease;"></div>
+                                </div>
+                                <div style="font-size: 12px; color: #6b7280;">
+                                    ${statusText} • ${percentage}% complete
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #9ca3af;">
+                                <div style="font-weight: 600; color: #333; margin-bottom: 8px;">
+                                    ${config.sport} ${config.prop}
+                                </div>
+                                <div style="font-size: 14px; color: #6b7280;">
+                                    ⏸️ Not started yet
+                                </div>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    // File doesn't exist yet - show as not started
+                    html += `
+                        <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #9ca3af;">
+                            <div style="font-weight: 600; color: #333; margin-bottom: 8px;">
+                                ${config.sport} ${config.prop}
+                            </div>
+                            <div style="font-size: 14px; color: #6b7280;">
+                                ⏸️ Not started yet
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            html += '</div>';
+            html += '<div style="text-align: center; margin-top: 15px; font-size: 12px; color: #6b7280;">Auto-refreshes every 10 seconds</div>';
+            progressContainer.innerHTML = html;
+        }
+        
+        // Auto-refresh dashboard every 10 seconds
+        setInterval(async () => {
+            console.log('🔄 Auto-refreshing dashboard...');
+            await loadDashboard();
+            await loadTrainingProgress();
+        }, 10000);
+        
+        // Initial load
+        loadDashboard();
+        loadTrainingProgress();
+    </script>
+</body>
+</html>

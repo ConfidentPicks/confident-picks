@@ -74,7 +74,7 @@ async function ensureCollectionsExist() {
 
   const requiredCollections = [
     { name: 'qa_picks', description: 'QA workflow picks (draft, rejected)' },
-    { name: 'test_picks', description: 'Approved picks for website display' },
+    { name: 'live_picks', description: 'Approved picks for website display' },
     { name: 'scoring', description: 'Concluded games for hit/miss tracking' },
     { name: 'deleted_picks', description: 'Soft-deleted picks archive' },
     { name: 'backups', description: 'System backup metadata' }
@@ -118,7 +118,7 @@ async function exportAllData() {
 
   try {
     console.log('📦 Starting full data backup...');
-    const collections = ['qa_picks', 'test_picks', 'scoring', 'deleted_picks', 'users'];
+    const collections = ['qa_picks', 'live_picks', 'scoring', 'deleted_picks', 'users'];
     const allData = {
       exportDate: new Date().toISOString(),
       version: '1.0',
@@ -283,7 +283,7 @@ async function moveCompletedGamesToScoring() {
     console.log('🔄 Moving completed games to scoring collection...');
     
     // Get all live picks
-    const livePicksSnapshot = await getDocs(collection(window.db, 'test_picks'));
+    const livePicksSnapshot = await getDocs(collection(window.db, 'live_picks'));
     const completedPicks = [];
     
     livePicksSnapshot.forEach(doc => {
@@ -309,16 +309,16 @@ async function moveCompletedGamesToScoring() {
           ...pick.data,
           status: 'pending',
           movedToScoring: new Date().toISOString(),
-          originalCollection: 'test_picks',
+          originalCollection: 'live_picks',
           originalId: pick.id
         };
         
         await addDoc(collection(window.db, 'scoring'), scoringData);
         console.log(`✅ Moved pick ${pick.id} to scoring collection`);
         
-        // Remove from test_picks
-        await deleteDoc(doc(window.db, 'test_picks', pick.id));
-        console.log(`🗑️ Removed pick ${pick.id} from test_picks`);
+        // Remove from live_picks
+        await deleteDoc(doc(window.db, 'live_picks', pick.id));
+        console.log(`🗑️ Removed pick ${pick.id} from live_picks`);
         
       } catch (error) {
         console.error(`❌ Error moving pick ${pick.id}:`, error);
@@ -435,8 +435,8 @@ async function debugScoringSystem() {
   try {
     console.log('🔍 Debugging scoring system...');
     
-    // Check test_picks collection
-    const livePicksSnapshot = await getDocs(collection(window.db, 'test_picks'));
+    // Check live_picks collection
+    const livePicksSnapshot = await getDocs(collection(window.db, 'live_picks'));
     console.log(`📊 Live picks count: ${livePicksSnapshot.size}`);
     
     const now = new Date();
@@ -516,7 +516,7 @@ ${scoringPicks.map(p => `  • ${p.teams} (${p.status})`).join('\n')}
 <style>
 :root{
   --bg:#0B0F14; --card:#121820; --text:#E6EDF3; --sub:#98A6B3;
-  --blue:#4DA3FF; --green:#22C55E; --red:#FF6B6B; --border:#ffffff18; --r:12px;
+  --blue:#4DA3FF; --blue-hover:#6BB5FF; --green:#22C55E; --red:#FF6B6B; --border:#ffffff18; --r:12px;
 
   --select-popup-bg:#0B0F14;
   --select-popup-text:#E6EDF3;
@@ -750,53 +750,60 @@ input,select,textarea{width:100%;padding:10px;border-radius:var(--r);border:1px 
 }
 :focus-visible { outline:2px solid var(--blue); outline-offset:2px; border-radius:6px; }
 
-/* Min Confidence — compact v38 format (prevents click-masking) */
+/* Min Confidence — slider format */
 .minconf {
   position: relative;
   display: inline-block;
+  min-width: 180px;
 }
-.minconf input {
+.minconf input[type="range"] {
   width: 100%;
-  padding: 10px 44px 10px 10px;
-  border-radius: var(--r);
-  border: 1px solid var(--border);
+  height: 6px;
+  border-radius: 3px;
   background: rgba(255,255,255,.12);
-  border-color: #ffffff2e;
-  color: var(--text);
-  font-weight: 600;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
-.minconf .steppers {
-  position: absolute;
-  right: 6px;
-  top: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.minconf .step {
-  width: 20px;
-  height: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.06);
-  border-radius: 4px;
+.minconf input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--blue);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  line-height: 1;
-  color: var(--text);
+  border: 2px solid var(--bg);
 }
-.minconf .step:hover {
-  background: rgba(255,255,255,.12);
+.minconf input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--blue);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+}
+.minconf input[type="range"]:hover::-webkit-slider-thumb {
+  background: var(--blue-hover);
+}
+.minconf input[type="range"]:hover::-moz-range-thumb {
+  background: var(--blue-hover);
 }
 .minconf .caption {
   font-size: 11px;
   color: var(--sub);
-  margin-top: 4px;
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-:root[data-theme="light"] .minconf input {
-  background: #ffffff;
+.minconf .value-display {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 13px;
+}
+:root[data-theme="light"] .minconf input[type="range"] {
+  background: #e0e0e0;
   border-color: #00000022;
 }
 
@@ -1021,11 +1028,7 @@ html.gated body > *:not(#gate){ display:none !important; }
 <div class="header">
   <div class="container row">
     <div class="logo" id="logoHome" style="cursor: pointer;" aria-label="Return to home">
-      <svg class="brandmark" viewBox="0 0 48 48" aria-hidden="true">
-        <defs><linearGradient id="g1" x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4DA3FF"/><stop offset="1" stop-color="#22C55E"/></linearGradient></defs>
-        <rect x="4" y="4" width="40" height="40" rx="10" fill="url(#g1)"/>
-        <path d="M14 25 L21 32 L34 17" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <img src="logo.png" alt="Confident Picks Logo" class="brandmark" style="width: 48px; height: 48px; object-fit: contain;">
       <strong>Confident Picks</strong>
     </div>
     <div class="row nav" style="gap:12px">
@@ -1037,7 +1040,7 @@ html.gated body > *:not(#gate){ display:none !important; }
       <a href="#admin" data-nav id="navAdmin" class="hidden">Admin</a>
       <button type="button" id="themeBtn" class="btn enhanced" aria-label="Toggle theme"><span class="theme-icon" aria-hidden="true"></span></button>
       <button type="button" id="authBtn" class="btn primary enhanced">Sign up for free</button>
-      <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade</button>
+      <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade <span style="font-size:10px; opacity:0.7;">(Sandbox)</span></button>
     </div>
   </div>
 </div>
@@ -1083,14 +1086,13 @@ html.gated body > *:not(#gate){ display:none !important; }
       </select>
       <input id="searchInp" placeholder="Search team/player…"/>
 
-      <!-- Min Confidence with compact v38 steppers -->
+      <!-- Min Confidence slider -->
       <div class="minconf">
-        <input id="minConf" type="number" min="0" max="100" value="70" placeholder="Min Confidence" aria-label="Minimum confidence threshold"/>
-        <div class="steppers">
-          <div class="step" data-step="5" aria-label="Increase confidence by 5">+</div>
-          <div class="step" data-step="-5" aria-label="Decrease confidence by 5">-</div>
+        <input id="minConf" type="range" min="0" max="100" value="70" step="5" aria-label="Minimum confidence threshold"/>
+        <div class="caption">
+          <span>Min Confidence</span>
+          <span class="value-display" id="minConfValue">70%</span>
         </div>
-        <div class="caption">Min Confidence</div>
       </div>
     </div>
 
@@ -2338,7 +2340,14 @@ var picksResults = [
 var picksAll = picksLive.concat(picksResults);
 
 // HELPERS
-function formatDate(iso){ var d = new Date(iso); return d.toLocaleString([], { dateStyle:'medium', timeStyle:'short' }); }
+function formatDate(iso){ 
+  // If already formatted with EST/PST etc, return as-is
+  if (typeof iso === 'string' && (iso.includes(' EST') || iso.includes(' PST') || iso.includes(' EDT') || iso.includes(' PDT'))) {
+    return iso;
+  }
+  var d = new Date(iso); 
+  return d.toLocaleString([], { dateStyle:'medium', timeStyle:'short' }); 
+}
 function byCommence(a,b){ return new Date(a.commenceTime) - new Date(b.commenceTime); }
 function byConfidence(a,b){ return (b.modelConfidence - a.modelConfidence) || (b.oddsAmerican - a.oddsAmerican); }
 function oddsString(a){ return a >= 0 ? ('+'+a) : String(a); }
@@ -2564,7 +2573,7 @@ function letterFromWins(wins, n){
   return ['A' + new Array(capped+1).join('+'), 'a'];
 }
 function canSee(p){
-  if (state.auth==='paid') return true;
+  if (state.auth==='admin' || state.auth==='paid') return true;
   if (state.auth==='free') return p.tier==='public' || p.tier==='free';
   return p.tier==='public';
 }
@@ -2626,7 +2635,7 @@ function cardHTML(p){
   }
   
   var on = state.favorites.find(function(f){ return f.id===p.id; }) ? 'on' : '';
-  var star = (state.auth==='paid')
+  var star = (state.auth==='paid' || state.auth==='admin')
     ? ('<div class="star '+on+'" title="Favorite" role="button" aria-pressed="'+(on?'true':'false')+'" tabindex="0" data-fav="'+p.id+'"></div>')
     : '<div class="text-sub">(Favorites for subscribers)</div>';
   return '<div class="card">'
@@ -2732,6 +2741,23 @@ function render(){
   if (min>0) arr = arr.filter(function(p){ return p.modelConfidence >= min; });
   if (search) arr = arr.filter(function(p){ return p.pickDesc.toLowerCase().includes(search); });
   arr.sort(sort==='confidence' ? byConfidence : byCommence);
+
+  // Limit picks per league based on account type (only when no specific league filter is applied)
+  if (!league) {
+    var maxPerLeague;
+    if (state.auth === 'paid' || state.auth === 'admin') {
+      maxPerLeague = 999; // Show all picks for paid/admin users
+    } else {
+      maxPerLeague = 3; // Show 3 picks per league for free/anon users
+    }
+    
+    var leagueCounts = {};
+    arr = arr.filter(function(p) {
+      var pickLeague = p.league || 'Unknown';
+      leagueCounts[pickLeague] = (leagueCounts[pickLeague] || 0) + 1;
+      return leagueCounts[pickLeague] <= maxPerLeague;
+    });
+  }
 
   var list = document.getElementById('list');
   if (arr.length > 0) list.innerHTML = arr.map(cardHTML).join('');
@@ -2840,7 +2866,7 @@ async function renderScorecard(){
 function renderFavorites(){
   var gate = document.getElementById('favGate');
   var wrap = document.getElementById('favList');
-  if (state.auth !== 'paid') { 
+  if (state.auth !== 'paid' && state.auth !== 'admin') { 
     gate.innerHTML = (state.auth==='free' ? '<div class="card">Subscribers only. Upgrade to save favorites <strong>($15/mo)</strong>. <div style="margin-top:8px"><button type="button" class="btn primary enhanced" data-goto-subscribe>Upgrade</button></div></div>' : '<div class="card">Subscribers only. <a href="#account" data-nav>Sign up</a> to get started.</div>'); 
     wrap.innerHTML=''; 
     return; 
@@ -2860,7 +2886,7 @@ function renderOutcomes(){
   var tf = state.otf;
   
   // For non-subscribers, show only the upgrade message
-  if (state.auth !== 'paid') {
+  if (state.auth !== 'paid' && state.auth !== 'admin') {
     container.innerHTML = '<div><strong>My Outcomes</strong> <span class="text-sub">— results for your favorited picks</span></div>' +
       '<div style="margin-top:12px">' + 
       (state.auth==='free' ? 
@@ -2958,7 +2984,7 @@ function accountSignedInHTML(){
   var plan = safeGetStorage('subPlan', 'free');
   var renew = safeGetStorage('subCurrentPeriodEnd');
   var autoRenew = safeGetStorage('autoRenew') === 'true';
-  var status = (state.auth==='paid') ? 'Subscriber' : 'Signed-in (Free)';
+  var status = (state.auth==='admin') ? 'Administrator' : (state.auth==='paid') ? 'Subscriber' : 'Signed-in (Free)';
   
   // Handle missing email case
   if (!email && state.auth !== 'anon') {
@@ -2982,7 +3008,8 @@ function accountSignedInHTML(){
     +   planCards
     + '</div>'
     + '<div class="row" style="gap:8px; margin-top:12px">'
-    +   (state.auth==='free' ? '<button id="goUpgradeBtn" class="btn primary enhanced">Upgrade — $15/mo</button>' : '')
+    +   (state.auth==='free' ? '<button id="goUpgradeBtn" class="btn primary enhanced">Upgrade — $15/mo <span style="font-size:10px; opacity:0.7;">(Sandbox)</span></button>' : '')
+    +   (state.auth==='admin' ? '<button id="goAdminBtn" class="btn enhanced" onclick="location.hash=\'#admin\'">Go to Admin Panel</button>' : '')
     +   '<button id="goPicksBtn" class="btn enhanced">Back to picks</button>'
     +   '<button id="signOutBtn" class="btn danger enhanced">Sign out</button>'
     + '</div>'
@@ -3676,12 +3703,7 @@ document.addEventListener('click', function(e){
     readFavoritesAloud();
   }
 
-  // Min Confidence steppers
-  var stepBtn = target.closest && target.closest('[data-step]');
-  if (stepBtn){
-    var delta = Number(stepBtn.getAttribute('data-step')||0);
-    changeMinConf(delta);
-  }
+  // Min Confidence slider - no longer needed (handled by input event listener)
 });
 
 // keyboard support for star toggle
@@ -3883,7 +3905,12 @@ function changeMinConf(delta){
 ['searchInp','minConf'].forEach(function(id){
   var el = document.getElementById(id);
   if (el) el.addEventListener('input', function(){
-    if (id==='minConf') this.value = clampMinConf(this.value);
+    if (id==='minConf') {
+      this.value = clampMinConf(this.value);
+      // Update the value display
+      var valueDisplay = document.getElementById('minConfValue');
+      if (valueDisplay) valueDisplay.textContent = this.value + '%';
+    }
     render();
   });
 });
@@ -4936,14 +4963,14 @@ async function loadQAPicks() {
       });
       console.log(`✅ Loaded ${qaSnapshot.size} picks from qa_picks collection`);
       
-      // Load from test_picks collection
-      const liveSnapshot = await getDocs(collection(window.db, 'test_picks'));
+      // Load from live_picks collection
+      const liveSnapshot = await getDocs(collection(window.db, 'live_picks'));
       liveSnapshot.forEach(doc => {
         const data = doc.data();
-        const pick = mapFirebaseDataToQAPick(doc.id, data, 'test_picks');
+        const pick = mapFirebaseDataToQAPick(doc.id, data, 'live_picks');
         qaPicks.push(pick);
       });
-      console.log(`✅ Loaded ${liveSnapshot.size} picks from test_picks collection`);
+      console.log(`✅ Loaded ${liveSnapshot.size} picks from live_picks collection`);
       
       // Load from scoring collection
       const scoringSnapshot = await getDocs(collection(window.db, 'scoring'));
@@ -4966,14 +4993,14 @@ async function loadQAPicks() {
       });
       console.log(`✅ Loaded ${qaPicks.length} picks from deleted_picks collection`);
     } else if (currentQAFilter === 'live') {
-      // Load from test_picks collection
-      const snapshot = await getDocs(collection(window.db, 'test_picks'));
+      // Load from live_picks collection
+      const snapshot = await getDocs(collection(window.db, 'live_picks'));
       snapshot.forEach(doc => {
         const data = doc.data();
-        const pick = mapFirebaseDataToQAPick(doc.id, data, 'test_picks');
+        const pick = mapFirebaseDataToQAPick(doc.id, data, 'live_picks');
         qaPicks.push(pick);
       });
-      console.log(`✅ Loaded ${qaPicks.length} picks from test_picks collection`);
+      console.log(`✅ Loaded ${qaPicks.length} picks from live_picks collection`);
     } else if (currentQAFilter === 'scoring') {
       // Load from scoring collection (pending, hit, miss)
       const snapshot = await getDocs(collection(window.db, 'scoring'));
@@ -5053,7 +5080,7 @@ function renderQAPicks() {
       );
     } else if (currentQAFilter === 'live') {
       // Show live picks
-      filteredPicks = qaPicks.filter(pick => pick.status === 'live' || pick.originalCollection === 'test_picks');
+      filteredPicks = qaPicks.filter(pick => pick.status === 'live' || pick.originalCollection === 'live_picks');
     } else if (currentQAFilter === 'rejected') {
       // Show rejected picks
       filteredPicks = qaPicks.filter(pick => pick.status === 'rejected');
@@ -5307,7 +5334,7 @@ async function approveAndMakeLive(pickId) {
     pick.approvedAt = new Date().toISOString();
     pick.liveAt = new Date().toISOString();
 
-    // Move pick from scoring to test_picks collection
+    // Move pick from scoring to live_picks collection
     if (window.db) {
       const { doc, updateDoc, addDoc, deleteDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
       
@@ -5319,7 +5346,7 @@ async function approveAndMakeLive(pickId) {
         if (qaPickSnap.exists()) {
           const pickData = qaPickSnap.data();
           
-          // 2. Add to test_picks collection with live status
+          // 2. Add to live_picks collection with live status
           const livePickData = {
             ...pickData,
             status: 'live',
@@ -5328,8 +5355,8 @@ async function approveAndMakeLive(pickId) {
             movedToLive: new Date().toISOString()
           };
           
-          await addDoc(collection(window.db, 'test_picks'), livePickData);
-          console.log('✅ Pick moved to test_picks collection');
+          await addDoc(collection(window.db, 'live_picks'), livePickData);
+          console.log('✅ Pick moved to live_picks collection');
           
           // 3. Delete from qa_picks collection
           await deleteDoc(qaPickRef);
@@ -5338,7 +5365,7 @@ async function approveAndMakeLive(pickId) {
           console.warn(`Pick ${pickId} not found in qa_picks collection`);
         }
       } catch (error) {
-        console.error('Error moving pick to test_picks:', error);
+        console.error('Error moving pick to live_picks:', error);
         // Fallback: just update status in scoring collection
         await updateDoc(doc(window.db, 'scoring', pickId), { 
           status: 'live', 
@@ -6108,7 +6135,7 @@ function filterQAPicksArray() {
       p.originalCollection !== 'scoring'
     );
   } else if (currentQAFilter === 'live') {
-    return qaPicks.filter(p => p.status === 'live' || p.originalCollection === 'test_picks');
+    return qaPicks.filter(p => p.status === 'live' || p.originalCollection === 'live_picks');
   } else if (currentQAFilter === 'rejected') {
     return qaPicks.filter(p => p.status === 'rejected');
   } else if (currentQAFilter === 'scoring') {
@@ -6596,8 +6623,8 @@ async function loadFirebaseData() {
     console.log('🔄 Loading Firebase data...');
     const { collection, getDocs, query, where } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
     
-    // Only load approved/live picks for the main website from test_picks collection
-    const approvedQuery = query(collection(window.db, 'test_picks'), where('status', 'in', ['approved', 'live']));
+    // Only load approved/live picks for the main website from live_picks collection
+    const approvedQuery = query(collection(window.db, 'live_picks'), where('status', 'in', ['approved', 'live']));
     const snapshot = await getDocs(approvedQuery);
     
     if (!snapshot.empty) {
@@ -6611,7 +6638,12 @@ async function loadFirebaseData() {
         // Get proper odds from Firebase data - simplified mapping
         let oddsAmerican = -110; // Default fallback
         
-        if (data.odds && Array.isArray(data.odds) && data.odds.length > 0) {
+        // First check if oddsAmerican is directly stored (NFL picks)
+        if (data.oddsAmerican !== undefined && data.oddsAmerican !== null) {
+          oddsAmerican = data.oddsAmerican;
+        } 
+        // Otherwise, check odds array (UFC picks)
+        else if (data.odds && Array.isArray(data.odds) && data.odds.length > 0) {
           const odds = data.odds[0]; // Get first odds object
           
           // For H2H markets, determine which fighter is predicted and use corresponding odds
@@ -6655,7 +6687,7 @@ async function loadFirebaseData() {
                    data.prediction || `${data.awayTeam || 'Away'} vs ${data.homeTeam || 'Home'}`,
           oddsAmerican: oddsAmerican,
           modelConfidence: Math.round(parseFloat(data.confidence || 0) * 100),
-          commenceTime: data.startTime || new Date().toISOString(),
+          commenceTime: data.commenceTime || data.startTime || data.gameTime || new Date().toISOString(),
           tier: data.tier || 'public',
           riskTag: data.riskTag || 'safe',
           reasoning: data.llmPredictions?.openai?.reasoning || data.reasoning || 'No reasoning provided'
@@ -6729,7 +6761,7 @@ async function moveCompletedGamesToScoring() {
     console.log('Current time:', now.toISOString());
     
     // Get all live picks that should have started
-    const liveQuery = query(collection(window.db, 'test_picks'));
+    const liveQuery = query(collection(window.db, 'live_picks'));
     const liveSnapshot = await getDocs(liveQuery);
     
     let movedCount = 0;
@@ -6751,7 +6783,7 @@ async function moveCompletedGamesToScoring() {
           ...data,
           status: 'pending', // Will be updated to 'hit' or 'miss' when results are in
           movedToScoringAt: new Date().toISOString(),
-          originalCollection: 'test_picks',
+          originalCollection: 'live_picks',
           originalDocId: liveDoc.id
         };
         
@@ -6787,11 +6819,12 @@ function startAutoScoring() {
     clearInterval(autoScoringInterval);
   }
   
-  console.log('🔄 Starting auto-scoring timer (every 5 minutes)');
-  autoScoringInterval = setInterval(moveCompletedGamesToScoring, 5 * 60 * 1000); // 5 minutes
+  // DISABLED: Old UFC auto-scoring system, replaced by unified pick system
+  console.log('⏹️ Auto-scoring disabled (using unified pick system)');
+  // autoScoringInterval = setInterval(moveCompletedGamesToScoring, 5 * 60 * 1000); // 5 minutes
   
   // Also run immediately
-  moveCompletedGamesToScoring();
+  // moveCompletedGamesToScoring();
 }
 
 function stopAutoScoring() {
@@ -7154,7 +7187,7 @@ window.debugFirebaseData = async function() {
       console.log(`Document ${doc.id}:`, data);
     });
     
-    // Check test_picks collection
+    // Check live_picks collection
     const liveQuery = query(collection(window.db, 'live_picks'));
     const liveSnapshot = await getDocs(liveQuery);
     
@@ -7275,10 +7308,31 @@ window.signUp = signUp;
 window.signIn = signIn;
 window.signOut = signOut;
 
-// Stripe Configuration
+// ============================================================================
+// STRIPE CONFIGURATION - CURRENTLY IN SANDBOX MODE
+// ============================================================================
+// 
+// 🧪 SANDBOX MODE (Current):
+//    - Uses test publishable key (pk_test_...)
+//    - Simulates payment flow with confirm dialogs
+//    - No real payments are processed
+//    - Perfect for testing and development
+//
+// 🚀 TO SWITCH TO PRODUCTION MODE:
+//    1. Replace publishableKey with live key (pk_live_...)
+//    2. Replace priceId with live price ID (price_...)
+//    3. Create backend endpoint to create Stripe Checkout Sessions
+//    4. Update redirectToCheckout() to call your backend
+//    5. Set up Stripe webhook to handle payment confirmations
+//    6. Remove "(Sandbox)" labels from upgrade buttons
+//
+// 📚 Documentation: https://stripe.com/docs/payments/checkout
+// ============================================================================
+
 const stripeConfig = {
   publishableKey: 'pk_test_51SF4k51G2mT1SwALg87INrgpI1PEOrm6nIwtLOsPANooLpWvcmbYoP6bI2FHDtUYVKNa4f5gIVC6gCsSiQqACaT1004GLTrovT',
-  priceId: 'price_1SF51I1G2mT1SwALThzOjtiQ'
+  priceId: 'price_1SF51I1G2mT1SwALThzOjtiQ',
+  mode: 'sandbox' // 'sandbox' or 'production'
 };
 
 // Initialize Stripe
@@ -7331,15 +7385,37 @@ async function redirectToCheckout(priceId) {
     
     // Simulate checkout process
     const confirmed = confirm(
-      '🧪 SANDBOX MODE\n\n' +
-      'This would normally redirect to Stripe checkout.\n\n' +
-      'For testing, click OK to simulate a successful payment.\n' +
-      'Click Cancel to simulate a canceled payment.'
+      '🧪 STRIPE SANDBOX MODE - SIMULATION ONLY\n\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      'This is a simulated payment flow for testing.\n' +
+      'No real payment will be processed.\n\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      '💳 Stripe Integration Details:\n' +
+      '   • Publishable Key: ' + stripeConfig.publishableKey.substring(0, 20) + '...\n' +
+      '   • Price ID: ' + stripeConfig.priceId + '\n' +
+      '   • Amount: $15.00 USD / month\n\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      'In production, this would:\n' +
+      '   1. Create a Stripe Checkout Session via backend\n' +
+      '   2. Redirect to secure Stripe payment page\n' +
+      '   3. Process real payment with Stripe\n' +
+      '   4. Receive webhook confirmation\n' +
+      '   5. Activate premium subscription\n\n' +
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+      'Click OK to simulate successful payment\n' +
+      'Click Cancel to simulate canceled payment'
     );
     
     if (confirmed) {
       // Simulate successful payment
       console.log('✅ Simulated successful payment');
+      console.log('📊 Payment Details:', {
+        priceId: priceId,
+        amount: '$15.00',
+        currency: 'USD',
+        interval: 'month',
+        timestamp: new Date().toISOString()
+      });
       
       // Update user subscription status
       if (window.auth?.currentUser) {
@@ -7354,12 +7430,38 @@ async function redirectToCheckout(priceId) {
         // Update local auth state
         setAuth('paid');
         
-        alert('🎉 Payment successful! Welcome to Premium!\n\nYou now have access to all premium features.');
+        alert(
+          '🎉 SIMULATED PAYMENT SUCCESSFUL!\n\n' +
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+          'Welcome to Premium!\n\n' +
+          '✅ Subscription Status: Active\n' +
+          '✅ Tier: Premium\n' +
+          '✅ Billing: $15/month (simulated)\n' +
+          '✅ Next Billing: ' + new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString() + '\n\n' +
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+          'You now have access to:\n' +
+          '   • All premium picks (unlimited)\n' +
+          '   • Favorites feature\n' +
+          '   • Outcomes tracking\n' +
+          '   • Priority support\n\n' +
+          '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' +
+          '⚠️ Remember: This is sandbox mode.\n' +
+          'No real payment was processed.'
+        );
+        
+        // Refresh the page to show updated status
+        location.hash = '#account';
+        route();
       }
     } else {
       // Simulate canceled payment
       console.log('❌ Simulated canceled payment');
-      alert('Payment was canceled. You can try again anytime.');
+      alert(
+        '❌ Payment Canceled\n\n' +
+        'The payment process was canceled.\n' +
+        'You can try again anytime from the Account page.\n\n' +
+        '(Sandbox simulation - no real payment was attempted)'
+      );
     }
     
   } catch (error) {
@@ -7453,21 +7555,94 @@ window.updateUserSubscription = updateUserSubscription;
 window.getUserSubscription = getUserSubscription;
 
 // Sync local auth with Firebase
-function syncAuthWithFirebase() {
+async function syncAuthWithFirebase() {
   // Listen for Firebase auth state changes
   if (window.auth) {
-    window.auth.onAuthStateChanged((user) => {
+    window.auth.onAuthStateChanged(async (user) => {
       if (user) {
         console.log('✅ Firebase user signed in:', user.email);
-        // Update local auth state to match Firebase
-        if (state.auth === 'anon') {
-          setAuth('free'); // Default to free tier for new Firebase users
+        
+        try {
+          // Fetch user data from Firestore to check role and subscription
+          const userData = await getUserData(user.uid);
+          console.log('📊 User data from Firebase:', userData);
+          
+          // Check role first (admin has highest priority)
+          if (userData?.role === 'admin') {
+            console.log('👑 Admin user detected from Firebase!');
+            setAuth('admin');
+            
+            // Store user info in localStorage
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('emailVerified', user.emailVerified ? 'true' : 'false');
+            localStorage.setItem('lastLoginAt', new Date().toISOString());
+            if (!localStorage.getItem('userCreatedAt')) {
+              localStorage.setItem('userCreatedAt', new Date().toISOString());
+            }
+          } 
+          // Check subscription status
+          else if (userData?.subscription?.status === 'active' && userData?.subscription?.tier === 'premium') {
+            console.log('💎 Premium subscriber detected from Firebase!');
+            setAuth('paid');
+            
+            // Store subscription info
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('emailVerified', user.emailVerified ? 'true' : 'false');
+            localStorage.setItem('subPlan', userData.subscription.plan || 'monthly');
+            localStorage.setItem('subCurrentPeriodEnd', userData.subscription.expiresAt || '');
+            localStorage.setItem('autoRenew', 'true');
+            localStorage.setItem('lastLoginAt', new Date().toISOString());
+            if (!localStorage.getItem('userCreatedAt')) {
+              localStorage.setItem('userCreatedAt', userData.subscription.startedAt || new Date().toISOString());
+            }
+          } 
+          // Default to free tier
+          else {
+            console.log('🆓 Free tier user');
+            setAuth('free');
+            
+            // Store basic user info
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('emailVerified', user.emailVerified ? 'true' : 'false');
+            localStorage.setItem('lastLoginAt', new Date().toISOString());
+            if (!localStorage.getItem('userCreatedAt')) {
+              localStorage.setItem('userCreatedAt', new Date().toISOString());
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data from Firebase:', error);
+          // Fallback to free tier if there's an error
+          setAuth('free');
+          localStorage.setItem('userEmail', user.email);
+          localStorage.setItem('emailVerified', user.emailVerified ? 'true' : 'false');
         }
       } else {
         console.log('❌ Firebase user signed out');
-        // Keep local auth state but note Firebase is not connected
+        // Reset to anonymous when signed out
+        if (state.auth !== 'anon') {
+          setAuth('anon');
+        }
       }
     });
+  }
+}
+
+// Helper function to get user data from Firestore
+async function getUserData(userId) {
+  try {
+    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
+    const userRef = doc(window.db, 'users', userId);
+    const userSnap = await getDoc(userRef);
+    
+    if (userSnap.exists()) {
+      return userSnap.data();
+    } else {
+      console.log('No user document found in Firestore');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error getting user data:', error);
+    return null;
   }
 }
 
