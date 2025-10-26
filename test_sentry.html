@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentry Test</title>
+    <!-- Sentry Error Monitoring -->
+    <script
+      src="https://browser.sentry-cdn.com/8.0.0/bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // Initialize Sentry
+      Sentry.init({
+        dsn: "https://947276173ab079f70a54fc3cf968fc21@o4510257418993664.ingest.us.sentry.io/4510257493573632",
+        environment: 'production',
+        tracesSampleRate: 1.0,
+      });
+      
+      console.log('✅ Sentry initialized');
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0B0F14;
+            color: white;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #7C3AED;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #6D28D9;
+        }
+        .success {
+            background: #10B981;
+        }
+        .success:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Sentry Error Monitoring Test</h1>
+    <p>Click the buttons below to test Sentry error tracking:</p>
+    
+    <button onclick="testError()">🔴 Test Error</button>
+    <button onclick="testMessage()">💬 Test Message</button>
+    <button onclick="testUserContext()">👤 Test User Context</button>
+    <button class="success" onclick="window.location.href='https://confident-picks.com'">✅ Go to Live Site</button>
+    
+    <div id="output" style="margin-top: 20px; padding: 15px; background: #1F2937; border-radius: 8px;"></div>
+    
+    <script>
+        const output = document.getElementById('output');
+        
+        function testError() {
+            output.innerHTML = '<p>🔴 Throwing test error...</p>';
+            try {
+                throw new Error('Test error from Sentry integration test');
+            } catch (error) {
+                Sentry.captureException(error);
+                output.innerHTML += '<p>✅ Error sent to Sentry! Check your dashboard.</p>';
+            }
+        }
+        
+        function testMessage() {
+            output.innerHTML = '<p>💬 Sending test message...</p>';
+            Sentry.captureMessage('Test message from Sentry integration', 'info');
+            output.innerHTML += '<p>✅ Message sent to Sentry! Check your dashboard.</p>';
+        }
+        
+        function testUserContext() {
+            output.innerHTML = '<p>👤 Setting user context...</p>';
+            Sentry.setUser({
+                id: 'test-user-123',
+                email: 'test@confident-picks.com',
+                username: 'Test User'
+            });
+            output.innerHTML += '<p>✅ User context set!</p>';
+            output.innerHTML += '<p>Now throwing an error with user context...</p>';
+            
+            setTimeout(() => {
+                try {
+                    throw new Error('Test error with user context');
+                } catch (error) {
+                    Sentry.captureException(error);
+                    output.innerHTML += '<p>✅ Error with user context sent! Check your dashboard.</p>';
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+
