@@ -2184,11 +2184,12 @@ setTimeout(() => {
 }, 100);
 
 // Auto-create collections on app load
-setTimeout(async () => {
-  if (window.firebaseReady) {
-    await ensureCollectionsExist();
-  }
-}, 2000);
+// Commented out - causing errors before Firebase modules load
+// setTimeout(async () => {
+//   if (window.firebaseReady) {
+//     await ensureCollectionsExist();
+//   }
+// }, 2000);
 
   // JSON file upload listener
   setTimeout(() => {
