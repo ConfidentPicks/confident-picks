@@ -3437,15 +3437,7 @@ document.addEventListener('click', function(e){
   if (target.id==='systemResetBtn') performSystemReset();
   if (target.id==='backupDataBtn') backupSystemData();
   
-  // Auth buttons with loading states
-  if (target.id==='googleSignup' || target.id==='googleSignin') {
-    setButtonLoading(target.id, true);
-    setTimeout(function() {
-      setButtonLoading(target.id, false);
-      setAuth('free');
-      showMessage('Signed in with Google! (mock)', 'success');
-    }, 2000);
-  }
+  // Auth buttons with loading states - REMOVED (now handled by real Firebase auth below)
   
   if (target.id==='emailSignupBtn') {
     var email = document.getElementById('emailInp');
