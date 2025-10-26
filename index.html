@@ -3585,21 +3585,39 @@ document.addEventListener('click', function(e){
 
   // auth (Account)
   if (target.id==='googleSignup'){
-    setAuth('free');
-    localStorage.setItem('userEmail', 'google_user@example.com');
-    localStorage.setItem('emailVerified','true');
-    localStorage.setItem('userCreatedAt', localStorage.getItem('userCreatedAt') || nowIso());
-    localStorage.setItem('lastLoginAt', nowIso());
-    alert('Signed up with Google (prototype).');
-    location.hash = '#picks'; route();
+    // Real Firebase Google Sign-In (same as sign-in, Firebase handles new users automatically)
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+      .then((result) => {
+        const user = result.user;
+        const isNewUser = result.additionalUserInfo?.isNewUser;
+        console.log('✅ Google sign-up successful:', user.email, 'New user:', isNewUser);
+        // Firebase auth state listener will handle the rest
+        location.hash = '#picks';
+        route();
+      })
+      .catch((error) => {
+        console.error('❌ Google sign-up error:', error);
+        alert('Sign-up failed: ' + error.message);
+      });
+    return; // Prevent default mock behavior
   }
   if (target.id==='googleSignin'){
-    setAuth('free');
-    localStorage.setItem('userEmail', 'google_user@example.com');
-    localStorage.setItem('emailVerified','true');
-    localStorage.setItem('lastLoginAt', nowIso());
-    alert('Signed in with Google (prototype).');
-    location.hash = '#picks'; route();
+    // Real Firebase Google Sign-In
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+      .then((result) => {
+        const user = result.user;
+        console.log('✅ Google sign-in successful:', user.email);
+        // Firebase auth state listener will handle the rest
+        location.hash = '#picks';
+        route();
+      })
+      .catch((error) => {
+        console.error('❌ Google sign-in error:', error);
+        alert('Sign-in failed: ' + error.message);
+      });
+    return; // Prevent default mock behavior
   }
   if (target.id==='emailSignupBtn'){
     var email = (document.getElementById('emailInp')||{}).value || '';
