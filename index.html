@@ -22,6 +22,79 @@
 <!-- Stripe SDK -->
 <script src="https://js.stripe.com/v3/"></script>
 
+<!-- Sentry Error Monitoring -->
+<script
+  src="https://browser.sentry-cdn.com/8.0.0/bundle.min.js"
+  integrity="sha384-bEh5vHBRi7m/AHV8OUDZd+5SALbPFKLBRHBBBXBXBXBXBXBXBXBXBXBXBXBXBXBX"
+  crossorigin="anonymous"
+></script>
+<script>
+  // Initialize Sentry for error tracking
+  if (typeof Sentry !== 'undefined') {
+    Sentry.init({
+      dsn: "https://947276173ab079f70a54fc3cf968fc21@o4510257418993664.ingest.us.sentry.io/4510257493573632",
+      environment: 'production',
+      
+      // Performance Monitoring
+      integrations: [
+        new Sentry.BrowserTracing(),
+        new Sentry.Replay({
+          maskAllText: true,
+          blockAllMedia: true,
+        }),
+      ],
+      
+      // Capture 100% of transactions for performance monitoring
+      tracesSampleRate: 1.0,
+      
+      // Session Replay: 10% of sessions, 100% of sessions with errors
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+      
+      // Filter out sensitive data
+      beforeSend(event, hint) {
+        // Don't send events from localhost
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          return null;
+        }
+        
+        // Filter sensitive data from error messages
+        if (event.message) {
+          event.message = event.message.replace(/password=\w+/gi, 'password=***');
+          event.message = event.message.replace(/token=\w+/gi, 'token=***');
+          event.message = event.message.replace(/api[_-]?key=\w+/gi, 'apikey=***');
+        }
+        
+        return event;
+      },
+      
+      // Ignore common non-critical errors
+      ignoreErrors: [
+        // Browser extensions
+        'top.GLOBALS',
+        'originalCreateNotification',
+        'canvas.contentDocument',
+        'MyApp_RemoveAllHighlights',
+        'atomicFindClose',
+        // Network errors (user's connection issues)
+        'NetworkError',
+        'Network request failed',
+        // Random plugins/extensions
+        'Can\'t find variable: ZiteReader',
+        'jigsaw is not defined',
+        'ComboSearch is not defined',
+        // Facebook blocked
+        'fb_xd_fragment',
+        // ISP injected ads
+        'bmi_SafeAddOnload',
+        'EBCallBackMessageReceived',
+      ],
+    });
+    
+    console.log('✅ Sentry error monitoring initialized');
+  }
+</script>
+
 <!-- Firebase SDK v9+ (modular approach - won't break existing code) -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js';
@@ -7534,6 +7607,15 @@ async function syncAuthWithFirebase() {
       if (user) {
         console.log('✅ Firebase user signed in:', user.email);
         
+        // Set Sentry user context for error tracking
+        if (typeof Sentry !== 'undefined') {
+          Sentry.setUser({
+            id: user.uid,
+            email: user.email,
+            emailVerified: user.emailVerified
+          });
+        }
+        
         try {
           // Fetch user data from Firestore to check role and subscription
           const userData = await getUserData(user.uid);
@@ -7590,6 +7672,12 @@ async function syncAuthWithFirebase() {
         }
       } else {
         console.log('❌ Firebase user signed out');
+        
+        // Clear Sentry user context
+        if (typeof Sentry !== 'undefined') {
+          Sentry.setUser(null);
+        }
+        
         // Reset to anonymous when signed out
         if (state.auth !== 'anon') {
           setAuth('anon');
