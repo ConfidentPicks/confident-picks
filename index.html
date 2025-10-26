@@ -3586,6 +3586,11 @@ document.addEventListener('click', function(e){
   // auth (Account)
   if (target.id==='googleSignup'){
     // Real Firebase Google Sign-In (same as sign-in, Firebase handles new users automatically)
+    if (typeof firebase === 'undefined' || !firebase.auth) {
+      console.error('❌ Firebase not loaded yet');
+      alert('Please wait a moment and try again (Firebase is loading)');
+      return;
+    }
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider)
       .then((result) => {
@@ -3604,6 +3609,11 @@ document.addEventListener('click', function(e){
   }
   if (target.id==='googleSignin'){
     // Real Firebase Google Sign-In
+    if (typeof firebase === 'undefined' || !firebase.auth) {
+      console.error('❌ Firebase not loaded yet');
+      alert('Please wait a moment and try again (Firebase is loading)');
+      return;
+    }
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider)
       .then((result) => {
