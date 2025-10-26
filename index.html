@@ -1084,7 +1084,7 @@ html.gated body > *:not(#gate){ display:none !important; }
         <option value="commence">Sort: Commence Time</option>
         <option value="confidence">Sort: Confidence</option>
       </select>
-      <input id="searchInp" placeholder="Search team/player…"/>
+      <input id="searchInp" placeholder="Search team/player…" autocomplete="off"/>
 
       <!-- Min Confidence slider -->
       <div class="minconf">
@@ -2174,6 +2174,14 @@ function route(){
   maybeShowVerifyBanner();
 }
 window.addEventListener('hashchange', route);
+
+// Clear search input on page load to prevent browser autofill
+setTimeout(() => {
+  const searchInp = document.getElementById('searchInp');
+  if (searchInp && searchInp.value) {
+    searchInp.value = '';
+  }
+}, 100);
 
 // Auto-create collections on app load
 setTimeout(async () => {
