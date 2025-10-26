@@ -8,6 +8,8 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const stripe = require('stripe')(functions.config().stripe.secret_key);
+const cors = require('cors')({ origin: true });
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -186,6 +188,62 @@ async function handleSubscriptionDeleted(subscription) {
     throw error;
   }
 }
+
+/**
+ * Create Stripe Checkout Session
+ * Called by frontend to initiate payment flow
+ */
+exports.createCheckoutSession = functions.https.onRequest((req, res) => {
+  cors(req, res, async () => {
+    // Only accept POST requests
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method Not Allowed' });
+    }
+
+    try {
+      const { priceId, userId, userEmail } = req.body;
+
+      if (!priceId || !userId || !userEmail) {
+        return res.status(400).json({ 
+          error: 'Missing required fields: priceId, userId, userEmail' 
+        });
+      }
+
+      console.log('💳 Creating checkout session for user:', userId);
+
+      // Create Stripe Checkout Session
+      const session = await stripe.checkout.sessions.create({
+        mode: 'subscription',
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        success_url: `${req.headers.origin || 'https://confident-picks.com'}/?session_id={CHECKOUT_SESSION_ID}&success=true`,
+        cancel_url: `${req.headers.origin || 'https://confident-picks.com'}/?canceled=true`,
+        customer_email: userEmail,
+        client_reference_id: userId,
+        metadata: {
+          userId: userId,
+          priceId: priceId
+        }
+      });
+
+      console.log('✅ Checkout session created:', session.id);
+
+      res.json({ sessionId: session.id, url: session.url });
+
+    } catch (error) {
+      console.error('❌ Error creating checkout session:', error);
+      res.status(500).json({ 
+        error: 'Failed to create checkout session',
+        message: error.message 
+      });
+    }
+  });
+});
 
 /**
  * Test function to verify deployment
