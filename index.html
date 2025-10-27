@@ -5730,7 +5730,7 @@ async function loadQAPicks() {
 
   } catch (error) {
     console.error('Error loading QA picks:', error);
-    showMessage('Error loading picks. Check console for details.', 'error');
+    // Don't show error to users for QA dashboard
   }
 }
 
