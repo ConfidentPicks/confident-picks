@@ -2769,10 +2769,23 @@ function formatDate(iso){
   }
   var d = new Date(iso);
   
+  // Get weekday name
+  var weekday = d.toLocaleString('en-US', { weekday: 'long' });
+  
   // Add week number calculation
   var weekNum = getWeekNumber(d);
   
-  return d.toLocaleString([], { dateStyle:'medium', timeStyle:'short' }) + ' (Week ' + weekNum + ')'; 
+  // Format: "Monday, Nov 3, 2025, 8:15 PM (Week 45)"
+  var dateTime = d.toLocaleString('en-US', { 
+    weekday: 'long',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  });
+  
+  return dateTime + ' (Week ' + weekNum + ')'; 
 }
 
 function getWeekNumber(date) {
