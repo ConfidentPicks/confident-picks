@@ -750,17 +750,21 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);co
 
 /* Quick Filter Buttons */
 .quick-filter-btn {
-  padding: 6px 14px;
+  padding: 8px 16px;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 8px;
   background: rgba(255,255,255,.06);
   color: var(--text);
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .quick-filter-btn:hover {
   background: rgba(255,255,255,.12);
@@ -1189,8 +1193,10 @@ input,select,textarea{width:100%;padding:10px;border-radius:var(--r);border:1px 
 /* Min Confidence — slider format */
 .minconf {
   position: relative;
-  display: inline-block;
-  min-width: 180px;
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 160px;
+  gap: 4px;
 }
 .minconf input[type="range"] {
   width: 100%;
@@ -1228,7 +1234,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:var(--r);border:1px 
 .minconf .caption {
   font-size: 11px;
   color: var(--sub);
-  margin-top: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1539,16 +1544,16 @@ html.gated body > *:not(#gate){ display:none !important; }
 
       <!-- Min Confidence slider -->
       <div class="minconf">
-        <input id="minConf" type="range" min="0" max="100" value="70" step="5" aria-label="Minimum confidence threshold"/>
+        <input id="minConf" type="range" min="0" max="100" value="75" step="5" aria-label="Minimum confidence threshold"/>
         <div class="caption">
           <span>Min Confidence</span>
-          <span class="value-display" id="minConfValue">70%</span>
+          <span class="value-display" id="minConfValue">75%</span>
         </div>
       </div>
     </div>
 
     <!-- Quick Filters -->
-    <div class="quick-filters" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+    <div class="quick-filters" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-start;">
       <button type="button" class="quick-filter-btn" data-filter="high-confidence">
         ⭐ High Confidence (75%+)
       </button>
