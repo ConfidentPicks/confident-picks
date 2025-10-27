@@ -748,6 +748,148 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);co
   background:var(--blue);color:#0B0F14;border-color:transparent;
   box-shadow: 0 3px 8px rgba(77,163,255,0.3);
 }
+
+/* Quick Filter Buttons */
+.quick-filter-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.quick-filter-btn:hover {
+  background: rgba(255,255,255,.12);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.quick-filter-btn:active {
+  transform: translateY(0);
+}
+.quick-filter-btn.active {
+  background: var(--blue);
+  color: #0B0F14;
+  border-color: transparent;
+  box-shadow: 0 3px 8px rgba(77,163,255,0.3);
+}
+.quick-filter-btn.clear-filters-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--red);
+}
+.quick-filter-btn.clear-filters-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* Notification Bell */
+.notification-btn {
+  position: relative;
+  padding: 8px 12px;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.06);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.notification-btn:hover {
+  background: rgba(255,255,255,.12);
+  transform: scale(1.05);
+}
+.notification-btn:active {
+  transform: scale(0.95);
+}
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--red);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
+  border: 2px solid var(--bg);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.notification-badge.hidden {
+  display: none;
+}
+
+/* Loading States - Skeleton Screens */
+.skeleton {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0.03) 0%, 
+    rgba(255,255,255,0.06) 50%, 
+    rgba(255,255,255,0.03) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+}
+.skeleton-text.short {
+  width: 40%;
+}
+.skeleton-text.medium {
+  width: 60%;
+}
+.skeleton-text.long {
+  width: 80%;
+}
+.skeleton-badge {
+  width: 60px;
+  height: 24px;
+  border-radius: 999px;
+}
+.skeleton-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(77,163,255,0.2);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Loading Container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+.loading-message {
+  color: var(--sub);
+  font-size: 14px;
+  text-align: center;
+}
+
 .nav a{color:var(--text); text-decoration:none; opacity:.85}
 .nav a.active{opacity:1; font-weight:600; text-decoration:underline; text-decoration-color: var(--blue)}
 
@@ -1111,6 +1253,10 @@ html.gated body > *:not(#gate){ display:none !important; }
       <a href="#favorites" data-nav>Favorites</a>
       <a href="#account" data-nav id="navAccount">Account</a>
       <a href="#admin" data-nav id="navAdmin" class="hidden">Admin</a>
+      <button type="button" id="notificationBtn" class="btn enhanced notification-btn" aria-label="Notifications">
+        🔔
+        <span class="notification-badge hidden" id="notificationBadge">0</span>
+      </button>
       <button type="button" id="themeBtn" class="btn enhanced" aria-label="Toggle theme"><span class="theme-icon" aria-hidden="true"></span></button>
       <button type="button" id="authBtn" class="btn primary enhanced">Sign up for free</button>
       <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade</button>
@@ -1167,6 +1313,28 @@ html.gated body > *:not(#gate){ display:none !important; }
           <span class="value-display" id="minConfValue">70%</span>
         </div>
       </div>
+    </div>
+
+    <!-- Quick Filters -->
+    <div class="quick-filters" style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+      <button type="button" class="quick-filter-btn" data-filter="high-confidence">
+        ⭐ High Confidence (75%+)
+      </button>
+      <button type="button" class="quick-filter-btn" data-filter="today">
+        📅 Today's Games
+      </button>
+      <button type="button" class="quick-filter-btn" data-filter="nfl-only">
+        🏈 NFL Only
+      </button>
+      <button type="button" class="quick-filter-btn" data-filter="nhl-only">
+        🏒 NHL Only
+      </button>
+      <button type="button" class="quick-filter-btn" data-filter="nba-only">
+        🏀 NBA Only
+      </button>
+      <button type="button" class="quick-filter-btn clear-filters-btn" onclick="clearAllFilters()" style="margin-left: auto;">
+        🗑️ Clear All
+      </button>
     </div>
 
     <div id="gatingNote" class="card text-sub" style="margin-top:12px"></div>
@@ -2485,6 +2653,55 @@ function setButtonLoading(buttonId, loading) {
   }
 }
 
+// Skeleton screen generator for picks
+function generateSkeletonPicks(count) {
+  var skeletons = [];
+  for (var i = 0; i < count; i++) {
+    skeletons.push(
+      '<div class="card">' +
+        '<div class="skeleton skeleton-text short" style="margin-bottom:8px;"></div>' +
+        '<div class="skeleton skeleton-text medium" style="margin-bottom:12px;"></div>' +
+        '<div class="skeleton skeleton-text long" style="margin-bottom:8px;"></div>' +
+        '<div style="display:flex; gap:12px; margin-top:8px;">' +
+          '<div class="skeleton skeleton-badge"></div>' +
+          '<div class="skeleton skeleton-text short"></div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+  return skeletons.join('');
+}
+
+// Show skeleton loading state
+function showSkeletonLoading(elementId, message) {
+  var element = document.getElementById(elementId);
+  if (!element) return;
+  
+  element.innerHTML = '<div class="loading-container">' +
+    '<div class="skeleton-spinner"></div>' +
+    '<div class="loading-message">' + (message || 'Loading picks...') + '</div>' +
+    '</div>';
+}
+
+// Show skeleton cards while loading
+function showSkeletonCards(elementId, count) {
+  var element = document.getElementById(elementId);
+  if (!element) return;
+  
+  element.innerHTML = generateSkeletonPicks(count || 3);
+}
+
+// Check if data is currently loading
+var isDataLoading = false;
+function setDataLoading(loading) {
+  isDataLoading = loading;
+  console.log('Data loading state:', loading ? 'Started' : 'Finished');
+}
+
+function getDataLoading() {
+  return isDataLoading;
+}
+
 // Safe localStorage helpers
 function safeGetStorage(key, fallback) {
   try {
@@ -2798,6 +3015,12 @@ function teaserCardHTML(i){
 
 // VIEW RENDERERS
 function render(){
+  // Check if data is loading
+  if (isDataLoading) {
+    showSkeletonCards('list', 6);
+    return;
+  }
+  
   var note = document.getElementById('gatingNote');
   if (state.auth==='anon') {
     note.textContent = 'Sign up for free to see 3 more picks.';
@@ -4549,6 +4772,67 @@ function clearFilters() {
 function clearAllFilters() {
   clearFilters();
   clearSearch();
+  
+  // Remove active state from all quick filter buttons
+  document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+}
+
+// Quick Filter Functions
+function applyHighConfidenceFilter() {
+  document.getElementById('minConf').value = '75';
+  document.getElementById('minConfValue').textContent = '75%';
+  render();
+}
+
+function applyTodayFilter() {
+  // Filter to only today's games (this would need to check commenceTime)
+  // For now, we'll just trigger a render to show the effect
+  render();
+}
+
+function applyLeagueFilter(league) {
+  document.getElementById('leagueSel').value = league;
+  render();
+}
+
+// Setup quick filter button event listeners
+function setupQuickFilters() {
+  document.querySelectorAll('.quick-filter-btn[data-filter]').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const filter = this.getAttribute('data-filter');
+      
+      // Toggle active state
+      this.classList.toggle('active');
+      
+      // Apply the filter
+      switch(filter) {
+        case 'high-confidence':
+          applyHighConfidenceFilter();
+          break;
+        case 'today':
+          applyTodayFilter();
+          break;
+        case 'nfl-only':
+          applyLeagueFilter('NFL');
+          break;
+        case 'nhl-only':
+          applyLeagueFilter('NHL');
+          break;
+        case 'nba-only':
+          applyLeagueFilter('NBA');
+          break;
+      }
+    });
+  });
+}
+
+// Initialize quick filters when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupQuickFilters);
+} else {
+  setupQuickFilters();
 }
 
 // Enhanced confidence calculation
@@ -7403,6 +7687,157 @@ async function signOut() {
 window.signUp = signUp;
 window.signIn = signIn;
 window.signOut = signOut;
+
+// ============================================================================
+// NOTIFICATION SYSTEM
+// ============================================================================
+
+let notificationCount = 0;
+let lastPickTimestamp = Date.now();
+let notificationUnsubscriber = null;
+
+// Initialize notification system
+async function initNotifications() {
+  if (!window.firebaseReady || !window.db) {
+    console.log('Firebase not ready, skipping notification initialization');
+    return;
+  }
+
+  try {
+    const { collection, query, where, onSnapshot, Timestamp } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
+    
+    // Listen for new high-confidence picks (75%+)
+    const notificationQuery = query(
+      collection(window.db, 'all_picks'),
+      where('status', '==', 'active'),
+      where('confidence', '>=', 0.75)
+    );
+    
+    // Set up real-time listener
+    notificationUnsubscriber = onSnapshot(notificationQuery, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === 'added') {
+          const data = change.doc.data();
+          const pickTime = data.commenceTime || data.startTime || data.gameTime;
+          
+          // Only notify if this is a new pick (not existing data)
+          if (pickTime && new Date(pickTime) > new Date(lastPickTimestamp)) {
+            notificationCount++;
+            updateNotificationBadge();
+            
+            // Show browser notification if permission granted
+            showBrowserNotification(data);
+          }
+        }
+      });
+    });
+    
+    console.log('✅ Notification system initialized');
+  } catch (error) {
+    console.error('❌ Notification system error:', error);
+  }
+}
+
+// Update notification badge
+function updateNotificationBadge() {
+  const badge = document.getElementById('notificationBadge');
+  if (badge) {
+    if (notificationCount > 0) {
+      badge.textContent = notificationCount > 99 ? '99+' : notificationCount.toString();
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+}
+
+// Show browser notification
+async function showBrowserNotification(pickData) {
+  // Request permission if not granted
+  if (Notification.permission === 'default') {
+    await Notification.requestPermission();
+  }
+  
+  // Show notification if permission granted
+  if (Notification.permission === 'granted') {
+    try {
+      const notification = new Notification('New High-Confidence Pick! 🎯', {
+        body: `${pickData.sport || 'Sport'} - ${pickData.prediction || pickData.market}`,
+        icon: '/logo.png',
+        badge: '/logo.png',
+        tag: 'new-pick',
+        requireInteraction: false
+      });
+      
+      // Close notification after 5 seconds
+      setTimeout(() => notification.close(), 5000);
+      
+      // Click handler to focus the app
+      notification.onclick = function() {
+        window.focus();
+        this.close();
+      };
+    } catch (error) {
+      console.error('Error showing notification:', error);
+    }
+  }
+}
+
+// Clear notifications
+function clearNotifications() {
+  notificationCount = 0;
+  updateNotificationBadge();
+}
+
+// Setup notification button click handler
+function setupNotificationButton() {
+  const btn = document.getElementById('notificationBtn');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      // Clear notifications and show a toast/message
+      clearNotifications();
+      
+      // Optional: Show notification panel or scroll to picks
+      if (location.hash !== '#picks') {
+        location.hash = '#picks';
+      }
+      
+      // Scroll to top of picks section
+      const picksSection = document.getElementById('view-picks');
+      if (picksSection) {
+        picksSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+}
+
+// Initialize on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setupNotificationButton();
+  });
+} else {
+  setupNotificationButton();
+}
+
+// Initialize notifications after Firebase is ready
+setTimeout(() => {
+  if (window.firebaseReady) {
+    initNotifications();
+  }
+}, 3000);
+
+// Update last timestamp on page load
+if (window.picksAll && window.picksAll.length > 0) {
+  const latestPick = window.picksAll.reduce((latest, pick) => {
+    const pickTime = new Date(pick.commenceTime).getTime();
+    return pickTime > latest ? pickTime : latest;
+  }, 0);
+  
+  if (latestPick > 0) {
+    lastPickTimestamp = latestPick;
+  }
+}
 
 // ============================================================================
 // STRIPE CONFIGURATION - PRODUCTION MODE
