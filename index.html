@@ -25,7 +25,6 @@
 <!-- Sentry Error Monitoring -->
 <script
   src="https://browser.sentry-cdn.com/8.0.0/bundle.min.js"
-  integrity="sha384-bEh5vHBRi7m/AHV8OUDZd+5SALbPFKLBRHBBBXBXBXBXBXBXBXBXBXBXBXBXBXBX"
   crossorigin="anonymous"
 ></script>
 <script>
@@ -3236,7 +3235,7 @@ function cardHTML(p){
     + '<div class="row"><div><strong>'+p.pickDesc+'</strong></div></div>'
     + '<div class="text-sub">Confidence: <span class="tooltip confidence-badge ' + confClass + '" data-tooltip="Model confidence: ' + p.modelConfidence + '% (' + confLevel + ')" style="color:'+confColor+'">' + p.modelConfidence + '%</span> • Odds: '+oddsString(p.oddsAmerican)+'</div>'
     + '<div class="reasoning">Reasoning: '+esc(p.reasoning || '—')+'</div>'
-    + '<button class="btn-expand-details" onclick="togglePickDetails('+p.id+')" type="button">Show More Details</button>'
+    + '<button class="btn-expand-details" onclick="togglePickDetails(\''+p.id+'\')" type="button">Show More Details</button>'
     + expandableHTML
     + '<div class="row" style="margin-top:6px;gap:8px"><div class="text-sub">Commences: '+formatDate(p.commenceTime)+'</div>'+star+'</div>'
     + '</div>';
@@ -7455,29 +7454,32 @@ async function loadFirebaseData() {
         console.log('🏷️ Market:', data.market);
         
         // Build proper pick description
+        // The prediction field name varies: data.prediction, data.pick, or data.pickTeam
+        const prediction = data.prediction || data.pick || data.pickTeam || 'Unknown';
+        
         let pickDesc = '';
         
-        if (data.market === 'h2h') {
+        if (data.market === 'h2h' || data.marketType === 'moneyline') {
           // For H2H (moneyline), show teams playing
           if (data.awayTeam && data.homeTeam) {
-            pickDesc = `${data.prediction} to WIN (${data.awayTeam} @ ${data.homeTeam})`;
+            pickDesc = `${prediction} to WIN (${data.awayTeam} @ ${data.homeTeam})`;
           } else {
-            pickDesc = `${data.prediction} to WIN`;
+            pickDesc = `${prediction} to WIN`;
           }
         } else if (data.market === 'total') {
           // For totals, show the prediction with teams if available
           if (data.awayTeam && data.homeTeam) {
-            pickDesc = `${data.prediction} (${data.awayTeam} @ ${data.homeTeam})`;
+            pickDesc = `${prediction} (${data.awayTeam} @ ${data.homeTeam})`;
           } else {
-            pickDesc = data.prediction;
+            pickDesc = prediction;
           }
         } else if (data.market === 'sgp2') {
-          pickDesc = `${data.fight || 'Match'} - ${data.prediction}`;
+          pickDesc = `${data.fight || 'Match'} - ${prediction}`;
         } else if (data.awayTeam && data.homeTeam) {
           // For other markets, show teams and prediction
-          pickDesc = `${data.prediction} (${data.awayTeam} @ ${data.homeTeam})`;
+          pickDesc = `${prediction} (${data.awayTeam} @ ${data.homeTeam})`;
         } else {
-          pickDesc = data.prediction || 'No pick description';
+          pickDesc = prediction || 'No pick description';
         }
         
         firebasePicks.push({
