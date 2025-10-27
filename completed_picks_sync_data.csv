@@ -1,0 +1,251 @@
+ID,Game,Away Team,Home Team,Pick Type,Pick Team,Pick Description,Odds,Confidence,Result,Status,Start Time,Settled At,League,Market Type,Reasoning,Created At,Last Updated,Graded At,Notes,Win Loss,Is Winner,Confidence Level,Is Enhanced,Source
+2025_01_ARI_NO_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 91.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.447780+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_ARI_NO_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 81.6% confidence,,2025-10-24T23:07:21.448171+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_BAL_BUF_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 89.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.448463+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_BAL_BUF_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 50.5 with 74.3% confidence,,2025-10-24T23:07:21.448646+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_CAR_JAX_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 86.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.448862+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_CAR_JAX_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts CAR covers with 54.2% confidence,,2025-10-24T23:07:21.449084+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_CAR_JAX_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 45.5 with 77.2% confidence,,2025-10-24T23:07:21.449462+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_CIN_CLE_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 89.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.449781+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_CIN_CLE_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts CIN covers with 57.0% confidence,,2025-10-24T23:07:21.449964+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_CIN_CLE_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 47.5 with 76.1% confidence,,2025-10-24T23:07:21.450114+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_DAL_PHI_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 88.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.450261+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_DAL_PHI_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts DAL covers with 54.2% confidence,,2025-10-24T23:07:21.450455+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_DAL_PHI_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 47.5 with 56.0% confidence,,2025-10-24T23:07:21.450635+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_DET_GB_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 81.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.450780+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_DET_GB_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 48.5 with 56.0% confidence,,2025-10-24T23:07:21.450918+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_HOU_LA_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 89.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.451053+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_HOU_LA_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 43.5 with 61.2% confidence,,2025-10-24T23:07:21.451188+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_KC_LAC_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 89.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.451319+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_KC_LAC_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 47.5 with 61.2% confidence,,2025-10-24T23:07:21.452539+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_LV_NE_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 91.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.466160+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_LV_NE_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts LV covers with 58.0% confidence,,2025-10-24T23:07:21.466591+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_LV_NE_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 65.8% confidence,,2025-10-24T23:07:21.466925+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_MIA_IND_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 86.5% confidence (FPI-adjusted),,2025-10-24T23:07:21.467278+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_MIA_IND_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts MIA covers with 55.2% confidence,,2025-10-24T23:07:21.467578+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_MIA_IND_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 47.5 with 51.4% confidence,,2025-10-24T23:07:21.467840+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_MIN_CHI_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 91.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.468086+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_MIN_CHI_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 43.5 with 65.2% confidence,,2025-10-24T23:07:21.468341+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_NYG_WAS_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 81.2% confidence (FPI-adjusted),,2025-10-24T23:07:21.468594+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_NYG_WAS_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts NYG covers with 57.2% confidence,,2025-10-24T23:07:21.468830+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_NYG_WAS_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 45.5 with 63.4% confidence,,2025-10-24T23:07:21.468963+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_PIT_NYJ_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 91.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.469094+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_PIT_NYJ_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 37.5 with 65.2% confidence,,2025-10-24T23:07:21.469900+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_SF_SEA_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 89.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.470451+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_SF_SEA_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts SF covers with 55.2% confidence,,2025-10-24T23:07:21.470794+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_SF_SEA_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 43.5 with 61.2% confidence,,2025-10-24T23:07:21.471289+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_TB_ATL_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 86.2% confidence (FPI-adjusted),,2025-10-24T23:07:21.471595+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_TB_ATL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts UNDER 47.5 with 56.7% confidence,,2025-10-24T23:07:21.472504+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_TEN_DEN_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 86.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.472836+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_01_TEN_DEN_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts TEN covers with 57.0% confidence,,2025-10-24T23:07:21.473112+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_01_TEN_DEN_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 42.5 with 62.8% confidence,,2025-10-24T23:07:21.473619+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_ATL_MIN_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 55.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.474152+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_ATL_MIN_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 56.8% confidence,,2025-10-24T23:07:21.474427+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_BUF_NYJ_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 55.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.475737+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_BUF_NYJ_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts BUF covers with 55.1% confidence,,2025-10-24T23:07:21.476036+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_BUF_NYJ_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 47.5 with 75.6% confidence,,2025-10-24T23:07:21.476206+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_CAR_ARI_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 69.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.476362+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_CAR_ARI_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 45.5 with 58.0% confidence,,2025-10-24T23:07:21.479212+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_CHI_DET_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 61.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.479666+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_CHI_DET_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 46.5 with 72.6% confidence,,2025-10-24T23:07:21.479937+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_CLE_BAL_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 58.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.480113+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_CLE_BAL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 46.5 with 84.3% confidence,,2025-10-24T23:07:21.480265+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_DEN_IND_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 62.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.480407+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_DEN_IND_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts DEN covers with 56.4% confidence,,2025-10-24T23:07:21.480546+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_DEN_IND_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts UNDER 43.5 with 54.1% confidence,,2025-10-24T23:07:21.480690+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_JAX_CIN_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 57.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.480871+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_JAX_CIN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 49.5 with 68.3% confidence,,2025-10-24T23:07:21.481219+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_LAC_LV_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 70.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.481530+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_LAC_LV_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 46.5 with 64.6% confidence,,2025-10-24T23:07:21.482318+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_LA_TEN_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 72.6% confidence (FPI-adjusted),,2025-10-24T23:07:21.482708+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_LA_TEN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 41.5 with 65.4% confidence,,2025-10-24T23:07:21.483105+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_NE_MIA_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 54.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.483391+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_NE_MIA_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts NE covers with 60.0% confidence,,2025-10-24T23:07:21.483998+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_NE_MIA_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 43.5 with 75.5% confidence,,2025-10-24T23:07:21.484267+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_NYG_DAL_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 59.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.484955+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_NYG_DAL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 44.5 with 74.2% confidence,,2025-10-24T23:07:21.485224+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_PHI_KC_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 64.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.485599+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_PHI_KC_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts PHI covers with 51.9% confidence,,2025-10-24T23:07:21.487554+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_PHI_KC_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 46.5 with 76.2% confidence,,2025-10-24T23:07:21.487972+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_SEA_PIT_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 61.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.488180+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_SEA_PIT_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 40.5 with 87.3% confidence,,2025-10-24T23:07:21.488331+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_SF_NO_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 56.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.488479+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_SF_NO_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 40.5 with 79.5% confidence,,2025-10-24T23:07:21.488817+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_TB_HOU_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 58.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.489169+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_TB_HOU_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 42.5 with 79.9% confidence,,2025-10-24T23:07:21.489376+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_02_WAS_GB_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 77.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.491053+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_02_WAS_GB_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 48.5 with 51.8% confidence,,2025-10-24T23:07:21.491340+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_ARI_SF_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 54.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.491589+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_ARI_SF_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 67.2% confidence,,2025-10-24T23:07:21.491757+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_ATL_CAR_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 73.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.491908+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_ATL_CAR_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 69.7% confidence,,2025-10-24T23:07:21.492373+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_CIN_MIN_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 50.2% confidence (FPI-adjusted),,2025-10-24T23:07:21.493147+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_CIN_MIN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 41.5 with 53.5% confidence,,2025-10-24T23:07:21.493639+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_DAL_CHI_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 68.5% confidence (FPI-adjusted),,2025-10-24T23:07:21.497592+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_DAL_CHI_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 49.5 with 84.1% confidence,,2025-10-24T23:07:21.497833+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_DEN_LAC_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 55.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.498206+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_DEN_LAC_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 45.5 with 75.1% confidence,,2025-10-24T23:07:21.498574+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_DET_BAL_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 72.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.498914+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_DET_BAL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 53.5 with 54.5% confidence,,2025-10-24T23:07:21.499168+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_GB_CLE_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 63.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.499515+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_GB_CLE_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 41.5 with 72.4% confidence,,2025-10-24T23:07:21.499775+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_HOU_JAX_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 68.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.499988+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_HOU_JAX_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 43.5 with 62.8% confidence,,2025-10-24T23:07:21.500193+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_IND_TEN_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 69.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.500364+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_IND_TEN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 43.5 with 71.3% confidence,,2025-10-24T23:07:21.500523+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_KC_NYG_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 67.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.500678+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_KC_NYG_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts KC covers with 59.2% confidence,,2025-10-24T23:07:21.500825+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_KC_NYG_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 66.8% confidence,,2025-10-24T23:07:21.500976+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_LA_PHI_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 59.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.501158+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_LA_PHI_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts LA covers with 50.1% confidence,,2025-10-24T23:07:21.501526+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_LA_PHI_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 45.5 with 73.6% confidence,,2025-10-24T23:07:21.501798+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_LV_WAS_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 65.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.502047+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_LV_WAS_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 43.5 with 63.7% confidence,,2025-10-24T23:07:21.502253+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_MIA_BUF_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 53.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.502447+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_MIA_BUF_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts MIA covers with 57.7% confidence,,2025-10-24T23:07:21.502993+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_MIA_BUF_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 50.5 with 51.0% confidence,,2025-10-24T23:07:21.503342+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_NO_SEA_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 64.2% confidence (FPI-adjusted),,2025-10-24T23:07:21.503581+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_NO_SEA_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts NO covers with 53.0% confidence,,2025-10-24T23:07:21.503834+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_NO_SEA_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 41.5 with 81.0% confidence,,2025-10-24T23:07:21.504110+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_NYJ_TB_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 63.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.504372+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_NYJ_TB_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 43.5 with 62.3% confidence,,2025-10-24T23:07:21.504728+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_PIT_NE_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 71.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.505153+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_03_PIT_NE_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts PIT covers with 53.1% confidence,,2025-10-24T23:07:21.505366+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_03_PIT_NE_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 85.9% confidence,,2025-10-24T23:07:21.505630+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_BAL_KC_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 61.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.505904+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_BAL_KC_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts BAL covers with 53.3% confidence,,2025-10-24T23:07:21.506115+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_BAL_KC_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 48.5 with 64.1% confidence,,2025-10-24T23:07:21.506279+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_CAR_NE_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 77.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.508049+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_CAR_NE_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 42.5 with 78.7% confidence,,2025-10-24T23:07:21.508341+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_CHI_LV_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 61.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.508589+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_CHI_LV_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 47.5 with 81.2% confidence,,2025-10-24T23:07:21.509370+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_CIN_DEN_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 66.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.509688+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_CIN_DEN_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts CIN covers with 54.4% confidence,,2025-10-24T23:07:21.510030+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_CIN_DEN_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 74.6% confidence,,2025-10-24T23:07:21.510513+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_CLE_DET_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 64.5% confidence (FPI-adjusted),,2025-10-24T23:07:21.510941+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_CLE_DET_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts CLE covers with 51.5% confidence,,2025-10-24T23:07:21.511253+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_CLE_DET_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 69.6% confidence,,2025-10-24T23:07:21.513866+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_GB_DAL_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 71.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.514077+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_GB_DAL_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts GB covers with 55.1% confidence,,2025-10-24T23:07:21.514240+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_GB_DAL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 47.5 with 83.0% confidence,,2025-10-24T23:07:21.514389+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_IND_LA_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 51.5% confidence (FPI-adjusted),,2025-10-24T23:07:21.514713+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_IND_LA_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts IND covers with 53.1% confidence,,2025-10-24T23:07:21.514952+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_IND_LA_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 49.5 with 65.9% confidence,,2025-10-24T23:07:21.515139+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_JAX_SF_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 63.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.515516+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_JAX_SF_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts JAX covers with 58.3% confidence,,2025-10-24T23:07:21.515857+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_JAX_SF_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 45.5 with 52.8% confidence,,2025-10-24T23:07:21.516115+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_LAC_NYG_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 56.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.516307+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_LAC_NYG_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 43.5 with 67.6% confidence,,2025-10-24T23:07:21.516456+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_MIN_PIT_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 67.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.516589+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_MIN_PIT_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 41.5 with 57.7% confidence,,2025-10-24T23:07:21.516729+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_NO_BUF_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 58.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.516874+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_NO_BUF_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts UNDER 48.5 with 53.5% confidence,,2025-10-24T23:07:21.517073+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_NYJ_MIA_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 59.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.517268+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_NYJ_MIA_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts UNDER 44.5 with 54.2% confidence,,2025-10-24T23:07:21.517432+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_PHI_TB_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 70.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.517758+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_PHI_TB_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 44.5 with 62.5% confidence,,2025-10-24T23:07:21.518093+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_SEA_ARI_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 69.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.518292+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_SEA_ARI_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 43.5 with 69.8% confidence,,2025-10-24T23:07:21.518453+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_TEN_HOU_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 69.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.518606+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_TEN_HOU_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 39.5 with 58.5% confidence,,2025-10-24T23:07:21.518999+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_04_WAS_ATL_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 55.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.519370+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_04_WAS_ATL_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts UNDER 43.5 with 56.2% confidence,,2025-10-24T23:07:21.519611+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_DAL_NYJ_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 66.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.519795+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_DAL_NYJ_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 48.5 with 72.6% confidence,,2025-10-24T23:07:21.520173+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_DEN_PHI_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 64.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.520572+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_DEN_PHI_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 55.5% confidence,,2025-10-24T23:07:21.520894+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_DET_CIN_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 52.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.521117+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_DET_CIN_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts UNDER 49.5 with 53.8% confidence,,2025-10-24T23:07:21.521302+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_HOU_BAL_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 71.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.521502+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_HOU_BAL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 41.5 with 70.1% confidence,,2025-10-24T23:07:21.521696+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_KC_JAX_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 66.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.522592+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_KC_JAX_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 45.5 with 71.3% confidence,,2025-10-24T23:07:21.522883+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_LV_IND_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 54.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.523093+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_LV_IND_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 46.5 with 51.0% confidence,,2025-10-24T23:07:21.523251+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_MIA_CAR_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 58.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.523400+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_MIA_CAR_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 44.5 with 57.5% confidence,,2025-10-24T23:07:21.524462+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_MIN_CLE_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 54.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.524747+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_MIN_CLE_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts MIN covers with 54.3% confidence,,2025-10-24T23:07:21.524995+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_MIN_CLE_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 35.5 with 73.6% confidence,,2025-10-24T23:07:21.525257+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_NE_BUF_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 53.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.525485+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_NE_BUF_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 49.5 with 65.9% confidence,,2025-10-24T23:07:21.525636+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_NYG_NO_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 73.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.525775+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_NYG_NO_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 41.5 with 77.0% confidence,,2025-10-24T23:07:21.525918+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_SF_LA_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 73.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.526055+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_SF_LA_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 43.5 with 70.2% confidence,,2025-10-24T23:07:21.526370+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_TB_SEA_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 64.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.526633+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_TB_SEA_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 44.5 with 74.2% confidence,,2025-10-24T23:07:21.527083+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_TEN_ARI_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 71.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.527544+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_TEN_ARI_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 41.5 with 70.2% confidence,,2025-10-24T23:07:21.527922+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_05_WAS_LAC_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 56.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.528299+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_05_WAS_LAC_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 47.5 with 75.3% confidence,,2025-10-24T23:07:21.529027+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_ARI_IND_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 70.6% confidence (FPI-adjusted),,2025-10-24T23:07:21.529322+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_ARI_IND_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 46.5 with 56.9% confidence,,2025-10-24T23:07:21.529627+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_BUF_ATL_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 59.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.529919+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_BUF_ATL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts UNDER 49.5 with 63.1% confidence,,2025-10-24T23:07:21.530202+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_CHI_WAS_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 56.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.530391+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_CHI_WAS_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts CHI covers with 59.6% confidence,,2025-10-24T23:07:21.530541+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_CHI_WAS_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts UNDER 49.5 with 58.3% confidence,,2025-10-24T23:07:21.530692+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_CIN_GB_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 73.6% confidence (FPI-adjusted),,2025-10-24T23:07:21.530829+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_CIN_GB_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 44.5 with 64.5% confidence,,2025-10-24T23:07:21.530976+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_CLE_PIT_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 61.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.531124+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_CLE_PIT_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 37.5 with 71.5% confidence,,2025-10-24T23:07:21.531343+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_DAL_CAR_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 65.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.531591+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_DAL_CAR_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 47.5 with 70.2% confidence,,2025-10-24T23:07:21.531971+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_DEN_NYJ_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 66.2% confidence (FPI-adjusted),,2025-10-24T23:07:21.532408+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_DEN_NYJ_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts DEN covers with 50.1% confidence,,2025-10-24T23:07:21.532852+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_DEN_NYJ_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts UNDER 43.5 with 57.6% confidence,,2025-10-24T23:07:21.533190+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_DET_KC_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 59.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.533556+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_DET_KC_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 51.5 with 69.8% confidence,,2025-10-24T23:07:21.533999+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_LAC_MIA_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 69.2% confidence (FPI-adjusted),,2025-10-24T23:07:21.534248+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_LAC_MIA_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 45.5 with 55.8% confidence,,2025-10-24T23:07:21.534425+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_LA_BAL_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 66.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.534692+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_LA_BAL_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 43.5 with 63.8% confidence,,2025-10-24T23:07:21.534942+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_NE_NO_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 77.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.535141+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_NE_NO_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 46.5 with 62.2% confidence,,2025-10-24T23:07:21.535296+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_PHI_NYG_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 55.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.535438+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_PHI_NYG_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 40.5 with 76.9% confidence,,2025-10-24T23:07:21.535574+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_SEA_JAX_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 54.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.535773+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_SEA_JAX_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts SEA covers with 52.0% confidence,,2025-10-24T23:07:21.535920+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_SEA_JAX_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 47.5 with 80.5% confidence,,2025-10-24T23:07:21.536053+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_06_SF_TB_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 52.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.536269+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_SF_TB_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 46.5 with 70.0% confidence,,2025-10-24T23:07:21.536513+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_TEN_LV_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 66.3% confidence (FPI-adjusted),,2025-10-24T23:07:21.536767+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_06_TEN_LV_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts UNDER 41.5 with 53.0% confidence,,2025-10-24T23:07:21.537013+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_ATL_SF_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 61.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.537255+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_ATL_SF_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 46.5 with 68.1% confidence,,2025-10-24T23:07:21.537401+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_CAR_NYJ_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 68.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.537541+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_CAR_NYJ_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 39.5 with 77.1% confidence,,2025-10-24T23:07:21.537674+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_GB_ARI_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 77.5% confidence (FPI-adjusted),,2025-10-24T23:07:21.537817+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_GB_ARI_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts GB covers with 51.8% confidence,,2025-10-24T23:07:21.537948+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_GB_ARI_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 44.5 with 62.9% confidence,,2025-10-24T23:07:21.538078+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_HOU_SEA_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 68.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.538208+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_HOU_SEA_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 41.5 with 72.8% confidence,,2025-10-24T23:07:21.538336+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_IND_LAC_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 60.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.538477+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_IND_LAC_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 48.5 with 57.9% confidence,,2025-10-24T23:07:21.538625+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_LA_JAX_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 70.4% confidence (FPI-adjusted),,2025-10-24T23:07:21.538759+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_LA_JAX_spread,,,,,,,-110,,W,completed,,,NFL,,Model predicts LA covers with 55.9% confidence,,2025-10-24T23:07:21.538890+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_LA_JAX_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 90.5% confidence,,2025-10-24T23:07:21.539021+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_LV_KC_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 73.6% confidence (FPI-adjusted),,2025-10-24T23:07:21.539156+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_LV_KC_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts LV covers with 53.7% confidence,,2025-10-24T23:07:21.539291+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_LV_KC_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 53.8% confidence,,2025-10-24T23:07:21.539430+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_MIA_CLE_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 68.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.539569+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_MIA_CLE_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 34.5 with 66.4% confidence,,2025-10-24T23:07:21.539711+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_NE_TEN_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 61.1% confidence (FPI-adjusted),,2025-10-24T23:07:21.539850+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_NE_TEN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 40.5 with 74.0% confidence,,2025-10-24T23:07:21.540000+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_NO_CHI_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 70.6% confidence (FPI-adjusted),,2025-10-24T23:07:21.540141+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_NO_CHI_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 43.5 with 54.1% confidence,,2025-10-24T23:07:21.540286+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_NYG_DEN_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 69.6% confidence (FPI-adjusted),,2025-10-24T23:07:21.540427+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_NYG_DEN_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts NYG covers with 61.5% confidence,,2025-10-24T23:07:21.540569+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_NYG_DEN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 39.5 with 66.9% confidence,,2025-10-24T23:07:21.540709+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_PHI_MIN_moneyline,,,,,,,-110,,L,completed,,,NFL,,Model prediction with 53.9% confidence (FPI-adjusted),,2025-10-24T23:07:21.540844+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_07_PHI_MIN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 43.5 with 76.4% confidence,,2025-10-24T23:07:21.541059+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_PIT_CIN_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 52.2% confidence (FPI-adjusted),,2025-10-24T23:07:21.541299+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_PIT_CIN_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 45.5 with 56.3% confidence,,2025-10-24T23:07:21.541536+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_TB_DET_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 74.7% confidence (FPI-adjusted),,2025-10-24T23:07:21.541765+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_TB_DET_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts UNDER 54.5 with 52.6% confidence,,2025-10-24T23:07:21.542002+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_WAS_DAL_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 65.8% confidence (FPI-adjusted),,2025-10-24T23:07:21.542223+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_07_WAS_DAL_total,,,,,,,-110,,W,completed,,,NFL,,Model predicts OVER 54.5 with 73.6% confidence,,2025-10-24T23:07:21.542369+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_08_MIN_LAC_moneyline,,,,,,,-110,,W,completed,,,NFL,,Model prediction with 70.0% confidence (FPI-adjusted),,2025-10-24T23:07:21.542510+00:00,,,WIN,True,LOW,True,firebase_existing
+2025_08_MIN_LAC_spread,,,,,,,-110,,L,completed,,,NFL,,Model predicts MIN covers with 54.6% confidence,,2025-10-24T23:07:21.542651+00:00,,,LOSS,False,LOW,True,firebase_existing
+2025_08_MIN_LAC_total,,,,,,,-110,,L,completed,,,NFL,,Model predicts OVER 44.5 with 65.9% confidence,,2025-10-24T23:07:21.544389+00:00,,,LOSS,False,LOW,True,firebase_existing

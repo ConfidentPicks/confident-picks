@@ -1,0 +1,291 @@
+{
+  "allowed_columns": {
+    "AU": {
+      "index": 46,
+      "header": "predicted_total",
+      "expected": "predicted_total"
+    },
+    "AV": {
+      "index": 47,
+      "header": "edge_vs_line",
+      "expected": "edge_vs_line"
+    },
+    "AW": {
+      "index": 48,
+      "header": "total_confidence",
+      "expected": "total_confidence"
+    },
+    "AX": {
+      "index": 49,
+      "header": "predicted_winner",
+      "expected": "predicted_winner"
+    },
+    "AZ": {
+      "index": 51,
+      "header": "winner_confidence",
+      "expected": "winner_confidence"
+    },
+    "BA": {
+      "index": 52,
+      "header": "Predicted_Cover_Home",
+      "expected": "Predicted_Cover_Home"
+    },
+    "BC": {
+      "index": 54,
+      "header": "home_cover_ confidence",
+      "expected": "home_cover_ confidence"
+    },
+    "BD": {
+      "index": 55,
+      "header": "Predicted_Cover_Away",
+      "expected": "Predicted_Cover_Away"
+    },
+    "BF": {
+      "index": 57,
+      "header": "away_cover_confidence",
+      "expected": "away_cover_confidence"
+    },
+    "BG": {
+      "index": 58,
+      "header": "Predicted_Total",
+      "expected": "Predicted_Total"
+    },
+    "BJ": {
+      "index": 61,
+      "header": "total_confidence",
+      "expected": "total_confidence"
+    },
+    "BK": {
+      "index": 62,
+      "header": "Predicted_Home_Score",
+      "expected": "Predicted_Home_Score"
+    },
+    "BN": {
+      "index": 65,
+      "header": "Predicted_Away_Score",
+      "expected": "Predicted_Away_Score"
+    }
+  },
+  "readonly_columns": {
+    "A": {
+      "index": 0,
+      "header": "game_id"
+    },
+    "B": {
+      "index": 1,
+      "header": "season"
+    },
+    "C": {
+      "index": 2,
+      "header": "game_type"
+    },
+    "D": {
+      "index": 3,
+      "header": "week"
+    },
+    "E": {
+      "index": 4,
+      "header": "gameday"
+    },
+    "F": {
+      "index": 5,
+      "header": "weekday"
+    },
+    "G": {
+      "index": 6,
+      "header": "gametime"
+    },
+    "H": {
+      "index": 7,
+      "header": "away_team"
+    },
+    "I": {
+      "index": 8,
+      "header": "away_score"
+    },
+    "J": {
+      "index": 9,
+      "header": "home_team"
+    },
+    "K": {
+      "index": 10,
+      "header": "home_score"
+    },
+    "L": {
+      "index": 11,
+      "header": "location"
+    },
+    "M": {
+      "index": 12,
+      "header": "result"
+    },
+    "N": {
+      "index": 13,
+      "header": "total"
+    },
+    "O": {
+      "index": 14,
+      "header": "overtime"
+    },
+    "P": {
+      "index": 15,
+      "header": "old_game_id"
+    },
+    "Q": {
+      "index": 16,
+      "header": "gsis"
+    },
+    "R": {
+      "index": 17,
+      "header": "nfl_detail_id"
+    },
+    "S": {
+      "index": 18,
+      "header": "pfr"
+    },
+    "T": {
+      "index": 19,
+      "header": "pff"
+    },
+    "U": {
+      "index": 20,
+      "header": "espn"
+    },
+    "V": {
+      "index": 21,
+      "header": "ftn"
+    },
+    "W": {
+      "index": 22,
+      "header": "away_rest"
+    },
+    "X": {
+      "index": 23,
+      "header": "home_rest"
+    },
+    "Y": {
+      "index": 24,
+      "header": "away_moneyline"
+    },
+    "Z": {
+      "index": 25,
+      "header": "home_moneyline"
+    },
+    "AA": {
+      "index": 26,
+      "header": "spread_line"
+    },
+    "AB": {
+      "index": 27,
+      "header": "away_spread_odds"
+    },
+    "AC": {
+      "index": 28,
+      "header": "home_spread_odds"
+    },
+    "AD": {
+      "index": 29,
+      "header": "total_line"
+    },
+    "AE": {
+      "index": 30,
+      "header": "under_odds"
+    },
+    "AF": {
+      "index": 31,
+      "header": "over_odds"
+    },
+    "AG": {
+      "index": 32,
+      "header": "div_game"
+    },
+    "AH": {
+      "index": 33,
+      "header": "roof"
+    },
+    "AI": {
+      "index": 34,
+      "header": "surface"
+    },
+    "AJ": {
+      "index": 35,
+      "header": "temp"
+    },
+    "AK": {
+      "index": 36,
+      "header": "wind"
+    },
+    "AL": {
+      "index": 37,
+      "header": "away_qb_id"
+    },
+    "AM": {
+      "index": 38,
+      "header": "home_qb_id"
+    },
+    "AN": {
+      "index": 39,
+      "header": "away_qb_name"
+    },
+    "AO": {
+      "index": 40,
+      "header": "home_qb_name"
+    },
+    "AP": {
+      "index": 41,
+      "header": "away_coach"
+    },
+    "AQ": {
+      "index": 42,
+      "header": "home_coach"
+    },
+    "AR": {
+      "index": 43,
+      "header": "referee"
+    },
+    "AS": {
+      "index": 44,
+      "header": "stadium_id"
+    },
+    "AT": {
+      "index": 45,
+      "header": "stadium"
+    },
+    "AY": {
+      "index": 50,
+      "header": "actual_winner"
+    },
+    "BB": {
+      "index": 53,
+      "header": "Actual_Spread_Cover_Home"
+    },
+    "BE": {
+      "index": 56,
+      "header": "Actual_Spread_Cover_Away"
+    },
+    "BH": {
+      "index": 59,
+      "header": "Actual_Total"
+    },
+    "BI": {
+      "index": 60,
+      "header": "Total_Choice"
+    },
+    "BL": {
+      "index": 63,
+      "header": "Actual_Home_Score"
+    },
+    "BM": {
+      "index": 64,
+      "header": "home_score_confidence"
+    },
+    "BO": {
+      "index": 66,
+      "header": "Actual_Away_Score"
+    },
+    "BP": {
+      "index": 67,
+      "header": "away_score_confidence"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "sport": "NHL",
+  "prop": "Moneyline",
+  "timestamp": "2025-10-25T23:48:22.461434",
+  "teamsCompleted": 12,
+  "teamsTarget": 32,
+  "best_teams_at_70plus": 12,
+  "best_config": {
+    "model_type": "AdaBoost",
+    "params": {
+      "n_estimators": 100,
+      "learning_rate": 0.2,
+      "random_state": 0
+    },
+    "split_seed": 40,
+    "test_size": 0.1,
+    "teams_at_70plus": 12,
+    "team_accuracies": {
+      "VAN": 0.812,
+      "PIT": 0.783,
+      "CGY": 0.762,
+      "PHI": 0.75,
+      "EDM": 0.75,
+      "OTT": 0.739,
+      "FLA": 0.727,
+      "BOS": 0.719,
+      "TOR": 0.714,
+      "TBL": 0.708,
+      "NYI": 0.704,
+      "VGK": 0.704,
+      "ANA": 0.667,
+      "WSH": 0.654,
+      "MIN": 0.65,
+      "NYR": 0.639,
+      "MTL": 0.619,
+      "CHI": 0.6,
+      "CAR": 0.594,
+      "NSH": 0.577
+    }
+  },
+  "status": "testing"
+}

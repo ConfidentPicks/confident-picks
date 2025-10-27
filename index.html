@@ -785,47 +785,7 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);co
   background: rgba(239, 68, 68, 0.2);
 }
 
-/* Notification Bell */
-.notification-btn {
-  position: relative;
-  padding: 8px 12px;
-  font-size: 20px;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,.06);
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-.notification-btn:hover {
-  background: rgba(255,255,255,.12);
-  transform: scale(1.05);
-}
-.notification-btn:active {
-  transform: scale(0.95);
-}
-.notification-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: var(--red);
-  color: white;
-  border-radius: 10px;
-  padding: 2px 6px;
-  font-size: 11px;
-  font-weight: 700;
-  min-width: 18px;
-  text-align: center;
-  border: 2px solid var(--bg);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-.notification-badge.hidden {
-  display: none;
-}
+
 
 /* Loading States - Skeleton Screens */
 .skeleton {
@@ -1514,10 +1474,6 @@ html.gated body > *:not(#gate){ display:none !important; }
       <a href="#favorites" data-nav>Favorites</a>
       <a href="#account" data-nav id="navAccount">Account</a>
       <a href="#admin" data-nav id="navAdmin" class="hidden">Admin</a>
-      <button type="button" id="notificationBtn" class="btn enhanced notification-btn" aria-label="Notifications">
-        🔔
-        <span class="notification-badge hidden" id="notificationBadge">0</span>
-      </button>
       <button type="button" id="themeBtn" class="btn enhanced" aria-label="Toggle theme"><span class="theme-icon" aria-hidden="true"></span></button>
       <button type="button" id="authBtn" class="btn primary enhanced">Sign up for free</button>
       <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade</button>
@@ -1596,6 +1552,9 @@ html.gated body > *:not(#gate){ display:none !important; }
       <button type="button" class="quick-filter-btn" data-filter="high-confidence">
         ⭐ High Confidence (75%+)
       </button>
+      <button type="button" class="quick-filter-btn" data-filter="degen">
+        🎲 Degen Bets (+400+)
+      </button>
       <button type="button" class="quick-filter-btn" data-filter="today">
         📅 Today's Games
       </button>
@@ -1609,7 +1568,7 @@ html.gated body > *:not(#gate){ display:none !important; }
         🏀 NBA Only
       </button>
       <button type="button" class="quick-filter-btn clear-filters-btn" onclick="clearAllFilters()" style="margin-left: auto;">
-        🗑️ Clear All
+        🔄 Reset Filter
       </button>
     </div>
 
@@ -3230,9 +3189,16 @@ function cardHTML(p){
     + '</div>'
     + '</div>';
   
+  // Get matchup from pickDesc for top of card
+  var matchup = p.pickDesc.match(/\((.*?)\)/);
+  var matchupText = matchup ? matchup[1] : p.pickDesc;
+  
+  // Extract the team name for the main pick text (remove MONEYLINE and parentheses content)
+  var pickTeam = p.pickDesc.replace(/\s+MONEYLINE.*$/, '').replace(/\s*\(.*?\)/, '');
+  
   return '<div class="card pick-card-enhanced" data-pick-id="'+p.id+'">'
-    + '<div class="text-sub">'+p.league+' • <span class="market-type">'+p.marketType+'</span></div>'
-    + '<div class="row"><div><strong>'+p.pickDesc+'</strong></div></div>'
+    + '<div class="text-sub">'+p.league+' • '+matchupText+'</div>'
+    + '<div class="row"><div><strong>'+pickTeam+' MONEYLINE</strong></div></div>'
     + '<div class="text-sub">Confidence: <span class="tooltip confidence-badge ' + confClass + '" data-tooltip="Model confidence: ' + p.modelConfidence + '% (' + confLevel + ')" style="color:'+confColor+'">' + p.modelConfidence + '%</span> • Odds: '+oddsString(p.oddsAmerican)+'</div>'
     + '<div class="reasoning">Reasoning: '+esc(p.reasoning || '—')+'</div>'
     + '<button class="btn-expand-details" onclick="togglePickDetails(\''+p.id+'\')" type="button">Show More Details</button>'
@@ -5151,6 +5117,19 @@ function applyHighConfidenceFilter() {
   render();
 }
 
+function applyDegenFilter() {
+  // Filter for odds above +400 (underdogs)
+  const filteredPicks = picksAll.filter(function(pick) {
+    return pick.oddsAmerican > 400;
+  });
+  
+  // Temporarily replace picksAll with filtered picks for rendering
+  const originalPicks = picksAll;
+  picksAll = filteredPicks;
+  render();
+  picksAll = originalPicks;
+}
+
 function applyTodayFilter() {
   console.log('Applying today filter');
   // Get today's date range
@@ -5205,6 +5184,10 @@ function setupQuickFilters() {
         case 'high-confidence':
           console.log('Applying high confidence filter');
           applyHighConfidenceFilter();
+          break;
+        case 'degen':
+          console.log('Applying degen filter');
+          applyDegenFilter();
           break;
         case 'today':
           console.log('Applying today filter');
@@ -7460,11 +7443,11 @@ async function loadFirebaseData() {
         let pickDesc = '';
         
         if (data.market === 'h2h' || data.marketType === 'moneyline') {
-          // For H2H (moneyline), show teams playing
+          // For H2H (moneyline), show just the team and MONEYLINE with matchup
           if (data.awayTeam && data.homeTeam) {
-            pickDesc = `${prediction} to WIN (${data.awayTeam} @ ${data.homeTeam})`;
+            pickDesc = `${prediction} MONEYLINE (${data.awayTeam} @ ${data.homeTeam})`;
           } else {
-            pickDesc = `${prediction} to WIN`;
+            pickDesc = `${prediction} MONEYLINE`;
           }
         } else if (data.market === 'total') {
           // For totals, show the prediction with teams if available
@@ -8114,155 +8097,7 @@ window.signIn = signIn;
 window.signOut = signOut;
 
 // ============================================================================
-// NOTIFICATION SYSTEM
-// ============================================================================
 
-let notificationCount = 0;
-let lastPickTimestamp = Date.now();
-let notificationUnsubscriber = null;
-
-// Initialize notification system
-async function initNotifications() {
-  if (!window.firebaseReady || !window.db) {
-    console.log('Firebase not ready, skipping notification initialization');
-    return;
-  }
-
-  try {
-    const { collection, query, where, onSnapshot, Timestamp } = await import('https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js');
-    
-    // Listen for new high-confidence picks (75%+)
-    const notificationQuery = query(
-      collection(window.db, 'all_picks'),
-      where('status', '==', 'active'),
-      where('confidence', '>=', 0.75)
-    );
-    
-    // Set up real-time listener
-    notificationUnsubscriber = onSnapshot(notificationQuery, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          const data = change.doc.data();
-          const pickTime = data.commenceTime || data.startTime || data.gameTime;
-          
-          // Only notify if this is a new pick (not existing data)
-          if (pickTime && new Date(pickTime) > new Date(lastPickTimestamp)) {
-            notificationCount++;
-            updateNotificationBadge();
-            
-            // Show browser notification if permission granted
-            showBrowserNotification(data);
-          }
-        }
-      });
-    });
-    
-    console.log('✅ Notification system initialized');
-  } catch (error) {
-    console.error('❌ Notification system error:', error);
-  }
-}
-
-// Update notification badge
-function updateNotificationBadge() {
-  const badge = document.getElementById('notificationBadge');
-  if (badge) {
-    if (notificationCount > 0) {
-      badge.textContent = notificationCount > 99 ? '99+' : notificationCount.toString();
-      badge.classList.remove('hidden');
-    } else {
-      badge.classList.add('hidden');
-    }
-  }
-}
-
-// Show browser notification
-async function showBrowserNotification(pickData) {
-  // Request permission if not granted
-  if (Notification.permission === 'default') {
-    await Notification.requestPermission();
-  }
-  
-  // Show notification if permission granted
-  if (Notification.permission === 'granted') {
-    try {
-      const notification = new Notification('New High-Confidence Pick! 🎯', {
-        body: `${pickData.sport || 'Sport'} - ${pickData.prediction || pickData.market}`,
-        icon: '/logo.png',
-        badge: '/logo.png',
-        tag: 'new-pick',
-        requireInteraction: false
-      });
-      
-      // Close notification after 5 seconds
-      setTimeout(() => notification.close(), 5000);
-      
-      // Click handler to focus the app
-      notification.onclick = function() {
-        window.focus();
-        this.close();
-      };
-    } catch (error) {
-      console.error('Error showing notification:', error);
-    }
-  }
-}
-
-// Clear notifications
-function clearNotifications() {
-  notificationCount = 0;
-  updateNotificationBadge();
-}
-
-// Setup notification button click handler
-function setupNotificationButton() {
-  const btn = document.getElementById('notificationBtn');
-  if (btn) {
-    btn.addEventListener('click', () => {
-      // Clear notifications and show a toast/message
-      clearNotifications();
-      
-      // Optional: Show notification panel or scroll to picks
-      if (location.hash !== '#picks') {
-        location.hash = '#picks';
-      }
-      
-      // Scroll to top of picks section
-      const picksSection = document.getElementById('view-picks');
-      if (picksSection) {
-        picksSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  }
-}
-
-// Initialize on page load
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    setupNotificationButton();
-  });
-} else {
-  setupNotificationButton();
-}
-
-// Initialize notifications after Firebase is ready
-setTimeout(() => {
-  if (window.firebaseReady) {
-    initNotifications();
-  }
-}, 3000);
-
-// Update last timestamp on page load
-if (window.picksAll && window.picksAll.length > 0) {
-  const latestPick = window.picksAll.reduce((latest, pick) => {
-    const pickTime = new Date(pick.commenceTime).getTime();
-    return pickTime > latest ? pickTime : latest;
-  }, 0);
-  
-  if (latestPick > 0) {
-    lastPickTimestamp = latestPick;
-  }
-}
 
 // ============================================================================
 // STRIPE CONFIGURATION - PRODUCTION MODE

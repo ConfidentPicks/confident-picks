@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test JSON Access</title>
+</head>
+<body>
+    <h1>Testing JSON File Access</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testFiles() {
+            const files = [
+                'nhl_model_test_progress.json',
+                'nhl_puckline_progress.json'
+            ];
+            
+            const results = document.getElementById('results');
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        const data = await response.json();
+                        results.innerHTML += `<p style="color: green;">✅ ${file}: Found! Teams: ${data.teamsCompleted || data.best_teams_at_70plus || 0}/${data.teamsTarget || 32}</p>`;
+                    } else {
+                        results.innerHTML += `<p style="color: red;">❌ ${file}: Not found (${response.status})</p>`;
+                    }
+                } catch (error) {
+                    results.innerHTML += `<p style="color: red;">❌ ${file}: Error - ${error.message}</p>`;
+                }
+            }
+        }
+        
+        testFiles();
+    </script>
+</body>
+</html>
+
