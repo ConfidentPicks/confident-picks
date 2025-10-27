@@ -890,6 +890,136 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);co
   text-align: center;
 }
 
+/* Onboarding Tour */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9998;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.onboarding-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.onboarding-tooltip {
+  position: absolute;
+  background: var(--card);
+  border: 2px solid var(--blue);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.3s ease;
+}
+.onboarding-tooltip.active {
+  opacity: 1;
+  transform: scale(1);
+}
+.onboarding-tooltip.arrow-top::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 10px solid transparent;
+  border-top-color: var(--blue);
+}
+.onboarding-tooltip.arrow-bottom::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 10px solid transparent;
+  border-bottom-color: var(--blue);
+}
+.onboarding-tooltip.arrow-left::before {
+  content: '';
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 10px solid transparent;
+  border-left-color: var(--blue);
+}
+.onboarding-tooltip.arrow-right::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 10px solid transparent;
+  border-right-color: var(--blue);
+}
+.onboarding-tooltip h3 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  color: var(--text);
+}
+.onboarding-tooltip p {
+  margin: 0 0 16px 0;
+  color: var(--sub);
+  line-height: 1.6;
+}
+.onboarding-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+.onboarding-buttons button {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+.onboarding-buttons button:hover {
+  background: rgba(255,255,255,.12);
+}
+.onboarding-buttons .btn-primary {
+  background: var(--blue);
+  color: #0B0F14;
+  border-color: transparent;
+}
+.onboarding-buttons .btn-primary:hover {
+  background: var(--blue-hover);
+}
+.onboarding-progress {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  justify-content: center;
+}
+.onboarding-progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.2s ease;
+}
+.onboarding-progress-dot.active {
+  background: var(--blue);
+  width: 24px;
+  border-radius: 4px;
+}
+.onboarding-highlight {
+  position: relative;
+  z-index: 10000 !important;
+  box-shadow: 0 0 0 4px var(--blue), 0 0 20px rgba(77,163,255,0.5) !important;
+  transition: all 0.3s ease !important;
+}
+
 .nav a{color:var(--text); text-decoration:none; opacity:.85}
 .nav a.active{opacity:1; font-weight:600; text-decoration:underline; text-decoration-color: var(--blue)}
 
@@ -1260,6 +1390,21 @@ html.gated body > *:not(#gate){ display:none !important; }
       <button type="button" id="themeBtn" class="btn enhanced" aria-label="Toggle theme"><span class="theme-icon" aria-hidden="true"></span></button>
       <button type="button" id="authBtn" class="btn primary enhanced">Sign up for free</button>
       <button type="button" id="upgradeBtn" class="btn primary enhanced hidden">Upgrade</button>
+    </div>
+  </div>
+</div>
+
+<!-- Onboarding Tour -->
+<div id="onboardingOverlay" class="onboarding-overlay"></div>
+<div id="onboardingTooltip" class="onboarding-tooltip">
+  <h3></h3>
+  <p></p>
+  <div class="onboarding-progress"></div>
+  <div class="onboarding-buttons">
+    <button id="onboardingSkip" type="button">Skip Tour</button>
+    <div style="display: flex; gap: 8px;">
+      <button id="onboardingBack" type="button">Back</button>
+      <button id="onboardingNext" type="button" class="btn-primary">Next</button>
     </div>
   </div>
 </div>
@@ -8416,6 +8561,273 @@ function initializeFinancialDashboard() {
     alert('❌ Error initializing financial dashboard: ' + error.message);
   }
 }
+
+// ============================================================================
+// USER ONBOARDING TOUR
+// ============================================================================
+
+const onboardingSteps = [
+  {
+    title: 'Welcome to Confident Picks! 👋',
+    content: 'Let\'s take a quick tour to help you get started. We\'ll show you the key features.',
+    selector: '#logoHome',
+    position: 'bottom'
+  },
+  {
+    title: 'View Picks 🎯',
+    content: 'This is where you\'ll see all the betting picks. Filter by league, market, and confidence level.',
+    selector: 'a[href="#picks"]',
+    position: 'bottom'
+  },
+  {
+    title: 'Quick Filters ⚡',
+    content: 'Use quick filter buttons for common searches like high-confidence picks or today\'s games.',
+    selector: '.quick-filters',
+    position: 'bottom'
+  },
+  {
+    title: 'Notifications 🔔',
+    content: 'Get notified when new high-confidence picks are added. Click here to manage notifications.',
+    selector: '#notificationBtn',
+    position: 'bottom'
+  },
+  {
+    title: 'Scorecard 📊',
+    content: 'Track your pick performance and see detailed statistics.',
+    selector: 'a[href="#scorecard"]',
+    position: 'bottom'
+  },
+  {
+    title: 'Account & Settings ⚙️',
+    content: 'Manage your account, subscription, and preferences here.',
+    selector: 'a[href="#account"]',
+    position: 'bottom'
+  },
+  {
+    title: 'You\'re All Set! 🎉',
+    content: 'You\'re ready to start using Confident Picks! Click "Finish" to close this tour.',
+    selector: '#logoHome',
+    position: 'bottom'
+  }
+];
+
+let currentStep = 0;
+let highlightedElement = null;
+
+function startOnboardingTour() {
+  // Check if user has already completed the tour
+  const hasCompletedTour = localStorage.getItem('onboardingCompleted') === 'true';
+  if (hasCompletedTour) {
+    return;
+  }
+  
+  // Check if user wants to skip
+  const skipOnboarding = localStorage.getItem('skipOnboarding') === 'true';
+  if (skipOnboarding) {
+    return;
+  }
+  
+  currentStep = 0;
+  showOnboardingStep(0);
+}
+
+function showOnboardingStep(stepIndex) {
+  if (stepIndex >= onboardingSteps.length) {
+    endOnboardingTour();
+    return;
+  }
+  
+  const step = onboardingSteps[stepIndex];
+  const tooltip = document.getElementById('onboardingTooltip');
+  const overlay = document.getElementById('onboardingOverlay');
+  const h3 = tooltip.querySelector('h3');
+  const p = tooltip.querySelector('p');
+  
+  // Update content
+  h3.textContent = step.title;
+  p.textContent = step.content;
+  
+  // Update progress dots
+  updateProgressDots(stepIndex);
+  
+  // Find and highlight element
+  const element = document.querySelector(step.selector);
+  if (element) {
+    // Remove previous highlight
+    if (highlightedElement) {
+      highlightedElement.classList.remove('onboarding-highlight');
+    }
+    
+    // Add highlight to new element
+    element.classList.add('onboarding-highlight');
+    highlightedElement = element;
+    
+    // Position tooltip
+    positionTooltip(element, step.position);
+  } else {
+    // Fallback position if element not found
+    tooltip.style.top = '50%';
+    tooltip.style.left = '50%';
+    tooltip.style.transform = 'translate(-50%, -50%)';
+    tooltip.classList.remove('arrow-top', 'arrow-bottom', 'arrow-left', 'arrow-right');
+  }
+  
+  // Show overlay and tooltip
+  overlay.classList.add('active');
+  tooltip.classList.add('active');
+  
+  // Update button states
+  document.getElementById('onboardingBack').style.display = stepIndex === 0 ? 'none' : 'block';
+  document.getElementById('onboardingNext').textContent = stepIndex === onboardingSteps.length - 1 ? 'Finish' : 'Next';
+}
+
+function positionTooltip(element, position) {
+  const tooltip = document.getElementById('onboardingTooltip');
+  const rect = element.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
+  
+  let top, left;
+  const spacing = 20;
+  
+  tooltip.classList.remove('arrow-top', 'arrow-bottom', 'arrow-left', 'arrow-right');
+  
+  switch (position) {
+    case 'bottom':
+      top = rect.bottom + spacing;
+      left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+      tooltip.classList.add('arrow-top');
+      break;
+    case 'top':
+      top = rect.top - tooltipRect.height - spacing;
+      left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+      tooltip.classList.add('arrow-bottom');
+      break;
+    case 'left':
+      top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+      left = rect.left - tooltipRect.width - spacing;
+      tooltip.classList.add('arrow-right');
+      break;
+    case 'right':
+      top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+      left = rect.right + spacing;
+      tooltip.classList.add('arrow-left');
+      break;
+    default:
+      top = rect.bottom + spacing;
+      left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+      tooltip.classList.add('arrow-top');
+  }
+  
+  // Keep tooltip within viewport
+  const maxLeft = window.innerWidth - tooltipRect.width - 20;
+  const maxTop = window.innerHeight - tooltipRect.height - 20;
+  
+  left = Math.max(20, Math.min(left, maxLeft));
+  top = Math.max(20, Math.min(top, maxTop));
+  
+  tooltip.style.top = top + 'px';
+  tooltip.style.left = left + 'px';
+}
+
+function updateProgressDots(stepIndex) {
+  const progressContainer = document.querySelector('.onboarding-progress');
+  progressContainer.innerHTML = '';
+  
+  for (let i = 0; i < onboardingSteps.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'onboarding-progress-dot';
+    if (i === stepIndex) {
+      dot.classList.add('active');
+    }
+    progressContainer.appendChild(dot);
+  }
+}
+
+function nextStep() {
+  if (highlightedElement) {
+    highlightedElement.classList.remove('onboarding-highlight');
+    highlightedElement = null;
+  }
+  
+  if (currentStep < onboardingSteps.length - 1) {
+    currentStep++;
+    showOnboardingStep(currentStep);
+  } else {
+    endOnboardingTour();
+  }
+}
+
+function previousStep() {
+  if (highlightedElement) {
+    highlightedElement.classList.remove('onboarding-highlight');
+    highlightedElement = null;
+  }
+  
+  if (currentStep > 0) {
+    currentStep--;
+    showOnboardingStep(currentStep);
+  }
+}
+
+function endOnboardingTour() {
+  const tooltip = document.getElementById('onboardingTooltip');
+  const overlay = document.getElementById('onboardingOverlay');
+  
+  if (highlightedElement) {
+    highlightedElement.classList.remove('onboarding-highlight');
+    highlightedElement = null;
+  }
+  
+  tooltip.classList.remove('active');
+  overlay.classList.remove('active');
+  
+  // Mark tour as completed
+  localStorage.setItem('onboardingCompleted', 'true');
+}
+
+function skipOnboardingTour() {
+  endOnboardingTour();
+  localStorage.setItem('skipOnboarding', 'true');
+}
+
+// Setup onboarding tour event listeners
+function setupOnboardingTour() {
+  const nextBtn = document.getElementById('onboardingNext');
+  const backBtn = document.getElementById('onboardingBack');
+  const skipBtn = document.getElementById('onboardingSkip');
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', nextStep);
+  }
+  
+  if (backBtn) {
+    backBtn.addEventListener('click', previousStep);
+  }
+  
+  if (skipBtn) {
+    skipBtn.addEventListener('click', skipOnboardingTour);
+  }
+}
+
+// Initialize onboarding tour when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setupOnboardingTour();
+    // Start tour after a brief delay
+    setTimeout(startOnboardingTour, 2000);
+  });
+} else {
+  setupOnboardingTour();
+  // Start tour after a brief delay
+  setTimeout(startOnboardingTour, 2000);
+}
+
+// Make tour restart function available globally
+window.restartOnboardingTour = function() {
+  localStorage.removeItem('onboardingCompleted');
+  localStorage.removeItem('skipOnboarding');
+  startOnboardingTour();
+};
 </script>
 </body>
 </html>
