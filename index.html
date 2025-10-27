@@ -2767,8 +2767,20 @@ function formatDate(iso){
   if (typeof iso === 'string' && (iso.includes(' EST') || iso.includes(' PST') || iso.includes(' EDT') || iso.includes(' PDT'))) {
     return iso;
   }
-  var d = new Date(iso); 
-  return d.toLocaleString([], { dateStyle:'medium', timeStyle:'short' }); 
+  var d = new Date(iso);
+  
+  // Add week number calculation
+  var weekNum = getWeekNumber(d);
+  
+  return d.toLocaleString([], { dateStyle:'medium', timeStyle:'short' }) + ' (Week ' + weekNum + ')'; 
+}
+
+function getWeekNumber(date) {
+  var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  var dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
 }
 function byCommence(a,b){ return new Date(a.commenceTime) - new Date(b.commenceTime); }
 function byConfidence(a,b){ return (b.modelConfidence - a.modelConfidence) || (b.oddsAmerican - a.oddsAmerican); }

@@ -88,14 +88,20 @@ def get_upcoming_nhl_games():
     service = get_sheets_service()
     result = service.spreadsheets().values().get(
         spreadsheetId=NHL_SHEET_ID,
-        range='Upcoming_Games!A:I'
+        range='Upcoming_Games!A:Z'
     ).execute()
     
     values = result.get('values', [])
     if not values or len(values) <= 1:
+        print("No NHL games found")
         return pd.DataFrame()
     
+    # Create DataFrame with proper handling of missing values
     df = pd.DataFrame(values[1:], columns=values[0])
+    
+    # Fill missing values with empty strings to avoid NoneType errors
+    df = df.fillna('')
+    
     print(f"Found {len(df)} upcoming NHL games")
     return df
 
