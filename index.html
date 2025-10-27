@@ -3244,11 +3244,20 @@ function cardHTML(p){
 
 // Toggle expandable details for picks
 function togglePickDetails(pickId) {
+  console.log('Toggling pick details for ID:', pickId);
   var card = document.querySelector('.pick-card-enhanced[data-pick-id="' + pickId + '"]');
-  if (!card) return;
+  if (!card) {
+    console.error('Card not found for ID:', pickId);
+    return;
+  }
   
   var expanded = card.querySelector('.pick-details-expanded');
   var button = card.querySelector('.btn-expand-details');
+  
+  if (!expanded || !button) {
+    console.error('Missing elements in card:', card);
+    return;
+  }
   
   if (expanded.style.display === 'none') {
     expanded.style.display = 'block';
@@ -5144,9 +5153,29 @@ function applyHighConfidenceFilter() {
 }
 
 function applyTodayFilter() {
-  // Filter to only today's games (this would need to check commenceTime)
-  // For now, we'll just trigger a render to show the effect
+  console.log('Applying today filter');
+  // Get today's date range
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  console.log('Filtering picks from', today, 'to', tomorrow);
+  
+  // Filter picks to only today's games
+  const filteredPicks = picksAll.filter(function(pick) {
+    if (!pick.commenceTime) return false;
+    const commenceTime = new Date(pick.commenceTime);
+    return commenceTime >= today && commenceTime < tomorrow;
+  });
+  
+  console.log('Found', filteredPicks.length, 'picks for today out of', picksAll.length);
+  
+  // Temporarily replace picksAll with filtered picks for rendering
+  const originalPicks = picksAll;
+  picksAll = filteredPicks;
   render();
+  picksAll = originalPicks;
 }
 
 function applyLeagueFilter(league) {
@@ -5156,8 +5185,17 @@ function applyLeagueFilter(league) {
 
 // Setup quick filter button event listeners
 function setupQuickFilters() {
-  document.querySelectorAll('.quick-filter-btn[data-filter]').forEach(btn => {
-    btn.addEventListener('click', function() {
+  console.log('Setting up quick filters...');
+  const buttons = document.querySelectorAll('.quick-filter-btn[data-filter]');
+  console.log('Found quick filter buttons:', buttons.length);
+  
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      console.log('Quick filter clicked:', this.getAttribute('data-filter'));
+      
       const filter = this.getAttribute('data-filter');
       
       // Toggle active state
@@ -5166,31 +5204,36 @@ function setupQuickFilters() {
       // Apply the filter
       switch(filter) {
         case 'high-confidence':
+          console.log('Applying high confidence filter');
           applyHighConfidenceFilter();
           break;
         case 'today':
+          console.log('Applying today filter');
           applyTodayFilter();
           break;
         case 'nfl-only':
+          console.log('Applying NFL filter');
           applyLeagueFilter('NFL');
           break;
         case 'nhl-only':
+          console.log('Applying NHL filter');
           applyLeagueFilter('NHL');
           break;
         case 'nba-only':
+          console.log('Applying NBA filter');
           applyLeagueFilter('NBA');
           break;
       }
     });
   });
+  
+  console.log('Quick filters setup complete');
 }
 
 // Initialize quick filters when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupQuickFilters);
-} else {
+document.addEventListener('DOMContentLoaded', function() {
   setupQuickFilters();
-}
+});
 
 // Enhanced confidence calculation
 function calculateRealisticConfidence(league, marketType, riskTag, odds) {
@@ -7411,6 +7454,32 @@ async function loadFirebaseData() {
         console.log('📈 Odds array:', data.odds);
         console.log('🏷️ Market:', data.market);
         
+        // Build proper pick description
+        let pickDesc = '';
+        
+        if (data.market === 'h2h') {
+          // For H2H (moneyline), show teams playing
+          if (data.awayTeam && data.homeTeam) {
+            pickDesc = `${data.prediction} to WIN (${data.awayTeam} @ ${data.homeTeam})`;
+          } else {
+            pickDesc = `${data.prediction} to WIN`;
+          }
+        } else if (data.market === 'total') {
+          // For totals, show the prediction with teams if available
+          if (data.awayTeam && data.homeTeam) {
+            pickDesc = `${data.prediction} (${data.awayTeam} @ ${data.homeTeam})`;
+          } else {
+            pickDesc = data.prediction;
+          }
+        } else if (data.market === 'sgp2') {
+          pickDesc = `${data.fight || 'Match'} - ${data.prediction}`;
+        } else if (data.awayTeam && data.homeTeam) {
+          // For other markets, show teams and prediction
+          pickDesc = `${data.prediction} (${data.awayTeam} @ ${data.homeTeam})`;
+        } else {
+          pickDesc = data.prediction || 'No pick description';
+        }
+        
         firebasePicks.push({
           id: doc.id,
           league: data.sport || 'UFC',
@@ -7418,10 +7487,7 @@ async function loadFirebaseData() {
                      data.market === 'total' ? 'totals' : 
                      data.market === 'sgp2' ? 'parlay' :
                      data.market || 'moneyline',
-          pickDesc: data.market === 'sgp2' ? `${data.fight || 'Match'} - ${data.prediction}` :
-                   data.market === 'h2h' ? `${data.prediction} to WIN vs ${data.homeTeam || 'Opponent'}` :
-                   data.market === 'total' ? `${data.fight || 'Match'} - ${data.prediction}` :
-                   data.prediction || `${data.awayTeam || 'Away'} vs ${data.homeTeam || 'Home'}`,
+          pickDesc: pickDesc,
           oddsAmerican: oddsAmerican,
           modelConfidence: Math.round(parseFloat(data.confidence || 0) * 100),
           commenceTime: data.commenceTime || data.startTime || data.gameTime || new Date().toISOString(),
