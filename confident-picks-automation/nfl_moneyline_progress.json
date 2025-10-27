@@ -1,0 +1,9 @@
+{
+  "sport": "NFL",
+  "prop": "Moneyline",
+  "timestamp": "2025-10-27T01:14:44.853175",
+  "teamsCompleted": 22,
+  "teamsTarget": 32,
+  "bestConfig": "('RandomForest', {'n_estimators': 50, 'max_depth': 10, 'random_state': 3}, 9, 0.27)",
+  "status": "testing"
+}

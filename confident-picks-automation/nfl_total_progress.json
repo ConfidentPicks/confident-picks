@@ -1,0 +1,9 @@
+{
+  "sport": "NFL",
+  "prop": "Total",
+  "timestamp": "2025-10-27T00:59:48.053597",
+  "teamsCompleted": 32,
+  "teamsTarget": 32,
+  "bestConfig": "('AdaBoost', {'n_estimators': 50, 'learning_rate': 0.05, 'random_state': 0}, 7, 0.3)",
+  "status": "completed"
+}

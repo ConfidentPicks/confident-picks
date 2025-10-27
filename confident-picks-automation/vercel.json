@@ -1,0 +1,28 @@
+{
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "@vercel/node@3"
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/auto-sync",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/collect-odds",
+      "schedule": "0 */2 * * *"
+    }
+  ],
+  "env": {
+    "OPENAI_API_KEY": "@openai_api_key",
+    "FIREBASE_PROJECT_ID": "@firebase_project_id",
+    "FIREBASE_PRIVATE_KEY": "@firebase_private_key",
+    "FIREBASE_PRIVATE_KEY_ID": "@firebase_private_key_id",
+    "FIREBASE_CLIENT_EMAIL": "@firebase_client_email",
+    "FIREBASE_CLIENT_ID": "@firebase_client_id",
+    "DRAFTKINGS_API_KEY": "@draftkings_api_key",
+    "SLACK_WEBHOOK_URL": "@slack_webhook_url",
+    "GOOGLE_SHEETS_SPREADSHEET_ID": "@google_sheets_spreadsheet_id"
+  }
+}

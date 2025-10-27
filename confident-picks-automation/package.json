@@ -1,0 +1,34 @@
+{
+  "name": "confident-picks-automation",
+  "version": "1.0.0",
+  "description": "Automated sports pick generation system for Confident Picks",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "sports",
+    "betting",
+    "automation",
+    "ai",
+    "picks"
+  ],
+  "author": "Confident Picks",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^20.0.0",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0",
+    "firebase-admin": "^12.0.0",
+    "googleapis": "^128.0.0",
+    "node-fetch": "^3.0.0",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

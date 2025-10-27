@@ -1,0 +1,46 @@
+{
+  "trained_at": "2025-10-22T01:34:44.341356",
+  "models": [
+    "moneyline",
+    "spread",
+    "total",
+    "player_props"
+  ],
+  "feature_importance": {
+    "moneyline": [
+      "home_team_strength",
+      "away_team_strength",
+      "div_game",
+      "cold_game",
+      "windy_game",
+      "dome_game",
+      "spread_line",
+      "total_line"
+    ],
+    "spread": [
+      "home_team_strength",
+      "away_team_strength",
+      "div_game",
+      "cold_game",
+      "windy_game",
+      "dome_game",
+      "total_line"
+    ],
+    "total": [
+      "home_team_strength",
+      "away_team_strength",
+      "div_game",
+      "cold_game",
+      "windy_game",
+      "dome_game",
+      "spread_line"
+    ],
+    "player_props": [
+      "is_qb",
+      "is_rb",
+      "is_wr",
+      "is_te",
+      "week"
+    ]
+  }
+}

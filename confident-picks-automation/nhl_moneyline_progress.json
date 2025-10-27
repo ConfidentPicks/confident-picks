@@ -1,0 +1,9 @@
+{
+  "sport": "NHL",
+  "prop": "Moneyline",
+  "timestamp": "2025-10-26T17:23:57.612623",
+  "teamsCompleted": 19,
+  "teamsTarget": 32,
+  "bestConfig": "(250, 0.1, 0, 3)",
+  "status": "testing"
+}
