@@ -1086,7 +1086,7 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);co
 }
 
 /* Filters */
-.filters{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 @media (max-width:800px){
   .filters{grid-template-columns:1fr 1fr}
   .filters input, .filters select { padding: 14px; font-size: 16px; }
@@ -1095,7 +1095,6 @@ body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:var(--bg);co
   .btn { padding: 12px 16px; min-height: 44px; }
   .tab { padding: 12px 16px; min-height: 44px; }
   .star { width: 32px; height: 32px; }
-  .minconf .step { width: 32px; height: 20px; font-size: 14px; }
   input, select, textarea { padding: 14px; min-height: 44px; }
   
   /* Mobile - Quick filters wrap */
@@ -1189,64 +1188,6 @@ input,select,textarea{width:100%;padding:10px;border-radius:var(--r);border:1px 
   font-weight: 600;
 }
 :focus-visible { outline:2px solid var(--blue); outline-offset:2px; border-radius:6px; }
-
-/* Min Confidence — slider format */
-.minconf {
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
-  min-width: 160px;
-  gap: 4px;
-}
-.minconf input[type="range"] {
-  width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: rgba(255,255,255,.12);
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-.minconf input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--blue);
-  cursor: pointer;
-  border: 2px solid var(--bg);
-}
-.minconf input[type="range"]::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--blue);
-  cursor: pointer;
-  border: 2px solid var(--bg);
-}
-.minconf input[type="range"]:hover::-webkit-slider-thumb {
-  background: var(--blue-hover);
-}
-.minconf input[type="range"]:hover::-moz-range-thumb {
-  background: var(--blue-hover);
-}
-.minconf .caption {
-  font-size: 11px;
-  color: var(--sub);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.minconf .value-display {
-  font-weight: 600;
-  color: var(--text);
-  font-size: 13px;
-}
-:root[data-theme="light"] .minconf input[type="range"] {
-  background: #e0e0e0;
-  border-color: #00000022;
-}
 
 /* keep native spinners hidden for other inputs */
 input[type=number]::-webkit-inner-spin-button,
@@ -1541,15 +1482,6 @@ html.gated body > *:not(#gate){ display:none !important; }
         <option value="confidence">Sort: Confidence</option>
       </select>
       <input id="searchInp" placeholder="Search team/player…" autocomplete="off"/>
-
-      <!-- Min Confidence slider -->
-      <div class="minconf">
-        <input id="minConf" type="range" min="0" max="100" value="75" step="5" aria-label="Minimum confidence threshold"/>
-        <div class="caption">
-          <span>Min Confidence</span>
-          <span class="value-display" id="minConfValue">75%</span>
-        </div>
-      </div>
     </div>
 
     <!-- Quick Filters -->
@@ -3371,15 +3303,12 @@ function render(){
   var market = (document.getElementById('marketSel')).value;
   
   var sort = (document.getElementById('sortSel')).value;
-  var min = Number((document.getElementById('minConf')).value || 0);
   var search = (document.getElementById('searchInp')).value.trim().toLowerCase();
 
   var arr = picksAll.filter(function(p){ return canSee(p); });
   
   if (league) arr = arr.filter(function(p){ return p.league===league; });
   if (market) arr = arr.filter(function(p){ return p.marketType===market; });
-  
-  if (min>0) arr = arr.filter(function(p){ return p.modelConfidence >= min; });
   if (search) arr = arr.filter(function(p){ return p.pickDesc.toLowerCase().includes(search); });
   arr.sort(sort==='confidence' ? byConfidence : byCommence);
 
@@ -3403,7 +3332,7 @@ function render(){
   var list = document.getElementById('list');
   if (arr.length > 0) list.innerHTML = arr.map(cardHTML).join('');
   else {
-    var hasFilters = league || market || min > 0;
+    var hasFilters = league || market;
     var message = search ? 
       'No picks found for "' + search + '". Try different keywords or <button onclick="clearSearch()" class="btn ghost" style="padding:2px 6px;font-size:inherit;">clear search</button>.' :
       hasFilters ? 
@@ -4540,32 +4469,15 @@ function dismissMaintBanner(){
   try { localStorage.setItem(BANNER_KEY,'1'); } catch (e) {}
 }
 
-/* Min Confidence helpers */
-function clampMinConf(val){
-  val = Math.round(Number(val) || 0);
-  if (val < 0) val = 0; if (val > 100) val = 100;
-  return val;
-}
-function changeMinConf(delta){
-  var el = document.getElementById('minConf'); if (!el) return;
-  el.value = clampMinConf((Number(el.value)||0) + delta);
-  render();
-}
 
 /* filter listeners */
 ['leagueSel','marketSel','sortSel'].forEach(function(id){
   var el = document.getElementById(id);
   if (el) el.addEventListener('change', render);
 });
-['searchInp','minConf'].forEach(function(id){
+['searchInp'].forEach(function(id){
   var el = document.getElementById(id);
   if (el) el.addEventListener('input', function(){
-    if (id==='minConf') {
-      this.value = clampMinConf(this.value);
-      // Update the value display
-      var valueDisplay = document.getElementById('minConfValue');
-      if (valueDisplay) valueDisplay.textContent = this.value + '%';
-    }
     render();
   });
 });
@@ -5101,7 +5013,6 @@ function clearSearch() {
 function clearFilters() {
   document.getElementById('leagueSel').value = '';
   document.getElementById('marketSel').value = '';
-  document.getElementById('minConf').value = '0';
   render();
 }
 
@@ -5117,9 +5028,16 @@ function clearAllFilters() {
 
 // Quick Filter Functions
 function applyHighConfidenceFilter() {
-  document.getElementById('minConf').value = '75';
-  document.getElementById('minConfValue').textContent = '75%';
+  // Filter for picks with 75%+ confidence
+  const filteredPicks = picksAll.filter(function(pick) {
+    return pick.modelConfidence >= 75;
+  });
+  
+  // Temporarily replace picksAll with filtered picks for rendering
+  const originalPicks = picksAll;
+  picksAll = filteredPicks;
   render();
+  picksAll = originalPicks;
 }
 
 function applyDegenFilter() {
@@ -8191,7 +8109,7 @@ async function redirectToCheckout(priceId) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        priceId: priceId,
+          priceId: priceId,
         userId: user.uid,
         userEmail: user.email
       })
