@@ -7320,6 +7320,24 @@ async function loadFirebaseData() {
         console.log('🔍 Processing Firebase pick:', doc.id);
         console.log('📊 Full data object:', JSON.stringify(data, null, 2));
         
+        // Check if this pick is for a future game (or today/tomorrow)
+        const commenceTime = data.commenceTime || data.startTime || data.gameTime;
+        if (!commenceTime) {
+          console.log('⚠️ Pick missing commenceTime, skipping:', doc.id);
+          return;
+        }
+        
+        const gameTime = new Date(commenceTime);
+        const now = new Date();
+        
+        // Only include picks that are for games happening today or in the future (but not completed games)
+        if (gameTime < now) {
+          console.log('⏭️ Skipping completed game:', doc.id, 'Game time:', gameTime);
+          return;
+        }
+        
+        console.log('✅ Including future game:', doc.id, 'Game time:', gameTime);
+        
         // Get proper odds from Firebase data - simplified mapping
         let oddsAmerican = -110; // Default fallback
         
