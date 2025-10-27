@@ -2769,13 +2769,7 @@ function formatDate(iso){
   }
   var d = new Date(iso);
   
-  // Get weekday name
-  var weekday = d.toLocaleString('en-US', { weekday: 'long' });
-  
-  // Add week number calculation
-  var weekNum = getWeekNumber(d);
-  
-  // Format: "Monday, Nov 3, 2025, 8:15 PM (Week 45)"
+  // Format: "Monday, Nov 3, 2025, 8:15 PM"
   var dateTime = d.toLocaleString('en-US', { 
     weekday: 'long',
     year: 'numeric',
@@ -2785,7 +2779,7 @@ function formatDate(iso){
     minute: '2-digit'
   });
   
-  return dateTime + ' (Week ' + weekNum + ')'; 
+  return dateTime; 
 }
 
 function getWeekNumber(date) {
@@ -7491,6 +7485,8 @@ async function loadFirebaseData() {
     }
   } catch (error) {
     console.error('Firebase data loading failed:', error);
+    // Silently handle the error - data will show when it's ready
+    // Don't show error messages to users for loading issues
   }
 }
 
