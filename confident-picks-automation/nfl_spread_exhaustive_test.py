@@ -127,9 +127,11 @@ def create_features(df):
         df.at[idx, 'home_field'] = 2.5  # NFL home field advantage
         
         # Update stats after game
-        if pd.notna(row['away_score']) and pd.notna(row['home_score']) and pd.notna(row['spread']):
+        if pd.notna(row['away_score']) and pd.notna(row['home_score']) and pd.notna(row.get('spread_line')):
             try:
-                away_score, home_score, spread = float(row['away_score']), float(row['home_score']), float(row['spread'])
+                away_score = float(row['away_score'])
+                home_score = float(row['home_score'])
+                spread = float(row.get('spread_line', 0))
                 margin = home_score - away_score
                 
                 # Spread cover (home team perspective)
