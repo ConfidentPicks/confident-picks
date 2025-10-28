@@ -3158,22 +3158,31 @@ function cardHTML(p){
   }
   
   // Extract the team name for the main pick text
-  // Handle format: "TEAM MONEYLINE (AWAY @ HOME)"
+  // Handle format: "TEAM MONEYLINE (AWAY @ HOME)" or "TEAM PUCK LINE (AWAY @ HOME)"
   var pickTeam = 'Unknown';
+  var pickLabel = 'MONEYLINE';
+  
   if (p.pickDesc) {
-    // Extract team name before "MONEYLINE" - capture everything up to the word "MONEYLINE"
-    // This works for both short (NYR) and long team names
-    var match = p.pickDesc.match(/^(.+?)\s+MONEYLINE/);
-    if (match && match[1]) {
-      pickTeam = match[1].trim();
-      if (p.league === 'NHL') console.log('[DEBUG cardHTML] Match found:', pickTeam);
+    // Check for PUCK LINE first
+    var puckLineMatch = p.pickDesc.match(/^(.+?)\s+PUCK LINE/);
+    if (puckLineMatch && puckLineMatch[1]) {
+      pickTeam = puckLineMatch[1].trim();
+      pickLabel = 'PUCK LINE';
+      if (p.league === 'NHL') console.log('[DEBUG cardHTML] Puck line match found:', pickTeam);
     } else {
-      // Fallback: try to extract just the first part
-      pickTeam = p.pickDesc.split(/\s+MONEYLINE/)[0].trim();
-      if (!pickTeam) {
-        pickTeam = 'Unknown';
+      // Extract team name before "MONEYLINE" - capture everything up to the word "MONEYLINE"
+      var match = p.pickDesc.match(/^(.+?)\s+MONEYLINE/);
+      if (match && match[1]) {
+        pickTeam = match[1].trim();
+        if (p.league === 'NHL') console.log('[DEBUG cardHTML] Moneyline match found:', pickTeam);
+      } else {
+        // Fallback: try to extract just the first part
+        pickTeam = p.pickDesc.split(/\s+(?:MONEYLINE|PUCK LINE)/)[0].trim();
+        if (!pickTeam) {
+          pickTeam = 'Unknown';
+        }
+        if (p.league === 'NHL') console.log('[DEBUG cardHTML] Fallback result:', pickTeam);
       }
-      if (p.league === 'NHL') console.log('[DEBUG cardHTML] Fallback result:', pickTeam);
     }
   } else {
     if (p.league === 'NHL') console.log('[DEBUG cardHTML] No pickDesc for NHL pick!');
@@ -3181,7 +3190,7 @@ function cardHTML(p){
   
   return '<div class="card pick-card-enhanced" data-pick-id="'+p.id+'">'
     + '<div class="text-sub">'+p.league+' • '+matchupText+'</div>'
-    + '<div class="row"><div><strong>'+pickTeam+' MONEYLINE</strong></div></div>'
+    + '<div class="row"><div><strong>'+pickTeam+' '+pickLabel+'</strong></div></div>'
     + '<div class="text-sub">Confidence: <span class="tooltip confidence-badge ' + confClass + '" data-tooltip="Model confidence: ' + p.modelConfidence + '% (' + confLevel + ')" style="color:'+confColor+'">' + p.modelConfidence + '%</span> • Odds: '+oddsString(p.oddsAmerican)+'</div>'
     + '<div class="reasoning">Reasoning: '+esc(p.reasoning || '—')+'</div>'
     + '<button class="btn-expand-details" onclick="togglePickDetails(\''+p.id+'\')" type="button">Show More Details</button>'
