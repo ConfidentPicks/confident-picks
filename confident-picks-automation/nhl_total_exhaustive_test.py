@@ -181,7 +181,7 @@ if __name__ == "__main__":
     print("NHL TOTAL EXHAUSTIVE TEST - TARGET: 32 TEAMS AT 70%+ ACCURACY")
     print("=" * 80)
     
-    save_progress(0, None, 'starting')
+    save_progress(0, None, 'testing')
     
     # Load and prepare data
     print("Loading data...")

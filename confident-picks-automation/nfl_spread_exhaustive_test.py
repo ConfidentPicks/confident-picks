@@ -164,6 +164,9 @@ if __name__ == "__main__":
     print("Target: 32 teams at 70%+ accuracy")
     print("="*80 + "\n")
     
+    # Mark as starting
+    save_progress(0, None, 'testing')
+    
     df = load_data()
     print(f"Loaded {len(df)} games")
     
