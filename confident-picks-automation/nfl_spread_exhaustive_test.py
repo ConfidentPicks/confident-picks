@@ -171,7 +171,7 @@ if __name__ == "__main__":
     print("Features created")
     
     # Create target variable (home team covers spread)
-    df['home_covers'] = ((df['home_score'] - df['away_score']) > df['spread']).astype(int)
+    df['home_covers'] = ((df['home_score'] - df['away_score']) > df['spread_line']).astype(int)
     
     # Feature columns
     feature_cols = ['away_win_pct', 'home_win_pct', 'away_point_diff', 'home_point_diff',
