@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Updated 2025-10-27 11:30 AM EST -->
+<!-- Updated 2025-10-27 09:45 PM EST - Added debug logs for NHL picks -->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -3150,8 +3150,34 @@ function cardHTML(p){
   var matchup = p.pickDesc.match(/\((.*?)\)/);
   var matchupText = matchup ? matchup[1] : p.pickDesc;
   
-  // Extract the team name for the main pick text (remove MONEYLINE and parentheses content)
-  var pickTeam = p.pickDesc.replace(/\s+MONEYLINE.*$/, '').replace(/\s*\(.*?\)/, '');
+  // DEBUG: Log pickDesc for NHL picks
+  if (p.league === 'NHL') {
+    console.log('[DEBUG cardHTML] NHL pick:', p.id);
+    console.log('[DEBUG cardHTML] pickDesc:', p.pickDesc);
+    console.log('[DEBUG cardHTML] type:', typeof p.pickDesc);
+  }
+  
+  // Extract the team name for the main pick text
+  // Handle format: "TEAM MONEYLINE (AWAY @ HOME)"
+  var pickTeam = 'Unknown';
+  if (p.pickDesc) {
+    // Extract team name before "MONEYLINE" - capture everything up to the word "MONEYLINE"
+    // This works for both short (NYR) and long team names
+    var match = p.pickDesc.match(/^(.+?)\s+MONEYLINE/);
+    if (match && match[1]) {
+      pickTeam = match[1].trim();
+      if (p.league === 'NHL') console.log('[DEBUG cardHTML] Match found:', pickTeam);
+    } else {
+      // Fallback: try to extract just the first part
+      pickTeam = p.pickDesc.split(/\s+MONEYLINE/)[0].trim();
+      if (!pickTeam) {
+        pickTeam = 'Unknown';
+      }
+      if (p.league === 'NHL') console.log('[DEBUG cardHTML] Fallback result:', pickTeam);
+    }
+  } else {
+    if (p.league === 'NHL') console.log('[DEBUG cardHTML] No pickDesc for NHL pick!');
+  }
   
   return '<div class="card pick-card-enhanced" data-pick-id="'+p.id+'">'
     + '<div class="text-sub">'+p.league+' • '+matchupText+'</div>'
@@ -7401,34 +7427,38 @@ async function loadFirebaseData() {
         // The prediction field name varies: data.prediction, data.pick, or data.pickTeam
         const prediction = data.prediction || data.pick || data.pickTeam || 'Unknown';
         
-        let pickDesc = '';
+        // Use existing pickDesc if available (e.g., for NHL, NFL picks with pre-formatted descriptions)
+        let pickDesc = data.pickDesc || '';
         
-        if (data.market === 'h2h' || data.marketType === 'moneyline') {
-          // For H2H (moneyline), show just the team and MONEYLINE with matchup
-          if (data.awayTeam && data.homeTeam) {
-            pickDesc = `${prediction} MONEYLINE (${data.awayTeam} @ ${data.homeTeam})`;
-          } else {
-            pickDesc = `${prediction} MONEYLINE`;
-          }
-        } else if (data.market === 'total') {
-          // For totals, show the prediction with teams if available
-          if (data.awayTeam && data.homeTeam) {
+        // Only rebuild pickDesc if it doesn't exist
+        if (!pickDesc) {
+          if (data.market === 'h2h' || data.marketType === 'moneyline') {
+            // For H2H (moneyline), show just the team and MONEYLINE with matchup
+            if (data.awayTeam && data.homeTeam) {
+              pickDesc = `${prediction} MONEYLINE (${data.awayTeam} @ ${data.homeTeam})`;
+            } else {
+              pickDesc = `${prediction} MONEYLINE`;
+            }
+          } else if (data.market === 'total') {
+            // For totals, show the prediction with teams if available
+            if (data.awayTeam && data.homeTeam) {
+              pickDesc = `${prediction} (${data.awayTeam} @ ${data.homeTeam})`;
+            } else {
+              pickDesc = prediction;
+            }
+          } else if (data.market === 'sgp2') {
+            pickDesc = `${data.fight || 'Match'} - ${prediction}`;
+          } else if (data.awayTeam && data.homeTeam) {
+            // For other markets, show teams and prediction
             pickDesc = `${prediction} (${data.awayTeam} @ ${data.homeTeam})`;
           } else {
-            pickDesc = prediction;
+            pickDesc = prediction || 'No pick description';
           }
-        } else if (data.market === 'sgp2') {
-          pickDesc = `${data.fight || 'Match'} - ${prediction}`;
-        } else if (data.awayTeam && data.homeTeam) {
-          // For other markets, show teams and prediction
-          pickDesc = `${prediction} (${data.awayTeam} @ ${data.homeTeam})`;
-        } else {
-          pickDesc = prediction || 'No pick description';
         }
         
-        firebasePicks.push({
+        const pickObj = {
           id: doc.id,
-          league: data.sport || 'UFC',
+          league: data.league || data.sport || 'UFC',
           marketType: data.market === 'h2h' ? 'moneyline' : 
                      data.market === 'total' ? 'totals' : 
                      data.market === 'sgp2' ? 'parlay' :
@@ -7440,7 +7470,15 @@ async function loadFirebaseData() {
           tier: data.tier || 'public',
           riskTag: data.riskTag || 'safe',
           reasoning: data.llmPredictions?.openai?.reasoning || data.reasoning || 'No reasoning provided'
-        });
+        };
+        
+        // DEBUG for NHL picks
+        if (pickObj.league === 'NHL') {
+          console.log('[DEBUG processPick] NHL pick:', doc.id);
+          console.log('[DEBUG processPick] Final pickDesc:', pickObj.pickDesc);
+        }
+        
+        firebasePicks.push(pickObj);
       });
       
       // Replace static picks with Firebase data
