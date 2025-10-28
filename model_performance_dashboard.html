@@ -637,11 +637,11 @@
         // Load training progress from JSON files
         async function loadTrainingProgress() {
             const progressFiles = [
-                { file: 'confident-picks-automation/nhl_moneyline_progress.json', sport: 'NHL', prop: 'Moneyline' },
-                { file: 'confident-picks-automation/nhl_puckline_progress.json', sport: 'NHL', prop: 'Puck Line' },
-                { file: 'confident-picks-automation/nhl_total_progress.json', sport: 'NHL', prop: 'Total' },
-                { file: 'confident-picks-automation/nfl_spread_progress.json', sport: 'NFL', prop: 'Spread' },
-                { file: 'confident-picks-automation/nfl_total_progress.json', sport: 'NFL', prop: 'Total' }
+                { file: 'nhl_moneyline_progress.json', sport: 'NHL', prop: 'Moneyline' },
+                { file: 'nhl_puckline_progress.json', sport: 'NHL', prop: 'Puck Line' },
+                { file: 'nhl_total_progress.json', sport: 'NHL', prop: 'Total' },
+                { file: 'nfl_spread_progress.json', sport: 'NFL', prop: 'Spread' },
+                { file: 'nfl_total_progress.json', sport: 'NFL', prop: 'Total' }
             ];
             
             const progressContainer = document.getElementById('trainingProgress');

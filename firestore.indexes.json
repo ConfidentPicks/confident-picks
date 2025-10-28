@@ -1,5 +1,49 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "all_picks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "commenceTime", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "all_picks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "league", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "commenceTime", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "scoring",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "scoredAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "live_picks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "commenceTime", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "qa_picks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }
+
+
 

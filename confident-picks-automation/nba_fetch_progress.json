@@ -1,6 +1,9 @@
 {
-  "status": "in_progress",
-  "current_season": "2021-22",
-  "last_game_fetched": "2022-04-10",
-  "total_games_fetched": 632
+  "status": "completed",
+  "message": "Successfully fetched 1403 games for 2024-2025!",
+  "current_season": "2024-2025",
+  "games_fetched": 1403,
+  "total_games": 1403,
+  "last_updated": "2025-10-27T17:13:10.436908",
+  "progress_percent": 100.0
 }
