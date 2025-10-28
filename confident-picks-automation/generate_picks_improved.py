@@ -333,51 +333,59 @@ def generate_improved_picks(league='NHL'):
         
         print(f"  [OK] Found models (away: {len(away_models)}, home: {len(home_models)})")
         
-        # Get consensus (if enabled)
-        if USE_CONSENSUS:
-            consensus = get_consensus_prediction(game, away_models, home_models)
+        # Process each prop type separately
+        for prop_type in ['Moneyline', 'Puck Line']:
+            # Filter models for this prop type (case-insensitive match)
+            away_models_prop = [m for m in away_models if m.get('prop', '').lower() == prop_type.lower()]
+            home_models_prop = [m for m in home_models if m.get('prop', '').lower() == prop_type.lower()]
             
-            if not consensus:
-                print(f"  [SKIP] No consensus or low confidence")
-                if not away_models or not home_models:
-                    skipped_no_model += 1
-                else:
+            if not away_models_prop or not home_models_prop:
+                print(f"  [{prop_type}] Missing models (away: {len(away_models_prop)}, home: {len(home_models_prop)})")
+                skipped_no_model += 1
+                continue
+            
+            # Get consensus (if enabled)
+            if USE_CONSENSUS:
+                consensus = get_consensus_prediction(game, away_models_prop, home_models_prop)
+                
+                if not consensus:
+                    print(f"  [{prop_type}] No consensus or low confidence")
                     skipped_low_confidence += 1
-                continue
-            
-            # Use the best model
-            best_model = consensus['model']
-            predicted_team = consensus['team']
-            confidence = consensus['confidence']
-            
-            print(f"  [CONSENSUS] {predicted_team} win ({confidence:.1f}% confidence)")
-            
-            # Generate pick
-            pick = generate_pick_from_model(game, best_model, predicted_team)
-            if pick:
-                # Validate before adding
-                if validate_pick(pick):
+                    continue
+                
+                # Use the best model
+                best_model = consensus['model']
+                predicted_team = consensus['team']
+                confidence = consensus['confidence']
+                
+                print(f"  [{prop_type}] {predicted_team} win ({confidence:.1f}% confidence)")
+                
+                # Generate pick
+                pick = generate_pick_from_model(game, best_model, predicted_team)
+                if pick:
+                    # Validate before adding
+                    if validate_pick(pick):
+                        all_picks.append(pick)
+                    else:
+                        print(f"  [{prop_type}] Pick validation failed")
+            else:
+                # Fallback: use best single model
+                all_applicable = away_models_prop + home_models_prop
+                best_single = max(all_applicable, key=lambda m: m.get('currentAccuracy', 0))
+                
+                predicted_team = best_single.get('team', '')
+                confidence = best_single.get('currentAccuracy', 0)
+                
+                if confidence < MIN_CONFIDENCE:
+                    print(f"  [{prop_type}] Low confidence: {confidence}%")
+                    skipped_low_confidence += 1
+                    continue
+                
+                print(f"  [{prop_type}] {predicted_team} win ({confidence:.1f}% confidence)")
+                
+                pick = generate_pick_from_model(game, best_single, predicted_team)
+                if pick and validate_pick(pick):
                     all_picks.append(pick)
-                else:
-                    print(f"  [WARN] Pick validation failed")
-        else:
-            # Fallback: use best single model
-            all_applicable = away_models + home_models
-            best_single = max(all_applicable, key=lambda m: m.get('currentAccuracy', 0))
-            
-            predicted_team = best_single.get('team', '')
-            confidence = best_single.get('currentAccuracy', 0)
-            
-            if confidence < MIN_CONFIDENCE:
-                print(f"  [SKIP] Low confidence: {confidence}%")
-                skipped_low_confidence += 1
-                continue
-            
-            print(f"  [BEST] {predicted_team} win ({confidence:.1f}% confidence)")
-            
-            pick = generate_pick_from_model(game, best_single, predicted_team)
-            if pick and validate_pick(pick):
-                all_picks.append(pick)
     
     # Upload to Firebase
     print(f"\n[SUMMARY]")
