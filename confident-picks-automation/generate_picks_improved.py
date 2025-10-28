@@ -258,6 +258,26 @@ def generate_pick_from_model(game, model, predicted_team):
             puck_line_numb = game.get('puck_line_number', '1.5')
             pick_desc = f"{picked_team} PUCK LINE ({away_team} @ {home_team})"
             market_type = 'puckline'
+        
+        elif prop == 'Total':
+            # For totals, the prediction is Over/Under
+            # Get the total number from the game
+            total_line = game.get('puck_line_number', '5.5')  # Default NHL total
+            over_total = game.get('over_total', '-110')
+            under_total = game.get('under_total', '-110')
+            
+            # Determine if prediction is Over or Under
+            # For now, use the model's prediction (this needs to be implemented in the model)
+            # Assuming the model predicts "Over" or "Under"
+            prediction_direction = "OVER"  # This should come from the model
+            
+            try:
+                odds_american = int(str(over_total)) if prediction_direction == "OVER" else int(str(under_total))
+            except:
+                odds_american = -110
+            
+            pick_desc = f"{prediction_direction} {total_line} ({away_team} @ {home_team})"
+            market_type = 'totals'
     
     # Confidence values
     confidence_decimal = round(float(accuracy_pct) / 100.0, 3)
@@ -354,7 +374,7 @@ def generate_improved_picks(league='NHL'):
         game_predictions = {}
         
         # Process each prop type to find consensus
-        for prop_type in ['Moneyline', 'Puck Line']:
+        for prop_type in ['Moneyline', 'Puck Line', 'Total']:
             # Filter models for this prop type (case-insensitive match)
             away_models_prop = [m for m in away_models if m.get('prop', '').lower() == prop_type.lower()]
             home_models_prop = [m for m in home_models if m.get('prop', '').lower() == prop_type.lower()]
