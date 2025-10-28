@@ -143,18 +143,35 @@ def get_consensus_prediction(game, away_models, home_models):
     away_team = str(game.get('away_team', ''))
     home_team = str(game.get('home_team', ''))
     
-    # Each model predicts its own team wins
-    # We need both models to predict the SAME team
-    # This happens when away model + home model both agree
+    # For NHL: Each model is trained on its own team
+    # away_models predict away team, home_models predict home team
+    # Consensus means: both sets of models agree on the same outcome
     
-    # Strategy: Use the model with higher accuracy and its prediction
-    best_overall = best_away if best_away.get('currentAccuracy', 0) > best_home.get('currentAccuracy', 0) else best_home
-    predicted_team = best_overall.get('team', '')
+    # Strategy: Check if both models agree on which team wins
+    # For away model: predicts away team should win
+    # For home model: predicts home team should win
+    # They agree only if one model has significantly higher accuracy/confidence
     
-    confidence = min(
-        away_models[0].get('currentAccuracy', 0) if away_models else 0,
-        home_models[0].get('currentAccuracy', 0) if home_models else 0
-    )
+    # Simple approach: Use the model with higher accuracy
+    away_accuracy = best_away.get('currentAccuracy', 0)
+    home_accuracy = best_home.get('currentAccuracy', 0)
+    
+    # They "agree" if one is clearly better
+    accuracy_diff = abs(away_accuracy - home_accuracy)
+    
+    # If they're very close (within 5%), it's unclear, skip
+    if accuracy_diff < 5:
+        return None
+    
+    # Pick the team with higher accuracy model
+    if away_accuracy > home_accuracy:
+        predicted_team = away_team
+        confidence = away_accuracy
+        best_model = best_away
+    else:
+        predicted_team = home_team
+        confidence = home_accuracy
+        best_model = best_home
     
     # Check if confidence meets threshold
     if confidence < MIN_CONFIDENCE:
@@ -163,7 +180,7 @@ def get_consensus_prediction(game, away_models, home_models):
     return {
         'team': predicted_team,
         'confidence': confidence,
-        'model': best_overall,
+        'model': best_model,
         'away_model': best_away,
         'home_model': best_home
     }
@@ -333,7 +350,10 @@ def generate_improved_picks(league='NHL'):
         
         print(f"  [OK] Found models (away: {len(away_models)}, home: {len(home_models)})")
         
-        # Process each prop type separately
+        # Track predictions for each prop type
+        game_predictions = {}
+        
+        # Process each prop type to find consensus
         for prop_type in ['Moneyline', 'Puck Line']:
             # Filter models for this prop type (case-insensitive match)
             away_models_prop = [m for m in away_models if m.get('prop', '').lower() == prop_type.lower()]
@@ -341,51 +361,47 @@ def generate_improved_picks(league='NHL'):
             
             if not away_models_prop or not home_models_prop:
                 print(f"  [{prop_type}] Missing models (away: {len(away_models_prop)}, home: {len(home_models_prop)})")
-                skipped_no_model += 1
                 continue
             
             # Get consensus (if enabled)
             if USE_CONSENSUS:
                 consensus = get_consensus_prediction(game, away_models_prop, home_models_prop)
                 
-                if not consensus:
-                    print(f"  [{prop_type}] No consensus or low confidence")
-                    skipped_low_confidence += 1
-                    continue
-                
-                # Use the best model
-                best_model = consensus['model']
-                predicted_team = consensus['team']
-                confidence = consensus['confidence']
-                
-                print(f"  [{prop_type}] {predicted_team} win ({confidence:.1f}% confidence)")
-                
-                # Generate pick
-                pick = generate_pick_from_model(game, best_model, predicted_team)
-                if pick:
-                    # Validate before adding
-                    if validate_pick(pick):
-                        all_picks.append(pick)
-                    else:
-                        print(f"  [{prop_type}] Pick validation failed")
-            else:
-                # Fallback: use best single model
-                all_applicable = away_models_prop + home_models_prop
-                best_single = max(all_applicable, key=lambda m: m.get('currentAccuracy', 0))
-                
-                predicted_team = best_single.get('team', '')
-                confidence = best_single.get('currentAccuracy', 0)
-                
-                if confidence < MIN_CONFIDENCE:
-                    print(f"  [{prop_type}] Low confidence: {confidence}%")
-                    skipped_low_confidence += 1
-                    continue
-                
-                print(f"  [{prop_type}] {predicted_team} win ({confidence:.1f}% confidence)")
-                
-                pick = generate_pick_from_model(game, best_single, predicted_team)
-                if pick and validate_pick(pick):
+                if consensus:
+                    game_predictions[prop_type] = consensus
+                    print(f"  [{prop_type}] {consensus['team']} win ({consensus['confidence']:.1f}% confidence)")
+        
+        # Check if all available prop types agree on the same team
+        if not game_predictions:
+            print(f"  [SKIP] No valid predictions")
+            skipped_no_model += 1
+            continue
+        
+        # If multiple prop types exist, they must all predict the SAME team
+        predicted_teams = set(pred['team'] for pred in game_predictions.values())
+        
+        if len(predicted_teams) > 1:
+            print(f"  [SKIP] Conflicting predictions: {predicted_teams}")
+            print(f"    -> Cannot show both moneyline and puck line for different teams")
+            skipped_no_consensus += 1
+            continue
+        
+        # All prop types agree, generate picks for each
+        agreed_team = predicted_teams.pop()
+        
+        for prop_type, consensus in game_predictions.items():
+            best_model = consensus['model']
+            confidence = consensus['confidence']
+            
+            # Generate pick
+            pick = generate_pick_from_model(game, best_model, agreed_team)
+            if pick:
+                # Validate before adding
+                if validate_pick(pick):
                     all_picks.append(pick)
+                    print(f"  [+] Generated {prop_type} pick for {agreed_team}")
+                else:
+                    print(f"  [{prop_type}] Pick validation failed")
     
     # Upload to Firebase
     print(f"\n[SUMMARY]")
